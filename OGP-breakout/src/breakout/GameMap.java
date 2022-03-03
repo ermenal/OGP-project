@@ -16,8 +16,9 @@ public class GameMap {
 		Vector size = new Vector(WIDTH/BLOCK_COLUMNS-70,HEIGHT/BLOCK_LINES-70);
 		Point blockTL = bottomLeft.plus(marginBL);
 		Point blockBR = blockTL.plus(size);
-		// TODO: return a block with given top left (`blockTL`) and bottom right (`blockBR`) Point  
-		return null;
+		// DONE: return a block with given top left (`blockTL`) and bottom right (`blockBR`) Point  
+		BlockState block = new BlockState(blockTL, blockBR);
+		return block;
 	}
 	private static PaddleState createPaddle(Point bottomLeft) {
 		Vector size = new Vector(WIDTH/BLOCK_COLUMNS/2,HEIGHT/BLOCK_LINES/2);
