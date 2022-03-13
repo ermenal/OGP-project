@@ -9,4 +9,12 @@ public class BlockState {
 		this.topLeft = topLeft;
 		this.bottomRight = bottomRight;
 	}
+	
+	public Point getTopLeft() {
+		return this.topLeft;
+	}
+	
+	public Point getBottomRight() {
+		return this.bottomRight;
+	}
 }
