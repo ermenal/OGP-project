@@ -21,6 +21,22 @@ public class BallState {
 		return velocity;
 	}
 	
+	public Point getTopLeftOfSurroundingRectangle() {
+		Vector xStraal = new Vector(diameter/2, 0);
+		Vector yStraal = new Vector(0, diameter/2);
+		Point leftMid = center.minus(xStraal);
+		Point topLeft = leftMid.plus(yStraal);
+		return topLeft;
+	}
+	
+	public Point getBottomRightOfSurroundingRectangle() {
+		Vector xStraal = new Vector(diameter/2, 0);
+		Vector yStraal = new Vector(0, diameter/2);
+		Point rightMid = center.plus(xStraal);
+		Point bottomRight = rightMid.minus(yStraal);
+		return bottomRight;
+	}
+	
 	public boolean BalHeeftPuntGeraakt(Point punt) {
 		//Checken of de x_coord of y_coord van het punt zelfs in de cirkel van de bal (middelpunt center + straal) kunnen zitten, performance van de code
 		int straal = diameter/2;
