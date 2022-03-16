@@ -10,7 +10,7 @@ public class GameMap {
 	private static final int WIDTH = 50000;
 	private static int BLOCK_LINES = 9;
 	private static int BLOCK_COLUMNS = 10;
-	private static final Vector INIT_BALL_VELOCITY = new Vector(55,27);
+	private static final Vector INIT_BALL_VELOCITY = new Vector(55,57);
 
 	private static BlockState createBlock(Point topLeft) {
 		Vector marginBL = new Vector(20,20);
@@ -32,7 +32,7 @@ public class GameMap {
 		Vector centerD = new Vector(WIDTH/BLOCK_COLUMNS/2,HEIGHT/BLOCK_LINES/2);
 		Point center = topLeft.plus(centerD);
 		int diameter = INIT_BALL_DIAMETER;
-		// TODO: return a ball with given `center`, `diameter` and initial speed `INIT_BALL_VELOCITY` 
+		// Done: return a ball with given `center`, `diameter` and initial speed `INIT_BALL_VELOCITY` 
 		BallState ball = new BallState(center, diameter, INIT_BALL_VELOCITY);
 		return ball;
 	}

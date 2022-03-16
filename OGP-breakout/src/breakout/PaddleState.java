@@ -23,15 +23,15 @@ public class PaddleState {
 	}
 	
 	public Vector getPaddleVelocity() {
-		return this.velocity;
+		return new Vector(velocity.getX(), velocity.getY());
 	}
 	
-	public void movePaddleRightBy(Vector x) {
-		center.plus(x);
+	public void movePaddleRightBy() {
+		center = new Point(center.getX() + 100, center.getY());
 	}
 	
-	public void movePaddleLeftBy(Vector x) {
-		center.minus(x);
+	public void movePaddleLeftBy() {
+		center = new Point(center.getX() - 100, center.getY());
 	}
 	
 	

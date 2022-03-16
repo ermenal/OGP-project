@@ -64,6 +64,16 @@ public class BallState {
 		return false;
 	}
 	
+	public boolean raaktPaddle(PaddleState paddle) {
+		// Probleem: Soms bug, rechts en links zitten er ook niet in.
+		
+		Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);
+		if (ballOnderstePunt.getY() >= paddle.getPaddleTopLeft().getY() && paddle.getPaddleTopLeft().getX() <= ballOnderstePunt.getX() && paddle.getPaddleBottomRight().getX() >= ballOnderstePunt.getX()) {
+			return true;
+		}
+		return false;
+	}
+	
 	public void bounceWall(int wallNumber) {
 		if (wallNumber == 1) {
 			// leftWall
@@ -80,6 +90,12 @@ public class BallState {
 			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0));
 			velocity = newVelocity;
 		}
+	}
+	
+	public void bouncePaddle(PaddleState paddle, int paddleDir) {
+		Vector newVelocity = velocity.mirrorOver(new Vector(0, -1));
+		int addedVelocity = paddleDir * 2;
+		velocity = new Vector(newVelocity.getX() + addedVelocity, newVelocity.getY() + addedVelocity);
 	}
 	
 	
