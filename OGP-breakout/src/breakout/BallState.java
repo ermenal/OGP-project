@@ -68,7 +68,12 @@ public class BallState {
 		// Probleem: Soms bug, rechts en links zitten er ook niet in.
 		
 		Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);
-		if (ballOnderstePunt.getY() >= paddle.getPaddleTopLeft().getY() && paddle.getPaddleTopLeft().getX() <= ballOnderstePunt.getX() && paddle.getPaddleBottomRight().getX() >= ballOnderstePunt.getX()) {
+		if (ballOnderstePunt.getY() >= paddle.getPaddleTopLeft().getY() && (ballOnderstePunt.getY() + diameter) <= paddle.getPaddleBottomRight().getY() && paddle.getPaddleTopLeft().getX() <= ballOnderstePunt.getX() && paddle.getPaddleBottomRight().getX() >= ballOnderstePunt.getX()) {
+			return true;
+		}
+		
+		//zijkanten
+		if ((ballOnderstePunt.getX() + diameter/2) >= paddle.getPaddleTopLeft().getX() && (ballOnderstePunt.getX() - diameter/2) <= paddle.getPaddleBottomRight().getX() && ballOnderstePunt.getY() >= paddle.getPaddleTopLeft().getY() && ballOnderstePunt.getY() <= paddle.getPaddleBottomRight().getY()){
 			return true;
 		}
 		return false;
