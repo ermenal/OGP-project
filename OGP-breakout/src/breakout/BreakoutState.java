@@ -54,6 +54,9 @@ public class BreakoutState {
 				}
 				balls = newBalls.toArray(new BallState[] {});
 			}
+			if (ball.raaktBoven()) {
+				
+			}
 		}
 	}
 	
