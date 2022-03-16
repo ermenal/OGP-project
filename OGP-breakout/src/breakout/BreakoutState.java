@@ -63,9 +63,31 @@ public class BreakoutState {
 			if (ball.raaktRechts()) {
 				ball.bounceWall(3);
 			}
-			if (ball.raaktPaddle(paddle)) {
-				ball.bouncePaddle(paddle, paddleDir);
+			
+			for (BlockState block: blocks) {
+				if (ball.raaktBlockOnder(block)) {
+					ball.bounceBlock(block, 1);
+					
+					ArrayList<BlockState> newBlocks = new ArrayList<BlockState>();
+					for (BlockState okBlock: blocks) {
+						if (okBlock != block){
+							newBlocks.add(okBlock);
+						}
+					}
+					blocks = newBlocks.toArray(new BlockState[] {});
+				}
 			}
+			
+			if (ball.raaktPaddleLinks(paddle)) {
+				ball.bouncePaddle(paddle, paddleDir, 1);
+			}
+			if (ball.raaktPaddleBoven(paddle)) {
+				ball.bouncePaddle(paddle, paddleDir, 2);
+			}
+			if (ball.raaktPaddleRechts(paddle)) {
+				ball.bouncePaddle(paddle, paddleDir, 3);
+			}
+			
 		}
 	}
 	
@@ -82,10 +104,16 @@ public class BreakoutState {
 	}
 	
 	public boolean isWon() {
+		if (blocks.length == 0) {
+		return true;
+		}
 		return false;
 	}
 
 	public boolean isDead() {
+		if (balls.length == 0) {
+			return true;
+		}
 		return false;
 	}
 }

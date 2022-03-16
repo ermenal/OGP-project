@@ -64,16 +64,28 @@ public class BallState {
 		return false;
 	}
 	
-	public boolean raaktPaddle(PaddleState paddle) {
+	public boolean raaktPaddleBoven(PaddleState paddle) {
 		// Probleem: Soms bug, rechts en links zitten er ook niet in.
 		
 		Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);
-		if (ballOnderstePunt.getY() >= paddle.getPaddleTopLeft().getY() && (ballOnderstePunt.getY() + diameter) <= paddle.getPaddleBottomRight().getY() && paddle.getPaddleTopLeft().getX() <= ballOnderstePunt.getX() && paddle.getPaddleBottomRight().getX() >= ballOnderstePunt.getX()) {
+		
+		if (ballOnderstePunt.getY() <= paddle.getPaddleTopLeft().getY() + diameter/2 && ballOnderstePunt.getY() >= paddle.getPaddleTopLeft().getY() && paddle.getPaddleTopLeft().getX() <= ballOnderstePunt.getX() && paddle.getPaddleBottomRight().getX() >= ballOnderstePunt.getX()) {
 			return true;
 		}
-		
-		//zijkanten
-		if ((ballOnderstePunt.getX() + diameter/2) >= paddle.getPaddleTopLeft().getX() && (ballOnderstePunt.getX() - diameter/2) <= paddle.getPaddleBottomRight().getX() && ballOnderstePunt.getY() >= paddle.getPaddleTopLeft().getY() && ballOnderstePunt.getY() <= paddle.getPaddleBottomRight().getY()){
+		return false;
+	}
+	
+	public boolean raaktPaddleLinks(PaddleState paddle) {
+		Point ballRechtsePunt = new Point(center.getX() + diameter/2, center.getY());
+		if (ballRechtsePunt.getX() <= paddle.getPaddleTopLeft().getX() + diameter/2 && ballRechtsePunt.getY() <= paddle.getPaddleBottomRight().getY() && ballRechtsePunt.getY() >= paddle.getPaddleTopLeft().getY() && ballRechtsePunt.getX() >= paddle.getPaddleTopLeft().getX()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean raaktPaddleRechts(PaddleState paddle) {
+		Point ballLinksePunt = new Point(center.getX() - diameter/2, center.getY());
+		if (ballLinksePunt.getX() >= paddle.getPaddleBottomRight().getX() - diameter/2 && ballLinksePunt.getY() <= paddle.getPaddleBottomRight().getY() && ballLinksePunt.getY() >= paddle.getPaddleTopLeft().getY() && ballLinksePunt.getX() <= paddle.getPaddleBottomRight().getX()) {
 			return true;
 		}
 		return false;
@@ -97,10 +109,50 @@ public class BallState {
 		}
 	}
 	
-	public void bouncePaddle(PaddleState paddle, int paddleDir) {
-		Vector newVelocity = velocity.mirrorOver(new Vector(0, -1));
+	public void bouncePaddle(PaddleState paddle, int paddleDir, int paddleSideNumber) {
 		int addedVelocity = paddleDir * 2;
-		velocity = new Vector(newVelocity.getX() + addedVelocity, newVelocity.getY() + addedVelocity);
+		if (paddleSideNumber == 1) {
+			// leftSide
+			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0));
+			velocity = new Vector(newVelocity.getX() + addedVelocity, newVelocity.getY());
+		}
+		if (paddleSideNumber == 2) {
+			// topSide
+			Vector newVelocity = velocity.mirrorOver(new Vector(0, -1));
+			velocity = new Vector(newVelocity.getX() + addedVelocity, newVelocity.getY());
+		}
+		if (paddleSideNumber == 3) {
+			// rightSide
+			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0));
+			velocity = new Vector(newVelocity.getX() + addedVelocity, newVelocity.getY());
+		}
+		
+	}
+	
+	public boolean raaktBlockOnder(BlockState block) {
+		Point ballBovenstePunt = new Point(center.getX(), center.getY() - diameter/2);
+		if (ballBovenstePunt.getX() >= block.getTopLeft().getX() && ballBovenstePunt.getX() <= block.getBottomRight().getX() && ballBovenstePunt.getY() <= block.getBottomRight().getY() && ballBovenstePunt.getY() >= (block.getBottomRight().getY() - diameter/2)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean raaktBlockLeft(BlockState block) {
+		Point ballRechtsePunt = new Point(center.getX() + diameter/2, center.getY());
+		if (ballRechtsePunt.getX() >= block.getTopLeft().getX() && ballRechtsePunt.getX() <= block.getTopLeft().getX() + diameter/2 && ballRechtsePunt.getY() <= block.getBottomRight().getY() && ballRechtsePunt.getY() >= block.getTopLeft().getY()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean raaktBlockBoven(BlockState block) {
+		return false;
+	}
+	
+	public void bounceBlock(BlockState block, int blockSideNumber) {
+		if (blockSideNumber == 1)
+			//bottomSide
+			velocity = velocity.mirrorOver(new Vector(0, 1));
 	}
 	
 	
