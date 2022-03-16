@@ -15,11 +15,11 @@ public class BreakoutState {
 	}
 	
 	public BallState[] getBalls() {
-		return balls;
+		return balls.clone();
 	}
 
 	public BlockState[] getBlocks() {
-		return blocks;
+		return blocks.clone();
 	}
 
 	public PaddleState getPaddle() {

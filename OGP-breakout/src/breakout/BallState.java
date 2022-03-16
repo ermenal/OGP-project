@@ -9,7 +9,7 @@ public class BallState {
 	public BallState(Point center, int diameter, Vector velocity) {
 		// Maak een ball aan met gegeven center, diameter en velocity.
 		this.center = center;
-		this.diameter = diameter;
+		this.diameter = Math.abs(diameter);
 		this.velocity = velocity;
 	}
 	
@@ -22,18 +22,13 @@ public class BallState {
 	}
 	
 	public Point getTopLeftOfSurroundingRectangle() {
-		Vector xStraal = new Vector(diameter/2, 0);
-		Vector yStraal = new Vector(0, diameter/2);
-		Point leftMid = center.minus(xStraal);
-		Point topLeft = leftMid.plus(yStraal);
+		Point topLeft = new Point(center.getX() - diameter/2, center.getY() + diameter/2);
+		Point test = new Point(50, 50);
 		return topLeft;
 	}
 	
 	public Point getBottomRightOfSurroundingRectangle() {
-		Vector xStraal = new Vector(diameter/2, 0);
-		Vector yStraal = new Vector(0, diameter/2);
-		Point rightMid = center.plus(xStraal);
-		Point bottomRight = rightMid.minus(yStraal);
+		Point bottomRight = new Point(center.getX() + (diameter/2), center.getY() - (diameter/2));
 		return bottomRight;
 	}
 	
