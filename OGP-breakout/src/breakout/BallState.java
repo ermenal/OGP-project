@@ -38,7 +38,6 @@ public class BallState {
 	}
 	
 	public boolean BalHeeftPuntGeraakt(Point punt) {
-		//TODO: moeten we dit niet doen met de omtrek van de cirkel, kan ook op een hoek raken denk ik
 		//Checken of de x_coord of y_coord van het punt zelfs in de cirkel van de bal (middelpunt center + straal) kunnen zitten, performance van de code
 		int straal = diameter/2;
 		if ((punt.getX() > center.getX()+straal) || (punt.getX() < center.getX()-straal) || (punt.getY() < center.getY()+straal) || (punt.getY() < center.getY()-straal)) {
