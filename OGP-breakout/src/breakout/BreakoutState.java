@@ -27,11 +27,31 @@ public class BreakoutState {
 	}
 
 	public Point getBottomRight() {
-		return this.bottomRight;
+		return bottomRight;
 	}
 
 	public void tick(int paddleDir) {
+		moveAllBalls();
+		
 	}
+	
+	public void moveAllBalls() {
+		for (BallState ball: balls) {
+			ball.moveBall();
+		}
+	}
+	
+	public void raakMethode() {
+		for (BallState ball: balls) {
+			if (ball.raaktOnder()) {
+				
+			}
+		}
+	}
+	
+	
+	
+	
 
 	public void movePaddleRight() {
 		Vector x = new Vector(10, 0);

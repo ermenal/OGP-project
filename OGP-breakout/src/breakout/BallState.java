@@ -22,14 +22,46 @@ public class BallState {
 	}
 	
 	public Point getTopLeftOfSurroundingRectangle() {
-		Point topLeft = new Point(center.getX() - diameter/2, center.getY() + diameter/2);
-		Point test = new Point(50, 50);
+		Point topLeft = new Point(center.getX() - diameter/2, center.getY() - diameter/2);
 		return topLeft;
 	}
 	
 	public Point getBottomRightOfSurroundingRectangle() {
-		Point bottomRight = new Point(center.getX() + (diameter/2), center.getY() - (diameter/2));
+		Point bottomRight = new Point(center.getX() + (diameter/2), center.getY() + (diameter/2));
 		return bottomRight;
+	}
+	
+	public void moveBall() {
+		Point newCenter = center.plus(velocity);
+		center = newCenter;
+	}
+	
+	public boolean raaktOnder() {
+		if (center.getY() + diameter/2 >= 30000) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean raaktRechts(){
+		if (center.getX() + diameter/2 >= 50000){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean raaktLinks() {
+		if (center.getX() - diameter/2 <= 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean raaktBoven() {
+		if (center.getY() - diameter/2 <= 0) {
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean BalHeeftPuntGeraakt(Point punt) {
