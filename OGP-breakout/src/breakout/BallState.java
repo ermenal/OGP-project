@@ -64,17 +64,22 @@ public class BallState {
 		return false;
 	}
 	
-	public boolean BalHeeftPuntGeraakt(Point punt) {
-		//Checken of de x_coord of y_coord van het punt zelfs in de cirkel van de bal (middelpunt center + straal) kunnen zitten, performance van de code
-		int straal = diameter/2;
-		if ((punt.getX() > center.getX()+straal) || (punt.getX() < center.getX()-straal) || (punt.getY() < center.getY()+straal) || (punt.getY() < center.getY()-straal)) {
-			return false;
+	public void bounceWall(int wallNumber) {
+		if (wallNumber == 1) {
+			// leftWall
+			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0));
+			velocity = newVelocity;
 		}
-		//Checken of het punt in de cirkel (bal) ligt.
-		if ((Math.pow(punt.getX() - center.getX(), 2) + (Math.pow(punt.getY() - center.getY(), 2))) > Math.pow(straal, 2)) {
-			return false;
+		if (wallNumber == 2) {
+			// topWall
+			Vector newVelocity = velocity.mirrorOver(new Vector(0, 1));
+			velocity = newVelocity;
 		}
-		return true;
+		if (wallNumber == 3) {
+			// righttWall
+			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0));
+			velocity = newVelocity;
+		}
 	}
 	
 	

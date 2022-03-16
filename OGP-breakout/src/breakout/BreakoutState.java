@@ -34,7 +34,7 @@ public class BreakoutState {
 
 	public void tick(int paddleDir) {
 		moveAllBalls();
-		
+		raakMethode();
 	}
 	
 	public void moveAllBalls() {
@@ -54,8 +54,14 @@ public class BreakoutState {
 				}
 				balls = newBalls.toArray(new BallState[] {});
 			}
+			if (ball.raaktLinks()) {
+				ball.bounceWall(1);
+			}
 			if (ball.raaktBoven()) {
-				
+				ball.bounceWall(2);
+			}
+			if (ball.raaktRechts()) {
+				ball.bounceWall(3);
 			}
 		}
 	}
