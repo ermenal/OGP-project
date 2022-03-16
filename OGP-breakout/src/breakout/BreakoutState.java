@@ -1,5 +1,7 @@
 package breakout;
 
+import java.util.ArrayList;
+
 // TODO: implement, document
 public class BreakoutState {
 	private BallState[] balls;
@@ -44,7 +46,13 @@ public class BreakoutState {
 	public void raakMethode() {
 		for (BallState ball: balls) {
 			if (ball.raaktOnder()) {
-				
+				ArrayList<BallState> newBalls = new ArrayList<BallState>();
+				for (BallState okBal: balls) {
+					if (okBal != ball){
+						newBalls.add(okBal);
+					}
+				}
+				balls = newBalls.toArray(new BallState[] {});
 			}
 		}
 	}
