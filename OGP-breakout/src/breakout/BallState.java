@@ -64,17 +64,38 @@ public class BallState {
 		return false;
 	}
 	
-	public boolean BalHeeftPuntGeraakt(Point punt) {
-		//Checken of de x_coord of y_coord van het punt zelfs in de cirkel van de bal (middelpunt center + straal) kunnen zitten, performance van de code
-		int straal = diameter/2;
-		if ((punt.getX() > center.getX()+straal) || (punt.getX() < center.getX()-straal) || (punt.getY() < center.getY()+straal) || (punt.getY() < center.getY()-straal)) {
-			return false;
+	public boolean raaktPaddle(PaddleState paddle) {
+		// Probleem: Soms bug, rechts en links zitten er ook niet in.
+		
+		Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);
+		if (ballOnderstePunt.getY() >= paddle.getPaddleTopLeft().getY() && paddle.getPaddleTopLeft().getX() <= ballOnderstePunt.getX() && paddle.getPaddleBottomRight().getX() >= ballOnderstePunt.getX()) {
+			return true;
 		}
-		//Checken of het punt in de cirkel (bal) ligt.
-		if ((Math.pow(punt.getX() - center.getX(), 2) + (Math.pow(punt.getY() - center.getY(), 2))) > Math.pow(straal, 2)) {
-			return false;
+		return false;
+	}
+	
+	public void bounceWall(int wallNumber) {
+		if (wallNumber == 1) {
+			// leftWall
+			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0));
+			velocity = newVelocity;
 		}
-		return true;
+		if (wallNumber == 2) {
+			// topWall
+			Vector newVelocity = velocity.mirrorOver(new Vector(0, 1));
+			velocity = newVelocity;
+		}
+		if (wallNumber == 3) {
+			// righttWall
+			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0));
+			velocity = newVelocity;
+		}
+	}
+	
+	public void bouncePaddle(PaddleState paddle, int paddleDir) {
+		Vector newVelocity = velocity.mirrorOver(new Vector(0, -1));
+		int addedVelocity = paddleDir * 2;
+		velocity = new Vector(newVelocity.getX() + addedVelocity, newVelocity.getY() + addedVelocity);
 	}
 	
 	

@@ -34,7 +34,7 @@ public class BreakoutState {
 
 	public void tick(int paddleDir) {
 		moveAllBalls();
-		
+		raakMethode(paddleDir);
 	}
 	
 	public void moveAllBalls() {
@@ -43,7 +43,7 @@ public class BreakoutState {
 		}
 	}
 	
-	public void raakMethode() {
+	public void raakMethode(int paddleDir) {
 		for (BallState ball: balls) {
 			if (ball.raaktOnder()) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
@@ -54,6 +54,18 @@ public class BreakoutState {
 				}
 				balls = newBalls.toArray(new BallState[] {});
 			}
+			if (ball.raaktLinks()) {
+				ball.bounceWall(1);
+			}
+			if (ball.raaktBoven()) {
+				ball.bounceWall(2);
+			}
+			if (ball.raaktRechts()) {
+				ball.bounceWall(3);
+			}
+			if (ball.raaktPaddle(paddle)) {
+				ball.bouncePaddle(paddle, paddleDir);
+			}
 		}
 	}
 	
@@ -62,13 +74,11 @@ public class BreakoutState {
 	
 
 	public void movePaddleRight() {
-		Vector x = new Vector(10, 0);
-		paddle.movePaddleRightBy(x);
+		paddle.movePaddleRightBy();
 	}
 
 	public void movePaddleLeft() {
-		Vector x = new Vector(10, 0);
-		paddle.movePaddleLeftBy(x);
+		paddle.movePaddleLeftBy();
 	}
 	
 	public boolean isWon() {
