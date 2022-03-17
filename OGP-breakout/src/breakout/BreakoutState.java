@@ -76,6 +76,39 @@ public class BreakoutState {
 					}
 					blocks = newBlocks.toArray(new BlockState[] {});
 				}
+				if (ball.raaktBlockLeft(block)) {
+					ball.bounceBlock(block, 2);
+					
+					ArrayList<BlockState> newBlocks = new ArrayList<BlockState>();
+					for (BlockState okBlock: blocks) {
+						if (okBlock != block){
+							newBlocks.add(okBlock);
+						}
+					}
+					blocks = newBlocks.toArray(new BlockState[] {});
+				}
+				if (ball.raaktBlockBoven(block)) {
+					ball.bounceBlock(block, 3);
+					
+					ArrayList<BlockState> newBlocks = new ArrayList<BlockState>();
+					for (BlockState okBlock: blocks) {
+						if (okBlock != block){
+							newBlocks.add(okBlock);
+						}
+					}
+					blocks = newBlocks.toArray(new BlockState[] {});
+				}
+				if (ball.raaktBlockRight(block)) {
+					ball.bounceBlock(block, 4);
+					
+					ArrayList<BlockState> newBlocks = new ArrayList<BlockState>();
+					for (BlockState okBlock: blocks) {
+						if (okBlock != block){
+							newBlocks.add(okBlock);
+						}
+					}
+					blocks = newBlocks.toArray(new BlockState[] {});
+				}
 			}
 			
 			if (ball.raaktPaddleLinks(paddle)) {

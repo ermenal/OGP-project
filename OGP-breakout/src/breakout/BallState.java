@@ -146,6 +146,18 @@ public class BallState {
 	}
 	
 	public boolean raaktBlockBoven(BlockState block) {
+		Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);
+		if (ballOnderstePunt.getX() >= block.getTopLeft().getX() && ballOnderstePunt.getX() <= block.getTopLeft().getX() && ballOnderstePunt.getY() >= block.getTopLeft().getY() && ballOnderstePunt.getY() <= block.getTopLeft().getY() + diameter/2) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean raaktBlockRight(BlockState block) {
+		Point ballLinksePunt = new Point(center.getX() - diameter/2, center.getY());
+		if(ballLinksePunt.getX() <= block.getBottomRight().getX() && ballLinksePunt.getX() >= block.getBottomRight().getX()-diameter/2 && ballLinksePunt.getY() >= block.getTopLeft().getY() && ballLinksePunt.getY() <= block.getBottomRight().getY()) {
+			return true;
+		}
 		return false;
 	}
 	
@@ -153,6 +165,15 @@ public class BallState {
 		if (blockSideNumber == 1)
 			//bottomSide
 			velocity = velocity.mirrorOver(new Vector(0, 1));
+		if (blockSideNumber == 2)
+			//leftSide
+			velocity = velocity.mirrorOver(new Vector(-1, 0));
+		if (blockSideNumber == 3)
+			//topSide
+			velocity = velocity.mirrorOver(new Vector(0, -1));
+		if (blockSideNumber == 4)
+			//rightSide
+			velocity = velocity.mirrorOver(new Vector(1, 0));
 	}
 	
 	
