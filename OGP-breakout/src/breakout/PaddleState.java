@@ -4,8 +4,7 @@ public class PaddleState {
 	// TODO: implement
 	
 	private Point center;
-	private Vector size;
-	private Vector velocity;
+	private final Vector size;
 	
 	public PaddleState(Point center, Vector size){
 		this.center = center;
@@ -22,19 +21,15 @@ public class PaddleState {
 		return br;
 	}
 	
-	public Vector getPaddleVelocity() {
-		return new Vector(velocity.getX(), velocity.getY());
-	}
-	
 	public void movePaddleRightBy() {
-		center = new Point(center.getX() + 10, center.getY());
+		center = new Point(center.getX() + 100, center.getY());
 		if (center.getX() + size.getX() > 50000){
 			center = new Point(50000 - size.getX(), center.getY());
 		}
 	}
 	
 	public void movePaddleLeftBy() {
-		center = new Point(center.getX() - 10, center.getY());
+		center = new Point(center.getX() - 100, center.getY());
 		if (center.getX() - size.getX() < 0){
 			center = new Point(size.getX(), center.getY());
 		}

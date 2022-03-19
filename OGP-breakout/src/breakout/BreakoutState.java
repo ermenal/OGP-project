@@ -6,8 +6,8 @@ import java.util.ArrayList;
 public class BreakoutState {
 	private BallState[] balls;
 	private BlockState[] blocks;
-	private Point bottomRight;
-	private PaddleState paddle;
+	private final Point bottomRight;
+	private final PaddleState paddle;
 	
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
 		this.balls = balls;
@@ -45,6 +45,15 @@ public class BreakoutState {
 	
 	public void raakMethode(int paddleDir) {
 		for (BallState ball: balls) {
+			if (ball.raaktLinks()) {
+				ball.bounceWall(1);
+			}
+			if (ball.raaktRechts()) {
+				ball.bounceWall(3);
+			}
+			if (ball.raaktBoven()) {
+				ball.bounceWall(2);
+			}
 			if (ball.raaktOnder()) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
@@ -53,15 +62,6 @@ public class BreakoutState {
 					}
 				}
 				balls = newBalls.toArray(new BallState[] {});
-			}
-			if (ball.raaktLinks()) {
-				ball.bounceWall(1);
-			}
-			if (ball.raaktBoven()) {
-				ball.bounceWall(2);
-			}
-			if (ball.raaktRechts()) {
-				ball.bounceWall(3);
 			}
 			
 			for (BlockState block: blocks) {
@@ -137,7 +137,7 @@ public class BreakoutState {
 	}
 	
 	public boolean isWon() {
-		if (blocks.length == 0) {
+		if (blocks.length == 0 && balls.length > 0) {
 		return true;
 		}
 		return false;
