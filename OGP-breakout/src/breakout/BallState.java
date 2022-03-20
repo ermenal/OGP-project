@@ -1,9 +1,17 @@
 package breakout;
 
+/**
+ * 
+ * @immutable
+ *
+ */
+
 public class BallState {
-	// TODO: implement
-	private Point center;
-	private Vector velocity;
+	// DONE: implement
+	
+	
+	private final Point center;
+	private final Vector velocity;
 	private final int diameter;
 	
 	public BallState(Point center, int diameter, Vector velocity) {
@@ -31,9 +39,9 @@ public class BallState {
 		return bottomRight;
 	}
 	
-	public void moveBall() {
+	public BallState moveBall() {
 		Point newCenter = center.plus(velocity);
-		center = newCenter;
+		return new BallState(newCenter, diameter, velocity);
 	}
 	
 	public boolean raaktOnder() {
@@ -88,42 +96,51 @@ public class BallState {
 		return false;
 	}
 	
-	public void bounceWall(int wallNumber) {
+	public BallState bounceWall(int wallNumber) {
 		if (wallNumber == 1) {
 			// leftWall
 			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0));
-			velocity = newVelocity;
+			return new BallState(new Point(center.getX(), center.getY()), diameter, newVelocity);
 		}
 		if (wallNumber == 2) {
 			// topWall
 			Vector newVelocity = velocity.mirrorOver(new Vector(0, 1));
-			velocity = newVelocity;
+			return new BallState(new Point(center.getX(), center.getY()), diameter, newVelocity);
 		}
 		if (wallNumber == 3) {
 			// righttWall
 			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0));
-			velocity = newVelocity;
+			return new BallState(new Point(center.getX(), center.getY()), diameter, newVelocity);
 		}
+		// 
+		//oplossing: Laatste if weglaten
+		//
+		return new BallState(new Point(center.getX(), center.getY()), diameter, new Vector(velocity.getX(), velocity.getY()));
+		//
 	}
 	
-	public void bouncePaddle(PaddleState paddle, int paddleDir, int paddleSideNumber) {
-		int addedVelocity = paddleDir * 20;
+	public BallState bouncePaddle(PaddleState paddle, int paddleDir, int paddleSideNumber) {
+		int addedVelocity = paddleDir * 2;
 		if (paddleSideNumber == 1) {
 			// leftSide
-			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0));
-			velocity = new Vector(newVelocity.getX() + addedVelocity, newVelocity.getY());
+			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0)).plus(new Vector(addedVelocity, 0));
+			return new BallState(center, diameter, newVelocity);
 		}
 		if (paddleSideNumber == 2) {
 			// topSide
-			Vector newVelocity = velocity.mirrorOver(new Vector(0, -1));
-			velocity = new Vector(newVelocity.getX() + addedVelocity, newVelocity.getY());
+			Vector newVelocity = velocity.mirrorOver(new Vector(0, -1)).plus(new Vector(addedVelocity, 0));
+			return new BallState(center, diameter, newVelocity);
 		}
 		if (paddleSideNumber == 3) {
 			// rightSide
-			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0));
-			velocity = new Vector(newVelocity.getX() + addedVelocity, newVelocity.getY());
+			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0)).plus(new Vector(addedVelocity, 0));
+			return new BallState(center, diameter, newVelocity);
 		}
-		
+		//
+		//
+		//oplossing: Laatste if weglaten
+		return new BallState(center, diameter, velocity);
+		//
 	}
 	
 	private boolean raakDottedProduct(Vector velocity, Vector n) {
@@ -164,19 +181,32 @@ public class BallState {
 		return false;
 	}
 	
-	public void bounceBlock(BlockState block, int blockSideNumber) {
-		if (blockSideNumber == 1)
+	public BallState bounceBlock(BlockState block, int blockSideNumber) {
+		if (blockSideNumber == 1) {
 			//bottomSide
-			velocity = velocity.mirrorOver(new Vector(0, 1));
-		if (blockSideNumber == 2)
+			Vector newVelocity = velocity.mirrorOver(new Vector(0, 1));
+			return new BallState(center, diameter, newVelocity);
+		}
+		if (blockSideNumber == 2) {
 			//leftSide
-			velocity = velocity.mirrorOver(new Vector(-1, 0));
-		if (blockSideNumber == 3)
+			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0));
+			return new BallState(center, diameter, newVelocity);
+		}
+		if (blockSideNumber == 3) {
 			//topSide
-			velocity = velocity.mirrorOver(new Vector(0, -1));
-		if (blockSideNumber == 4)
+			Vector newVelocity = velocity.mirrorOver(new Vector(0, -1));
+			return new BallState(center, diameter, newVelocity);
+		}
+		if (blockSideNumber == 4) {
 			//rightSide
-			velocity = velocity.mirrorOver(new Vector(1, 0));
+			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0));
+			return new BallState(center, diameter, newVelocity);
+		}
+		//
+		//
+		//oplossing: Laatste if weglaten
+		return new BallState(center, diameter, velocity);
+		//
 	}
 	
 	

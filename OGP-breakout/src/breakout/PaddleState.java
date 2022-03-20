@@ -3,7 +3,7 @@ package breakout;
 public class PaddleState {
 	// TODO: implement
 	
-	private Point center;
+	private final Point center;
 	private final Vector size;
 	
 	public PaddleState(Point center, Vector size){
@@ -21,18 +21,20 @@ public class PaddleState {
 		return br;
 	}
 	
-	public void movePaddleRightBy() {
-		center = new Point(center.getX() + 100, center.getY());
-		if (center.getX() + size.getX() > 50000){
-			center = new Point(50000 - size.getX(), center.getY());
+	public PaddleState movePaddleRightBy() {
+		Point newCenter = new Point(center.getX() + 10, center.getY());
+		if (newCenter.getX() + size.getX() > 50000){
+			newCenter = new Point(50000 - size.getX(), center.getY());
 		}
+		return new PaddleState(newCenter, size);
 	}
 	
-	public void movePaddleLeftBy() {
-		center = new Point(center.getX() - 100, center.getY());
-		if (center.getX() - size.getX() < 0){
-			center = new Point(size.getX(), center.getY());
+	public PaddleState movePaddleLeftBy() {
+		Point newCenter = new Point(center.getX() - 10, center.getY());
+		if (newCenter.getX() - size.getX() < 0){
+			newCenter = new Point(size.getX(), center.getY());
 		}
+		return new PaddleState(newCenter, size);
 	}
 	
 	

@@ -7,7 +7,7 @@ public class BreakoutState {
 	private BallState[] balls;
 	private BlockState[] blocks;
 	private final Point bottomRight;
-	private final PaddleState paddle;
+	private PaddleState paddle;
 	
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
 		this.balls = balls;
@@ -38,21 +38,47 @@ public class BreakoutState {
 	}
 	
 	public void moveAllBalls() {
+		ArrayList<BallState> newBalls = new ArrayList<BallState>();
 		for (BallState ball: balls) {
-			ball.moveBall();
+			newBalls.add(ball.moveBall());
 		}
+		balls = newBalls.toArray(new BallState[] {});
 	}
 	
 	public void raakMethode(int paddleDir) {
 		for (BallState ball: balls) {
 			if (ball.raaktLinks()) {
-				ball.bounceWall(1);
+				ArrayList<BallState> newBalls = new ArrayList<BallState>();
+				for (BallState okBal: balls) {
+					if (okBal != ball){
+						newBalls.add(okBal);
+					}else {
+						newBalls.add(okBal.bounceWall(1));
+					}
+				}
+				balls = newBalls.toArray(new BallState[] {});
 			}
 			if (ball.raaktRechts()) {
-				ball.bounceWall(3);
+				ArrayList<BallState> newBalls = new ArrayList<BallState>();
+				for (BallState okBal: balls) {
+					if (okBal != ball){
+						newBalls.add(okBal);
+					}else {
+						newBalls.add(okBal.bounceWall(3));
+					}
+				}
+				balls = newBalls.toArray(new BallState[] {});
 			}
 			if (ball.raaktBoven()) {
-				ball.bounceWall(2);
+				ArrayList<BallState> newBalls = new ArrayList<BallState>();
+				for (BallState okBal: balls) {
+					if (okBal != ball){
+						newBalls.add(okBal);
+					}else {
+						newBalls.add(okBal.bounceWall(2));
+					}
+				}
+				balls = newBalls.toArray(new BallState[] {});
 			}
 			if (ball.raaktOnder()) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
@@ -66,7 +92,16 @@ public class BreakoutState {
 			
 			for (BlockState block: blocks) {
 				if (ball.raaktBlockOnder(block)) {
-					ball.bounceBlock(block, 1);
+					
+					ArrayList<BallState> newBalls = new ArrayList<BallState>();
+					for (BallState okBal: balls) {
+						if (okBal != ball){
+							newBalls.add(okBal);
+						}else {
+							newBalls.add(okBal.bounceBlock(block, 1));
+						}
+					}
+					balls = newBalls.toArray(new BallState[] {});
 					
 					ArrayList<BlockState> newBlocks = new ArrayList<BlockState>();
 					for (BlockState okBlock: blocks) {
@@ -77,7 +112,15 @@ public class BreakoutState {
 					blocks = newBlocks.toArray(new BlockState[] {});
 				}
 				if (ball.raaktBlockLeft(block)) {
-					ball.bounceBlock(block, 2);
+					ArrayList<BallState> newBalls = new ArrayList<BallState>();
+					for (BallState okBal: balls) {
+						if (okBal != ball){
+							newBalls.add(okBal);
+						}else {
+							newBalls.add(okBal.bounceBlock(block, 2));
+						}
+					}
+					balls = newBalls.toArray(new BallState[] {});
 					
 					ArrayList<BlockState> newBlocks = new ArrayList<BlockState>();
 					for (BlockState okBlock: blocks) {
@@ -88,7 +131,15 @@ public class BreakoutState {
 					blocks = newBlocks.toArray(new BlockState[] {});
 				}
 				if (ball.raaktBlockBoven(block)) {
-					ball.bounceBlock(block, 3);
+					ArrayList<BallState> newBalls = new ArrayList<BallState>();
+					for (BallState okBal: balls) {
+						if (okBal != ball){
+							newBalls.add(okBal);
+						}else {
+							newBalls.add(okBal.bounceBlock(block, 3));
+						}
+					}
+					balls = newBalls.toArray(new BallState[] {});
 					
 					ArrayList<BlockState> newBlocks = new ArrayList<BlockState>();
 					for (BlockState okBlock: blocks) {
@@ -99,7 +150,15 @@ public class BreakoutState {
 					blocks = newBlocks.toArray(new BlockState[] {});
 				}
 				if (ball.raaktBlockRight(block)) {
-					ball.bounceBlock(block, 4);
+					ArrayList<BallState> newBalls = new ArrayList<BallState>();
+					for (BallState okBal: balls) {
+						if (okBal != ball){
+							newBalls.add(okBal);
+						}else {
+							newBalls.add(okBal.bounceBlock(block, 4));
+						}
+					}
+					balls = newBalls.toArray(new BallState[] {});
 					
 					ArrayList<BlockState> newBlocks = new ArrayList<BlockState>();
 					for (BlockState okBlock: blocks) {
@@ -112,13 +171,37 @@ public class BreakoutState {
 			}
 			
 			if (ball.raaktPaddleLinks(paddle)) {
-				ball.bouncePaddle(paddle, paddleDir, 1);
+				ArrayList<BallState> newBalls = new ArrayList<BallState>();
+				for (BallState okBal: balls) {
+					if (okBal != ball){
+						newBalls.add(okBal);
+					}else {
+						newBalls.add(ball.bouncePaddle(paddle, paddleDir, 1));
+					}
+				}
+				balls = newBalls.toArray(new BallState[] {});
 			}
 			if (ball.raaktPaddleBoven(paddle)) {
-				ball.bouncePaddle(paddle, paddleDir, 2);
+				ArrayList<BallState> newBalls = new ArrayList<BallState>();
+				for (BallState okBal: balls) {
+					if (okBal != ball){
+						newBalls.add(okBal);
+					}else {
+						newBalls.add(ball.bouncePaddle(paddle, paddleDir, 2));
+					}
+				}
+				balls = newBalls.toArray(new BallState[] {});
 			}
 			if (ball.raaktPaddleRechts(paddle)) {
-				ball.bouncePaddle(paddle, paddleDir, 3);
+				ArrayList<BallState> newBalls = new ArrayList<BallState>();
+				for (BallState okBal: balls) {
+					if (okBal != ball){
+						newBalls.add(okBal);
+					}else {
+						newBalls.add(ball.bouncePaddle(paddle, paddleDir, 3));
+					}
+				}
+				balls = newBalls.toArray(new BallState[] {});
 			}
 			
 		}
@@ -129,11 +212,11 @@ public class BreakoutState {
 	
 
 	public void movePaddleRight() {
-		paddle.movePaddleRightBy();
+		paddle = paddle.movePaddleRightBy();
 	}
 
 	public void movePaddleLeft() {
-		paddle.movePaddleLeftBy();
+		paddle = paddle.movePaddleLeftBy();
 	}
 	
 	public boolean isWon() {
