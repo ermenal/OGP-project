@@ -21,18 +21,20 @@ public class PaddleState {
 		return br;
 	}
 	
-	public PaddleState movePaddleRightBy() {
-		Point newCenter = new Point(center.getX() + 10, center.getY());
-		if (newCenter.getX() + size.getX() > 50000){
-			newCenter = new Point(50000 - size.getX(), center.getY());
+	public PaddleState movePaddleRightBy(Point br) {
+		int moveBy = 10;
+		Point newCenter = new Point(center.getX() + moveBy, center.getY());
+		if (newCenter.getX() + size.getX() > br.getX()){
+			newCenter = new Point(br.getX() - size.getX(), newCenter.getY());
 		}
 		return new PaddleState(newCenter, size);
 	}
 	
 	public PaddleState movePaddleLeftBy() {
-		Point newCenter = new Point(center.getX() - 10, center.getY());
+		int moveBy = 10;
+		Point newCenter = new Point(center.getX() - moveBy, center.getY());
 		if (newCenter.getX() - size.getX() < 0){
-			newCenter = new Point(size.getX(), center.getY());
+			newCenter = new Point(size.getX(), newCenter.getY());
 		}
 		return new PaddleState(newCenter, size);
 	}
