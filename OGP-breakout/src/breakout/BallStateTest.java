@@ -31,7 +31,7 @@ class BallStateTest {
 		bal1 = new BallState(center1, diameter1, velocity1);
 		
 		velocity2 = new Vector(7,-3);
-		center2 = new Point(1000,20);
+		center2 = new Point(1000,0);
 		diameter2 = 33;
 		bal2 = new BallState(center2, diameter2, velocity2);
 		
@@ -44,10 +44,27 @@ class BallStateTest {
 	}
 
 	@Test
-	void testBallSate() {
+	void testGetCenter() {
 		assertEquals(new Point(0,0), bal1.getCenter());
-		assertNotEquals(new Point(0,1), bal1.getCenter());
-		
+		assertEquals(new Point(1000,0), bal2.getCenter());
+		assertEquals(new Point(25000,15000), bal3.getCenter());
+		assertNotEquals(new Vector(0,0), bal1.getCenter());
+		assertNotEquals(null, bal2.getCenter());
 	}
-
+	
+	@Test
+	void testGetVelocity() {
+		assertEquals(new Vector(0,0), bal1.getVelocity());
+		assertEquals(new Vector(7,-3), bal2.getVelocity());
+		assertEquals(new Vector(1,3),bal3.getVelocity());
+		assertNotEquals(null, bal3.getVelocity());
+	}
+	
+	@Test
+	void testGetTopLeft() {
+		assertEquals(new Point( -1/2, -1/2), bal1.getTopLeftOfSurroundingRectangle());
+		assertEquals(new Point(1000 - 33/2, -33/2),bal2.getTopLeftOfSurroundingRectangle());
+		assertEquals(new Point(24500, 14500), bal3.getTopLeftOfSurroundingRectangle());
+		assertNotEquals(null, bal1.getTopLeftOfSurroundingRectangle());
+	}
 }
