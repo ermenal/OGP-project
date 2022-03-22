@@ -21,6 +21,10 @@ public class BallState {
 		this.velocity = velocity;
 	}
 	
+	public int getDiameter() {
+		return diameter;
+	}
+	
 	public Point getCenter() {
 		return center;
 	}
