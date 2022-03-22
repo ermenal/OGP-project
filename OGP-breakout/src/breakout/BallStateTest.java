@@ -67,4 +67,42 @@ class BallStateTest {
 		assertEquals(new Point(24500, 14500), bal3.getTopLeftOfSurroundingRectangle());
 		assertNotEquals(null, bal1.getTopLeftOfSurroundingRectangle());
 	}
+	
+	@Test
+	void testBottomRight() {
+		assertEquals(new Point(1/2, 1/2), bal1.getBottomRightOfSurroundingRectangle());
+		assertEquals(new Point(1000 + 33/2, 33/2), bal2.getBottomRightOfSurroundingRectangle());
+		assertEquals(new Point(25500, 15500), bal3.getBottomRightOfSurroundingRectangle());
+		assertNotEquals(null, bal1.getBottomRightOfSurroundingRectangle());
+	}
+	
+	@Test
+	void testmoveBall() {
+		assertEquals(new BallState(new Point(0,0), 1, new Vector(0,0)), bal1.moveBall());
+		
+	}
+	
+	@Test
+	void testRaakt() {
+		assertEquals(false, bal1.raaktOnder());
+		assertEquals(false, bal1.raaktRechts());
+		assertEquals(true, bal1.raaktLinks());
+		assertEquals(true, bal1.raaktBoven());
+		
+		assertEquals(false, bal2.raaktOnder());
+		assertEquals(false, bal2.raaktRechts());
+		assertEquals(false, bal2.raaktLinks());
+		assertEquals(true, bal2.raaktBoven());
+		
+		assertEquals(false, bal3.raaktOnder());
+		assertEquals(false, bal3.raaktRechts());
+		assertEquals(false, bal3.raaktLinks());
+		assertEquals(false, bal3.raaktBoven());
+		
+		assertNotEquals(null, bal1.raaktBoven());
+	}
+	
+	@Test
+	void testRaaktPaddle() {
+	}
 }
