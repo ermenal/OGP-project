@@ -78,7 +78,10 @@ class BallStateTest {
 	
 	@Test
 	void testmoveBall() {
-		assertEquals(new BallState(new Point(0,0), 1, new Vector(0,0)), bal1.moveBall());
+		BallState newBall = new BallState(new Point(0,0), 1, new Vector(0,0));
+		BallState bewogenBall = bal1.moveBall();
+		assertEquals(newBall.getCenter(), bewogenBall.getCenter());
+		assertEquals(newBall.getVelocity(), bewogenBall.getVelocity());
 		
 	}
 	

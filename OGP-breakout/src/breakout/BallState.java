@@ -97,6 +97,7 @@ public class BallState {
 	}
 	
 	public BallState bounceWall(int wallNumber) {
+		
 		if (wallNumber == 1) {
 			// leftWall
 			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0));
