@@ -64,10 +64,13 @@ public class BreakoutState {
 	 * 
 	 * @post This object's BallState array's elements are equal to and in the same order as the given array of balls' elements
 	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].equals(balls[i]))
+	 * 
 	 * @post This object's BlockState array's elements are equal to and in the same order as the given array of blocks' elements
 	 * 	   | IntStream.range(0, getBlocks().length).allMatch(i -> getBlocks()[i].equals(blocks[i]))
+	 * 
 	 * @post This object's bottom right Point has the same coordinates as the given bottomRight point
 	 * 	   | bottomRight.equals(getBottomRight())
+	 * 
 	 * @post This object's paddle has the same center and size as the given paddle
 	 *     | paddle.getCenter().equals(getPaddle().getCenter()) && getPaddle().getSize().equals(getPaddle().getSize())
 	 */
