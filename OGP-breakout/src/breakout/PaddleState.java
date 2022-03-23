@@ -1,5 +1,11 @@
 package breakout;
 
+/**
+ * 
+ * @immutable
+ *
+ */
+
 public class PaddleState {
 	// TODO: implement
 	

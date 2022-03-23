@@ -3,6 +3,13 @@ package breakout;
 import java.util.ArrayList;
 
 // TODO: implement, document
+
+/**
+ * 
+ * @immutable
+ *
+ */
+
 public class BreakoutState {
 	private BallState[] balls;
 	private BlockState[] blocks;
@@ -16,6 +23,11 @@ public class BreakoutState {
 		this.paddle = paddle;
 	}
 	
+	
+	/**
+	 * 
+	 * 
+	 */
 	public BallState[] getBalls() {
 		return balls.clone();
 	}
@@ -24,10 +36,18 @@ public class BreakoutState {
 		return blocks.clone();
 	}
 
+	
+	/**
+	 * returns the paddle 
+	 */
 	public PaddleState getPaddle() {
 		return paddle;
 	}
 
+	/**
+	 * returns the coordinates of the bottom right of the field
+	 */
+	
 	public Point getBottomRight() {
 		return bottomRight;
 	}
@@ -36,6 +56,11 @@ public class BreakoutState {
 		moveAllBalls();
 		raakMethode(paddleDir);
 	}
+	
+	/**
+	 * @pre the 
+	 *    | getBalls().length != 0
+	 */
 	
 	public void moveAllBalls() {
 		ArrayList<BallState> newBalls = new ArrayList<BallState>();
