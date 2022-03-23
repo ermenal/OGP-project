@@ -6,25 +6,51 @@ import java.util.stream.IntStream;
 
 /**
  * This class stores the current state of the breakout game
+ * 
+ * @invar This object's balls array is not {@code null} 
+ *     | getBalls() != null
+ * @invar This object's balls array has no elements that are {@code null}
+ *     | Arrays.stream(getBalls()).allMatch(e -> e != null)
+ * @invar This object's balls array's elements are entirely inside the field 
+ *     | Arrays.stream(getBalls()).allMatch(e -> e.getCenter().getX() - e.getDiameter()/2 >= 0 && 
+ *     |     e.getCenter().getX() + e.getDiameter()/2 <= getBottomRight().getX() && e.getCenter().getY() - e.getDiameter()/2 >= 0 && 
+ *     |     e.getCenter().getY() + e.getDiameter()/2 <= getBottomRight().getY())
+ *     
+ * @invar This object's blocks array is not {@code null} 
+ *     | getBlocks() != null
+ * @invar This object's blocks array has no elements that are {@code null}
+ *     | Arrays.stream(getBlocks()).allMatch(e -> e != null)
+ * @invar This object's blocks array's elements are entirely inside the field 
+ *     | Arrays.stream(getBlocks()).allMatch(e -> e.getTopLeft().getX() >= 0 && e.getBottomRight().getX() <= getBottomRight().getX() &&
+ *     |  e.getTopLeft().getY() >= 0 && e.getBottomRight().getY() <= getBottomRight().getY())
+ *     
+ * @invar This object's bottomRight point is not {@code null}
+ *     | getBottomRight() != null
+ *     
+ * @invar This object's paddle is entirely inside the field
+ *     | getPaddle().getTopLeft().getX() >= 0 && getPaddle().getBottomRight().getX() <= getBottomRight().getX() && 
+ *     |     getPaddle().getTopLeft().getY() >= 0 && getPaddle().getBottomRight().getY() <= getBottomRight().getY()
  */
 
 public class BreakoutState {
 	
 	/**
 	 * @invar | balls != null
-	 * @invar | Arrays.stream(balls).anyMatch(e -> e == null) == false
-	 * @invar | Arrays.stream(balls).anyMatch(e -> e.getCenter().getX() - e.getDiameter()/2 < 0 || e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX()) == false
-	 * @invar | Arrays.stream(balls).anyMatch(e -> e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() || e.getCenter().getY() - e.getDiameter()/2 < 0) == false
+	 * @invar | Arrays.stream(balls).noneMatch(e -> e == null)
+	 * @invar | Arrays.stream(balls).noneMatch(e -> e.getCenter().getX() - e.getDiameter()/2 < 0 || e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX())
+	 * @invar | Arrays.stream(balls).noneMatch(e -> e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() || e.getCenter().getY() - e.getDiameter()/2 < 0)
 	 * 
 	 * @invar | blocks != null
-	 * @invar | Arrays.stream(blocks).anyMatch(e -> e == null) == false
-	 * @invar | Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getX() < 0 || e.getBottomRight().getX() > bottomRight.getX()) == false
-	 * @invar | Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getY() < 0 || e.getBottomRight().getY() > bottomRight.getY()) == false
+	 * @invar | Arrays.stream(blocks).noneMatch(e -> e == null)
+	 * @invar | Arrays.stream(blocks).noneMatch(e -> e.getTopLeft().getX() < 0 || e.getBottomRight().getX() > bottomRight.getX())
+	 * @invar | Arrays.stream(blocks).noneMatch(e -> e.getTopLeft().getY() < 0 || e.getBottomRight().getY() > bottomRight.getY())
 	 * 
 	 * @invar | bottomRight != null
 	 * 
 	 * @invar | paddle != null
 	 * @invar | paddle.getBottomRight().getX() <= bottomRight.getX() && paddle.getBottomRight().getY() <= bottomRight.getY() && paddle.getTopLeft().getX() >= 0 && paddle.getTopLeft().getY() >= 0 
+	 * 
+	 * @representationObject
 	 */
 	
 	private BallState[] balls;
@@ -106,7 +132,7 @@ public class BreakoutState {
 	 * @post the result is not {@code null} 
 	 *    | result != null
 	 * @post the result's elements are not {@code null}
-	 *    | Arrays.stream(result).allMatch(e -> e != null)
+	 *    | Arrays.stream(result).noneMatch(e -> e == null)
 	 */
 	public BallState[] getBalls() {
 		return balls.clone();
@@ -118,6 +144,8 @@ public class BreakoutState {
 	 * @creates | result
 	 * @post the result is not {@code null} 
 	 *    | result != null
+	 * @post the result's elements are not {@code null}
+	 *    | Arrays.stream(result).noneMatch(e -> e == null)
 	 */
 	public BlockState[] getBlocks() {
 		return blocks.clone();
@@ -127,46 +155,71 @@ public class BreakoutState {
 	/**
 	 * returns the paddle 
 	 * 
+	 * @creates | result
 	 * @post | result != null
 	 */
 	public PaddleState getPaddle() {
-		return paddle;
+		return new PaddleState(paddle.getCenter(), paddle.getSize());
 	}
 
 	/**
 	 * returns the coordinates of the bottom right of the field
 	 * 
+	 * @creates | result
 	 * @post | result != null
 	 */
 	
 	public Point getBottomRight() {
-		return bottomRight;
+		return new Point(bottomRight.getX(), bottomRight.getY());
 	}
 
 	public void tick(int paddleDir) {
-		moveAllBalls(bottomRight);
-		raakMethode(paddleDir);
+		moveAllBalls();
+		
+		raaktWallLinks();
+		raaktWallBoven();
+		raaktWallRechts();
+		raaktOnder();
+		
+		raaktBlockOnder();
+		raaktBlockLinks();
+		raaktBlockBoven();
+		raaktBlockRechts();
+		
+		raaktPaddleLinks(paddleDir);
+		raaktPaddleBoven(paddleDir);
+		raaktPaddleRechts(paddleDir);
 	}
 	
 	/**
 	 * moves all the balls currently in the game according to their current velocity
+	 *    
+	 * @mutates | this
 	 * 
-	 * @pre the array of balls is not empty
-	 *    | getBalls().length != 0
-	 * 
-	 * @mutates 
+	 * @post This object's balls array's number of elements equals its old number of elements
+	 *     | getBalls().length == old(getBalls()).length
+	 * @post All balls in this object's balls array have been moved according to their current velocity, and none have gone outside of the field
+	 *     | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter().plus(old(getBalls())[i].getVelocity())) || 
+	 *     | getBalls()[i].getCenter().getX() + getBalls()[i].getDiameter()/2 == getBottomRight().getX() || 
+	 *     | getBalls()[i].getCenter().getX() - getBalls()[i].getDiameter()/2 == 0 || 
+	 *     | getBalls()[i].getCenter().getY() + getBalls()[i].getDiameter()/2 == getBottomRight().getY() ||
+	 *     | getBalls()[i].getCenter().getY() - getBalls()[i].getDiameter()/2 == 0)
 	 * 
 	 */
 	
-	public void moveAllBalls(Point br) {
+	public void moveAllBalls() {
 		ArrayList<BallState> newBalls = new ArrayList<BallState>();
 		for (BallState ball: balls) {
-			newBalls.add(ball.moveBall(br));
+			newBalls.add(ball.moveBall(getBottomRight()));
 		}
 		balls = newBalls.toArray(new BallState[] {});
 	}
 	
-	public void raakMethode(int paddleDir) {
+	/**
+	 * @pre 
+	 * 
+	 */
+	public void raaktWallLinks() {
 		for (BallState ball: balls) {
 			if (ball.raaktLinks()) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
@@ -178,19 +231,12 @@ public class BreakoutState {
 					}
 				}
 				balls = newBalls.toArray(new BallState[] {});
-				
 			}
-			if (ball.raaktRechts(bottomRight)) {
-				ArrayList<BallState> newBalls = new ArrayList<BallState>();
-				for (BallState okBal: balls) {
-					if (okBal != ball){
-						newBalls.add(okBal);
-					}else {
-						newBalls.add(okBal.bounceWall(3));
-					}
-				}
-				balls = newBalls.toArray(new BallState[] {});
-			}
+		}
+	}
+	
+	public void raaktWallBoven() {
+		for (BallState ball: balls) {
 			if (ball.raaktBoven()) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
@@ -202,31 +248,51 @@ public class BreakoutState {
 				}
 				balls = newBalls.toArray(new BallState[] {});
 			}
-			if (ball.raaktOnder(bottomRight)) {
+		}
+	}
+	
+	public void raaktWallRechts() {
+		for (BallState ball: balls) {
+			if (ball.raaktRechts(bottomRight)) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
 					if (okBal != ball){
 						newBalls.add(okBal);
+					}else {
+						newBalls.add(okBal.bounceWall(3));
 					}
 				}
 				balls = newBalls.toArray(new BallState[] {});
 			}
-			
+		}
+	}
+	
+	public void raaktOnder() {
+		balls = Arrays.stream(balls).filter(e -> !(e.raaktOnder(getBottomRight()))).toArray(BallState[]::new);
+	}
+	
+	public void raaktBlockOnder() {
+		for (BallState ball: balls) {
 			for (BlockState block: blocks) {
 				if (ball.raaktBlockOnder(block)) {
-						
-						ArrayList<BallState> newBalls = new ArrayList<BallState>();
-						for (BallState okBal: balls) {
-							if (okBal != ball){
-								newBalls.add(okBal);
-							}else {
-								newBalls.add(okBal.bounceBlock(block, 1));
-							}
+					ArrayList<BallState> newBalls = new ArrayList<BallState>();
+					for (BallState okBal: balls) {
+						if (okBal != ball){
+							newBalls.add(okBal);
+						}else {
+							newBalls.add(okBal.bounceBlock(block, 1));
 						}
-						balls = newBalls.toArray(new BallState[] {});
-					
+					}
+					balls = newBalls.toArray(new BallState[] {});
 					blocks = Arrays.stream(blocks).filter(b -> b != block).toArray(BlockState[]::new);
 				}
+			}
+		}
+	}
+	
+	public void raaktBlockLinks() {
+		for (BallState ball: balls) {
+			for (BlockState block: blocks) {
 				if (ball.raaktBlockLeft(block)) {
 					ArrayList<BallState> newBalls = new ArrayList<BallState>();
 					for (BallState okBal: balls) {
@@ -236,10 +302,16 @@ public class BreakoutState {
 							newBalls.add(okBal.bounceBlock(block, 2));
 						}
 					}
-					balls = newBalls.toArray(new BallState[] {});
-					
+					balls = newBalls.toArray(new BallState[] {});		
 					blocks = Arrays.stream(blocks).filter(b -> b != block).toArray(BlockState[]::new);
 				}
+			}
+		}
+	}
+	
+	public void raaktBlockBoven() {
+		for (BallState ball: balls) {
+			for (BlockState block: blocks) {
 				if (ball.raaktBlockBoven(block)) {
 					ArrayList<BallState> newBalls = new ArrayList<BallState>();
 					for (BallState okBal: balls) {
@@ -253,6 +325,13 @@ public class BreakoutState {
 					
 					blocks = Arrays.stream(blocks).filter(b -> b != block).toArray(BlockState[]::new);
 				}
+			}
+		}
+	}
+	
+	public void raaktBlockRechts() {
+		for (BallState ball: balls) {
+			for (BlockState block: blocks) {
 				if (ball.raaktBlockRight(block)) {
 					ArrayList<BallState> newBalls = new ArrayList<BallState>();
 					for (BallState okBal: balls) {
@@ -267,7 +346,11 @@ public class BreakoutState {
 					blocks = Arrays.stream(blocks).filter(b -> b != block).toArray(BlockState[]::new);
 				}
 			}
-			
+		}
+	}
+	
+	public void raaktPaddleLinks(int paddleDir) {
+		for (BallState ball: balls) {
 			if (ball.raaktPaddleLinks(paddle)) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
@@ -279,6 +362,11 @@ public class BreakoutState {
 				}
 				balls = newBalls.toArray(new BallState[] {});
 			}
+		}
+	}
+	
+	public void raaktPaddleBoven(int paddleDir) {
+		for (BallState ball: balls) {
 			if (ball.raaktPaddleBoven(paddle)) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
@@ -290,6 +378,11 @@ public class BreakoutState {
 				}
 				balls = newBalls.toArray(new BallState[] {});
 			}
+		}
+	}
+	
+	public void raaktPaddleRechts(int paddleDir) {
+		for (BallState ball: balls) {
 			if (ball.raaktPaddleRechts(paddle)) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
