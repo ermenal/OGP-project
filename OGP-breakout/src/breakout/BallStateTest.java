@@ -33,6 +33,21 @@ class BallStateTest {
 	
 	Vector PaddleSize;
 	
+	BlockState blok1;
+	BlockState blok2;
+	BlockState blok3;
+	BlockState blok4;
+	
+	Point topleftBlock1;
+	Point topleftBlock2;
+	Point topleftBlock3;
+	Point topleftBlock4;
+	
+	Point bottomrightBlock1;
+	Point bottomrightBlock2;
+	Point bottomrightBlock3;
+	Point bottomrightBlock4;
+
 	@BeforeEach
 	void setUp() {
 		velocity1 = new Vector(0,0);
@@ -61,6 +76,7 @@ class BallStateTest {
 		centerPaddle3 = new Point(25500,15000);
 		paddle3 = new PaddleState(centerPaddle3, PaddleSize);
 		
+		//blokken toevoegen, maar moet eerst bounce fixen anders moet ik alle getters weer aanpassen
 	}
 	
 	@Test
@@ -209,6 +225,16 @@ class BallStateTest {
 		assertEquals(newball33.getCenter(), bal3.bounceWall(3).getCenter());
 		assertEquals(newball33.getVelocity(), bal3.bounceWall(3).getVelocity());
 		assertEquals(newball33.getDiameter(), bal3.bounceWall(3).getDiameter());
+	}
+	
+	@Test
+	void testbouncePaddle() {
+		
+	}
+	
+	@Test
+	void testraaktblockOnder() {
+		
 	}
 	
 	@Test
