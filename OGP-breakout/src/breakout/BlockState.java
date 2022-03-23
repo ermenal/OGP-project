@@ -26,13 +26,13 @@ public class BlockState {
 	}
 	
 	
-	/** Return this point's topLeft coordinate. */
+	/** Return this block's topLeft coordinate. */
 	public Point getTopLeft() {
-		return this.topLeft;
+		return topLeft;
 	}
 	
-	/** Return this point's bottomRight coordinate. */
+	/** Return this block's bottomRight coordinate. */
 	public Point getBottomRight() {
-		return this.bottomRight;
+		return bottomRight;
 	}
 }
