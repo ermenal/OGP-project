@@ -122,8 +122,8 @@ public class GameView extends JPanel {
 		g.setColor(Color.green);
 		PaddleState paddle = breakoutState.getPaddle();
 		// DONE: figure out top-left and bottom right Point of paddle
-		Point tl = paddle.getPaddleTopLeft();
-		Point br = paddle.getPaddleBottomRight();
+		Point tl = paddle.getTopLeft();
+		Point br = paddle.getBottomRight();
 		paintPaddle(g, tl, br);
 	}
 

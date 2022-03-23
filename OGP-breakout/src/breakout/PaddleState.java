@@ -7,7 +7,6 @@ package breakout;
  */
 
 public class PaddleState {
-	// TODO: implement
 	
 	private final Point center;
 	private final Vector size;
@@ -17,14 +16,22 @@ public class PaddleState {
 		this.size = size;
 	}
 	
-	public Point getPaddleTopLeft() {
+	public Point getTopLeft() {
 		Point tl = center.minus(size);
 		return tl;
 	}
 	
-	public Point getPaddleBottomRight() {
+	public Point getBottomRight() {
 		Point br = center.plus(size);
 		return br;
+	}
+	
+	public Point getCenter() {
+		return new Point(center.getX(), center.getY());
+	}
+	
+	public Vector getSize() {
+		return new Vector(size.getX(), size.getY());
 	}
 	
 	public PaddleState movePaddleRightBy(Point br) {
