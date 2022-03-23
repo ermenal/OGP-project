@@ -113,15 +113,16 @@ class BallStateTest {
 		assertEquals(newball1.getDiameter(), bal1.moveBall(br1).getDiameter());
 		
 		Point br2 = new Point(100000, 100000);
-		BallState newball2 = new BallState(new Point(1007,-3),33, new Vector(7,-3));
+		BallState newball2 = new BallState(new Point(1007,16),33, new Vector(7,-3));
 		assertEquals(newball2.getCenter(), bal2.moveBall(br2).getCenter());
 		assertEquals(newball2.getVelocity(), bal2.moveBall(br2).getVelocity());
 		assertEquals(newball2.getDiameter(), bal2.moveBall(br2).getDiameter());
 		
+		Point br3 = new Point(33333, 22222);
 		BallState newball3 = new BallState(new Point(25001, 15003), 1000, new Vector(1,3));
-		assertEquals(newball3.getCenter(), bal3.moveBall(br2).getCenter());
-		assertEquals(newball3.getVelocity(), bal3.moveBall(br2).getVelocity());
-		assertEquals(newball3.getDiameter(), bal3.moveBall(br2).getDiameter());
+		assertEquals(newball3.getCenter(), bal3.moveBall(br3).getCenter());
+		assertEquals(newball3.getVelocity(), bal3.moveBall(br3).getVelocity());
+		assertEquals(newball3.getDiameter(), bal3.moveBall(br3).getDiameter());
 
 	}
 	
