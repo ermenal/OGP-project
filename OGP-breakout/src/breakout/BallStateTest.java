@@ -105,25 +105,24 @@ class BallStateTest {
 	
 	@Test
 	void testmoveBall() {
-		/**
-		Point br1 = new Point(1/2, 1/2);
+
+		Point br1 = new Point(50000, 30000);
 		BallState newball1 = new BallState(new Point(0,0), 1, new Vector(0,0));
 		assertEquals(newball1.getCenter(), bal1.moveBall(br1).getCenter());
 		assertEquals(newball1.getVelocity(), bal1.moveBall(br1).getVelocity());
 		assertEquals(newball1.getDiameter(), bal1.moveBall(br1).getDiameter());
 		
-		Point br2 = new Point(1000 +33/2 +7, 33/2 +3);
+		Point br2 = new Point(100000, 100000);
 		BallState newball2 = new BallState(new Point(1007,-3),33, new Vector(7,-3));
 		assertEquals(newball2.getCenter(), bal2.moveBall(br2).getCenter());
 		assertEquals(newball2.getVelocity(), bal2.moveBall(br2).getVelocity());
 		assertEquals(newball2.getDiameter(), bal2.moveBall(br2).getDiameter());
 		
-		Point br3 = new Point(25500, 15500);
 		BallState newball3 = new BallState(new Point(25001, 15003), 1000, new Vector(1,3));
-		assertEquals(newball3.getCenter(), bal3.moveBall(br3).getCenter());
-		assertEquals(newball3.getVelocity(), bal3.moveBall(br3).getVelocity());
-		assertEquals(newball3.getDiameter(), bal3.moveBall(br3).getDiameter());
-		*/
+		assertEquals(newball3.getCenter(), bal3.moveBall(br2).getCenter());
+		assertEquals(newball3.getVelocity(), bal3.moveBall(br2).getVelocity());
+		assertEquals(newball3.getDiameter(), bal3.moveBall(br2).getDiameter());
+
 	}
 	
 	@Test
