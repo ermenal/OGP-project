@@ -83,10 +83,7 @@ public class BreakoutState {
 	 * @throws IllegalArgumentException if the given paddle is outside of the field
 	 *     | paddle.getBottomRight().getX() > bottomRight.getX() || paddle.getBottomRight().getY() > bottomRight.getY() || paddle.getTopLeft().getX() < 0 || paddle.getTopLeft().getY() < 0 
 	 * 
-	 * @inspects | balls
-	 * @inspects | blocks
-	 * @inspects | bottomRight
-	 * @inspects | paddle
+	 * @inspects | balls, blocks
 	 * 
 	 * @post This object's BallState array's elements are equal to and in the same order as the given array of balls' elements
 	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].equals(balls[i]))
@@ -126,8 +123,7 @@ public class BreakoutState {
 	
 	
 	/**
-	 * returns a new array containing all the balls 
-	 * 
+	 * returns a new array containing all the balls
 	 * @creates | result
 	 * @post the result is not {@code null} 
 	 *    | result != null
@@ -194,7 +190,7 @@ public class BreakoutState {
 	/**
 	 * moves all the balls currently in the game according to their current velocity
 	 *    
-	 * @mutates | this
+	 * @mutates | this, getBalls()
 	 * 
 	 * @post This object's balls array's number of elements equals its old number of elements
 	 *     | getBalls().length == old(getBalls()).length
@@ -216,7 +212,17 @@ public class BreakoutState {
 	}
 	
 	/**
-	 * @pre 
+	 * Checks for a collision between a ball and the left wall, and if there is a collision, bounces the ball off the wall
+	 * 
+	 * @mutates | this, getBalls()
+	 * 
+	 * @post This object's balls array's number of elements equals its old number of elements
+	 *     | getBalls().length == old(getBalls()).length
+	 *     
+	 * @post If a ball did not touch the left wall, it remained the exact same object at the exact same index they were before in the balls list. 
+	 * 		 If a ball did touch the left wall, its velocity got mirrored according to the wall, while its center's coordinates remained unchanged
+	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> (getBalls()[i].equals(old(getBalls())[i])) || 
+	 *     |     (getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter())) && getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()))
 	 * 
 	 */
 	public void raaktWallLinks() {
