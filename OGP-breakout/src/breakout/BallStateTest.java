@@ -37,17 +37,14 @@ class BallStateTest {
 	BlockState blok1;
 	BlockState blok2;
 	BlockState blok3;
-	BlockState blok4;
 	
 	Point topleftBlock1;
 	Point topleftBlock2;
 	Point topleftBlock3;
-	Point topleftBlock4;
 	
 	Point bottomrightBlock1;
 	Point bottomrightBlock2;
 	Point bottomrightBlock3;
-	Point bottomrightBlock4;
 
 	@BeforeEach
 	void setUp() {
@@ -77,7 +74,18 @@ class BallStateTest {
 		centerPaddle3 = new Point(25500,15000);
 		paddle3 = new PaddleState(centerPaddle3, PaddleSize2);
 		
-		//blokken toevoegen, maar moet eerst bounce fixen anders moet ik alle getters weer aanpassen
+		topleftBlock1 = new Point(-1,0);
+		bottomrightBlock1 = new Point(1,1);
+		blok1 = new BlockState(topleftBlock1, bottomrightBlock1);
+		
+		topleftBlock2 = new Point(900,-10);
+		bottomrightBlock2 = new Point(1100,0);
+		blok2 = new BlockState(topleftBlock2, bottomrightBlock2);
+		
+		topleftBlock3 = new Point(25500,14500);
+		bottomrightBlock3 = new Point(27000,17000);
+		blok3 = new BlockState(topleftBlock3, bottomrightBlock3);
+		
 	}
 	
 	@Test
@@ -228,7 +236,20 @@ class BallStateTest {
 	
 	@Test
 	void testraaktblock() {
+		assertEquals(true, bal1.raaktBlockBoven(blok1));
+		assertEquals(false, bal1.raaktBlockOnder(blok1));
+		assertEquals(false, bal1.raaktBlockLinks(blok1));
+		assertEquals(false, bal1.raaktBlockRechts(blok1));
 		
+		assertEquals(false, bal2.raaktBlockBoven(blok2));
+		assertEquals(true, bal2.raaktBlockOnder(blok2));
+		assertEquals(false, bal2.raaktBlockLinks(blok2));
+		assertEquals(false, bal2.raaktBlockRechts(blok2));
+		
+		assertEquals(false, bal3.raaktBlockBoven(blok3));
+		assertEquals(false, bal3.raaktBlockOnder(blok3));
+		assertEquals(true, bal3.raaktBlockLinks(blok3));
+		assertEquals(false, bal3.raaktBlockRechts(blok3));
 	}
 	
 	@Test
