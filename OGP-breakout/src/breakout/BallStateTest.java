@@ -31,7 +31,8 @@ class BallStateTest {
 	Point centerPaddle2;
 	Point centerPaddle3;
 	
-	Vector PaddleSize;
+	Vector PaddleSize1;
+	Vector PaddleSize2;
 	
 	BlockState blok1;
 	BlockState blok2;
@@ -65,16 +66,16 @@ class BallStateTest {
 		diameter3 = 1000;
 		bal3 = new BallState(center3, diameter3, velocity3);
 		
-		PaddleSize = new Vector(1,1);
+		PaddleSize1 = new Vector(10,10);
+		centerPaddle1 = new Point(0,10);
+		paddle1 = new PaddleState(centerPaddle1, PaddleSize1);
 		
-		centerPaddle1 = new Point(0,1);
-		paddle1 = new PaddleState(centerPaddle1, PaddleSize);
-		
-		centerPaddle2 = new Point(1000,0);
-		paddle2 = new PaddleState(centerPaddle2, PaddleSize);
+		PaddleSize2 = new Vector(100,100);
+		centerPaddle2 = new Point(900,100);
+		paddle2 = new PaddleState(centerPaddle2, PaddleSize2);
 		
 		centerPaddle3 = new Point(25500,15000);
-		paddle3 = new PaddleState(centerPaddle3, PaddleSize);
+		paddle3 = new PaddleState(centerPaddle3, PaddleSize2);
 		
 		//blokken toevoegen, maar moet eerst bounce fixen anders moet ik alle getters weer aanpassen
 	}
@@ -170,10 +171,12 @@ class BallStateTest {
 	void testRaaktPaddle() {
 		
 		assertEquals(true, bal1.raaktPaddleBoven(paddle1));
-		//assertEquals(false, bal1.raaktPaddleLinks(paddle1));
-		//assertEquals(false, bal1.raaktPaddleRechts(paddle1));
+		assertEquals(false, bal1.raaktPaddleLinks(paddle1));
+		assertEquals(false, bal1.raaktPaddleRechts(paddle1));
 		
-		//assertEquals(true, bal2.raaktPaddleRechts(paddle2));
+		assertEquals(false, bal2.raaktPaddleBoven(paddle2));
+		assertEquals(false, bal2.raaktPaddleLinks(paddle2));
+		assertEquals(false, bal2.raaktPaddleRechts(paddle2));
 		
 		assertEquals(false, bal3.raaktPaddleBoven(paddle3));
 		assertEquals(true, bal3.raaktPaddleLinks(paddle3));
