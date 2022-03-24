@@ -1,21 +1,47 @@
 package breakout;
 
 /**
+ * This class represents a paddle on a 2D-grid
  * 
  * @immutable
  *
+ * @invar | getCenter() != null
+ * @invar | getSize() != null
  */
 
 public class PaddleState {
+	// TODO: VOLLEDIGE DOCUMENTATIE, nog niks is af
+	
+	/**
+	 * @invar | center != null
+	 * @invar | size != null
+	 */
 	
 	private final Point center;
 	private final Vector size;
+	
+	/**
+	 * @pre The argument {@code center} is not {@code null}
+	 *     | center != null
+	 * @pre The argument {@code size} is not {@code null}
+	 * 	   | size != null
+	 * 
+	 * @post | getCenter() == center
+	 * @post | getSize() == size
+	 */
 	
 	public PaddleState(Point center, Vector size){
 		this.center = center;
 		this.size = size;
 	}
 	
+	
+	/**
+	 * Returns the top left coordinates of the paddle
+	 * 
+	 * @creates | result
+	 * @post The result 
+	 */
 	public Point getTopLeft() {
 		Point tl = center.minus(size);
 		return tl;

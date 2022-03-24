@@ -594,12 +594,15 @@ public class BreakoutState {
 	}
 	
 	/**
-	 * Returns true if there are no more blocks on the field, and at least one ball is still in the game
+	 * Returns whether the game is won or not 
 	 * 
 	 * @inspects | getBlocks(), getBalls()
 	 * 
-	 * 
+	 * @post  The result is {@code true} if there are no more blocks on the field, and at least one ball is still in the game
+	 *     | result == (getBlocks().length == 0 && getBalls().length > 0)
 	 */
+	
+//TODO
 	
 	public boolean isWon() {
 		if (blocks.length == 0 && balls.length > 0) {
@@ -608,6 +611,12 @@ public class BreakoutState {
 		return false;
 	}
 
+	/**
+	 * Returns true if there are no more balls left in the game
+	 * 
+	 * @inspects | getBalls()
+	 */
+	
 	public boolean isDead() {
 		if (balls.length == 0) {
 			return true;

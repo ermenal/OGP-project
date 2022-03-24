@@ -7,8 +7,6 @@ package breakout;
  * @immutable
  */
 public class BlockState {
-	// DONE: implement
-	
 		
 	private final Point topLeft;
 	private final Point bottomRight;

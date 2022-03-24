@@ -1,14 +1,13 @@
 package breakout;
 
 /**
+ * This class represents a ball on a 2D-grid
  * 
  * @immutable
  *
  */
 
 public class BallState {
-	// DONE: implement
-	
 	
 	private final Point center;
 	private final Vector velocity;
