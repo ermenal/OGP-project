@@ -27,15 +27,15 @@ public class PaddleState {
 	}
 	
 	public Point getCenter() {
-		return new Point(center.getX(), center.getY());
+		return center;
 	}
 	
 	public Vector getSize() {
-		return new Vector(size.getX(), size.getY());
+		return size;
 	}
 	
 	public PaddleState movePaddleRightBy(Point br) {
-		int moveBy = 100;
+		int moveBy = 10;
 		Point newCenter = new Point(center.getX() + moveBy, center.getY());
 		if (newCenter.getX() + size.getX() > br.getX()){
 			newCenter = new Point(br.getX() - size.getX(), newCenter.getY());
@@ -44,7 +44,7 @@ public class PaddleState {
 	}
 	
 	public PaddleState movePaddleLeftBy() {
-		int moveBy = 100;
+		int moveBy = 10;
 		Point newCenter = new Point(center.getX() - moveBy, center.getY());
 		if (newCenter.getX() - size.getX() < 0){
 			newCenter = new Point(size.getX(), newCenter.getY());

@@ -57,6 +57,7 @@ public class BreakoutState {
 	private BlockState[] blocks;
 	private final Point bottomRight;
 	private PaddleState paddle;
+	int i = 0;
 	
 	/**
 	 * Initializes this object so that it stores the given balls, blocks, bottomRight point and paddle.
@@ -117,8 +118,8 @@ public class BreakoutState {
 		
 		this.balls = balls.clone();
 		this.blocks = blocks.clone();
-		this.bottomRight = new Point(bottomRight.getX(), bottomRight.getY());
-		this.paddle = new PaddleState(paddle.getCenter(), paddle.getSize());
+		this.bottomRight = bottomRight;
+		this.paddle = paddle;
 	}
 	
 	
@@ -151,25 +152,24 @@ public class BreakoutState {
 	/**
 	 * returns the paddle 
 	 * 
-	 * @creates | result
 	 * @post | result != null
 	 */
 	public PaddleState getPaddle() {
-		return new PaddleState(paddle.getCenter(), paddle.getSize());
+		return paddle;
 	}
 
 	/**
 	 * returns the coordinates of the bottom right of the field
 	 * 
-	 * @creates | result
 	 * @post | result != null
 	 */
 	
 	public Point getBottomRight() {
-		return new Point(bottomRight.getX(), bottomRight.getY());
+		return bottomRight;
 	}
 
 	public void tick(int paddleDir) {
+		
 		moveAllBalls();
 		
 		raaktWallLinks();
@@ -328,11 +328,16 @@ public class BreakoutState {
 	 * 
 	 * @mutates | this, getBalls(), getBlocks()
 	 * 
-	 * @post This object's balls array's number of elements is equal to or less than its old number of elements. 
-	 * 	   | getBalls().length <= old(getBalls()).length
+	 * @post This object's balls array's number of elements is equal to its old number of elements. 
+	 * 	   | getBalls().length == old(getBalls()).length 
 	 * @post This object's blocks array's  number of elements is equal to or less than its old number of elements
-	 * 	   | getBlocks().length <= old(getBlocks()).length
-	 * 
+	 * 	   | getBlocks().length <= old(getBlocks()).length 
+	 * @post All blocks that were hit by a ball on their bottom side get removed from the game
+	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktBlockOnder(e)))
+	 * @post All balls remained unchanged, unless the ball bounced off a block's bottom side. 
+	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() &&
+	 * 	   |     getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
+	 *     |     getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceBlock(1).getVelocity())))
 	 */
 	
 	public void raaktBlockOnder() {
@@ -344,7 +349,7 @@ public class BreakoutState {
 						if (okBal != ball){
 							newBalls.add(okBal);
 						}else {
-							newBalls.add(okBal.bounceBlock(block, 1));
+							newBalls.add(okBal.bounceBlock(1));
 						}
 					}
 					balls = newBalls.toArray(new BallState[] {});
@@ -354,16 +359,33 @@ public class BreakoutState {
 		}
 	}
 	
+	/**
+	 * Checks for a collision between a ball and a block's left side. If there is a collision, the block gets removed from the game and the ball gets bounced off the block's left side.
+	 * 
+	 * @mutates | this, getBalls(), getBlocks()
+	 * 
+	 * @post This object's balls array's number of elements is equal to its old number of elements. 
+	 * 	   | getBalls().length == old(getBalls()).length
+	 * @post This object's blocks array's  number of elements is equal to or less than its old number of elements
+	 * 	   | getBlocks().length <= old(getBlocks()).length
+	 * @post All blocks that were hit by a ball on their left side get removed from the game
+	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktBlockLinks(e)))
+	 * @post All balls remained unchanged, unless the ball bounced off a block's left side. 
+	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() &&
+	 * 	   |     getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
+	 *     |     getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceBlock(2).getVelocity())))
+	 */
+	
 	public void raaktBlockLinks() {
 		for (BallState ball: balls) {
 			for (BlockState block: blocks) {
-				if (ball.raaktBlockLeft(block)) {
+				if (ball.raaktBlockLinks(block)) {
 					ArrayList<BallState> newBalls = new ArrayList<BallState>();
 					for (BallState okBal: balls) {
 						if (okBal != ball){
 							newBalls.add(okBal);
 						}else {
-							newBalls.add(okBal.bounceBlock(block, 2));
+							newBalls.add(okBal.bounceBlock(2));
 						}
 					}
 					balls = newBalls.toArray(new BallState[] {});		
@@ -372,6 +394,23 @@ public class BreakoutState {
 			}
 		}
 	}
+	
+	/**
+	 * Checks for a collision between a ball and a block's top side. If there is a collision, the block gets removed from the game and the ball gets bounced off the block's top side.
+	 * 
+	 * @mutates | this, getBlocks(), getBalls()
+	 * 
+	 * @post This object's balls array's number of elements is equal to its old number of elements. 
+	 * 	   | getBalls().length == old(getBalls()).length
+	 * @post This object's blocks array's  number of elements is equal to or less than its old number of elements
+	 * 	   | getBlocks().length <= old(getBlocks()).length
+	 * @post Any block that was hit by a ball on its top side got removed from the game
+	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktBlockBoven(e)))
+	 * @post All balls remained unchanged, unless the ball bounced off a block's top side. 
+	 *     |IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() &&
+	 * 	   |     getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
+	 *     |     getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceBlock(3).getVelocity())))
+	 */
 	
 	public void raaktBlockBoven() {
 		for (BallState ball: balls) {
@@ -382,7 +421,7 @@ public class BreakoutState {
 						if (okBal != ball){
 							newBalls.add(okBal);
 						}else {
-							newBalls.add(okBal.bounceBlock(block, 3));
+							newBalls.add(okBal.bounceBlock(3));
 						}
 					}
 					balls = newBalls.toArray(new BallState[] {});
@@ -393,16 +432,33 @@ public class BreakoutState {
 		}
 	}
 	
+	/**
+	 * Checks for a collision between a ball and a block's right side. If there is a collision, the block gets removed from the game and the ball gets bounced off the block's right side.
+	 * 
+	 * @mutates | this, getBlocks(), getBalls()
+	 * 
+	 * @post This object's balls array's number of elements is equal to its old number of elements. 
+	 * 	   | getBalls().length == old(getBalls()).length
+	 * @post This object's blocks array's  number of elements is equal to or less than its old number of elements
+	 * 	   | getBlocks().length <= old(getBlocks()).length
+	 * @post Any block that was hit by a ball on its right side got removed from the game
+	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktBlockRechts(e)))
+	 * @post All balls remained unchanged, unless the ball bounced off a block's right side. 
+	 *     |IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() &&
+	 * 	   |     getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
+	 *     |     getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceBlock(4).getVelocity())))
+	 */
+	
 	public void raaktBlockRechts() {
 		for (BallState ball: balls) {
 			for (BlockState block: blocks) {
-				if (ball.raaktBlockRight(block)) {
+				if (ball.raaktBlockRechts(block)) {
 					ArrayList<BallState> newBalls = new ArrayList<BallState>();
 					for (BallState okBal: balls) {
 						if (okBal != ball){
 							newBalls.add(okBal);
 						}else {
-							newBalls.add(okBal.bounceBlock(block, 4));
+							newBalls.add(okBal.bounceBlock(4));
 						}
 					}
 					balls = newBalls.toArray(new BallState[] {});
