@@ -57,7 +57,6 @@ public class BreakoutState {
 	private BlockState[] blocks;
 	private final Point bottomRight;
 	private PaddleState paddle;
-	int i = 0;
 	
 	/**
 	 * Initializes this object so that it stores the given balls, blocks, bottomRight point and paddle.
@@ -469,6 +468,22 @@ public class BreakoutState {
 		}
 	}
 	
+	/**
+	 * Checks for a collision between a ball and the paddle's left side. If there is a collision, the ball gets bounced off the paddle's left side
+	 * 
+	 * @mutates | this, getBalls()
+	 * @inspects | getPaddle()
+	 * 
+	 * @post This object's balls array's number of elements has remained the same 
+	 * 	   | getBalls().length == old(getBalls()).length
+	 * @post This object's paddle has remained the exact same instance
+	 *     | getPaddle().equals(old(getPaddle()))
+	 * @post This object's balls have remained unchanged, unless they bounced off the left side of the paddle, in which case the velocity has changed
+	 *     | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) &&
+	 *     |     getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() && 
+	 *     |     (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) || getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(getPaddle(), paddleDir, 1).getVelocity())))
+	 */
+	
 	public void raaktPaddleLinks(int paddleDir) {
 		for (BallState ball: balls) {
 			if (ball.raaktPaddleLinks(paddle)) {
@@ -485,6 +500,22 @@ public class BreakoutState {
 		}
 	}
 	
+	/**
+	 * Checks for a collision between a ball and the paddle's top side. If there is a collision, the ball gets bounced off the paddle's top side
+	 * 
+	 * @mutates | this, getBalls()
+	 * @inspects | getPaddle()
+	 * 
+	 * @post This object's balls array's number of elements has remained the same 
+	 * 	   | getBalls().length == old(getBalls()).length
+	 * @post This object's paddle has remained the exact same instance
+	 *     | getPaddle().equals(old(getPaddle())) 
+	 * @post This object's balls have remained unchanged, unless they bounced off the top side of the paddle, in which case the velocity has changed
+	 *     | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) &&
+	 *     |     getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() && 
+	 *     |     (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) || getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(getPaddle(), paddleDir, 2).getVelocity())))
+	 */
+	
 	public void raaktPaddleBoven(int paddleDir) {
 		for (BallState ball: balls) {
 			if (ball.raaktPaddleBoven(paddle)) {
@@ -500,6 +531,22 @@ public class BreakoutState {
 			}
 		}
 	}
+	
+	/**
+	 * Checks for a collision between any ball and the paddle's right side. If a collision is detected, the ball gets bounced off the paddle's right side
+	 * 
+	 * @mutates | this, getBalls()
+	 * @inspects | getPaddle()
+	 * 
+	 * @post This object's balls array's number of elements has remained the same 
+	 * 	   | getBalls().length == old(getBalls()).length
+	 * @post This object's paddle has remained the exact same instance
+	 *     | getPaddle().equals(old(getPaddle())) 
+	 * @post This object's balls have remained unchanged, unless they bounced off the right side of the paddle, in which case the velocity has changed
+	 *     | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) &&
+	 *     |     getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() && 
+	 *     |     (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) || getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(getPaddle(), paddleDir, 3).getVelocity())))
+	 */
 	
 	public void raaktPaddleRechts(int paddleDir) {
 		for (BallState ball: balls) {
@@ -518,17 +565,41 @@ public class BreakoutState {
 		}
 	}
 	
+	/**
+	 * Moves the paddle to the right by 10 units, keeping in mind it can't go outside of the field
+	 * 
+	 * @mutates | this, getPaddle()
+	 * @inspects | getBottomRight()
+	 * 
+	 * @post the paddle has moved to the right by 10 units, unless it would have gone outside of the field, in which case it does not go any further than the right of the field
+	 * 	   | getPaddle().getCenter().getX() == old(getPaddle()).getCenter().getX() + 10 || getPaddle().getCenter().getX() == getBottomRight().getX() - getPaddle().getSize().getX()
+	 */
 	
-	
-	
-
 	public void movePaddleRight() {
 		paddle = paddle.movePaddleRightBy(getBottomRight());
 	}
+	
+	/**
+	 * Moves the paddle to the left by 10 units, keeping in mind it can't go outside of the field
+	 * 
+	 * @mutates | this, getPaddle()
+	 * @inspects | getBottomRight()
+	 * 
+	 * @post the paddle has moved to the left by 10 units, unless it would have gone outside of the fiels, in which case it did not go any further than the left of the field
+	 *     | getPaddle().getCenter().getX() == old(getPaddle()).getCenter().getX() - 10 || getPaddle().getCenter().getX() == getPaddle().getSize().getX()
+	 */
 
 	public void movePaddleLeft() {
 		paddle = paddle.movePaddleLeftBy();
 	}
+	
+	/**
+	 * Returns true if there are no more blocks on the field, and at least one ball is still in the game
+	 * 
+	 * @inspects | getBlocks(), getBalls()
+	 * 
+	 * 
+	 */
 	
 	public boolean isWon() {
 		if (blocks.length == 0 && balls.length > 0) {
