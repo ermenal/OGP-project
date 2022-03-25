@@ -526,7 +526,7 @@ public class BreakoutState {
 	 *     | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) &&
 	 *     |    getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() && 
 	 *     |		(getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) || 
-	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(getPaddle(), paddleDir, 1).getVelocity())))
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(paddleDir, 1).getVelocity())))
 	 */
 	
 	public void raaktPaddleLinks(int paddleDir) {
@@ -537,7 +537,7 @@ public class BreakoutState {
 					if (okBal != ball){
 						newBalls.add(okBal);
 					}else {
-						newBalls.add(ball.bouncePaddle(paddle, paddleDir, 1));
+						newBalls.add(ball.bouncePaddle(paddleDir, 1));
 					}
 				}
 				balls = newBalls.toArray(new BallState[] {});
@@ -559,7 +559,7 @@ public class BreakoutState {
 	 *     | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) &&
 	 *     |    getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() && 
 	 *     |		(getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) || 
-	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(getPaddle(), paddleDir, 2).getVelocity())))
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(paddleDir, 2).getVelocity())))
 	 */
 	
 	public void raaktPaddleBoven(int paddleDir) {
@@ -570,7 +570,7 @@ public class BreakoutState {
 					if (okBal != ball){
 						newBalls.add(okBal);
 					}else {
-						newBalls.add(ball.bouncePaddle(paddle, paddleDir, 2));
+						newBalls.add(ball.bouncePaddle(paddleDir, 2));
 					}
 				}
 				balls = newBalls.toArray(new BallState[] {});
@@ -592,7 +592,7 @@ public class BreakoutState {
 	 *     | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) &&
 	 *     |    getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() && 
 	 *     |		(getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) || 
-	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(getPaddle(), paddleDir, 3).getVelocity())))
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(paddleDir, 3).getVelocity())))
 	 */
 	
 	public void raaktPaddleRechts(int paddleDir) {
@@ -603,7 +603,7 @@ public class BreakoutState {
 					if (okBal != ball){
 						newBalls.add(okBal);
 					}else {
-						newBalls.add(ball.bouncePaddle(paddle, paddleDir, 3));
+						newBalls.add(ball.bouncePaddle(paddleDir, 3));
 					}
 				}
 				balls = newBalls.toArray(new BallState[] {});

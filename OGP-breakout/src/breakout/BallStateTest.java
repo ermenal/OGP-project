@@ -220,18 +220,18 @@ class BallStateTest {
 		//bal1 raakt bovenkant paddle 1
 		int paddledir1 = 0;
 		BallState newball1 = new BallState(new Point(0,0), 1, new Vector(0,0));
-		assertEquals(newball1.getCenter(), bal1.bouncePaddle(paddle1,paddledir1, 2).getCenter());
-		assertEquals(newball1.getVelocity(), bal1.bouncePaddle(paddle1,paddledir1, 2).getVelocity());
-		assertEquals(newball1.getDiameter(), bal1.bouncePaddle(paddle1,paddledir1, 2).getDiameter());
+		assertEquals(newball1.getCenter(), bal1.bouncePaddle(paddledir1, 2).getCenter());
+		assertEquals(newball1.getVelocity(), bal1.bouncePaddle(paddledir1, 2).getVelocity());
+		assertEquals(newball1.getDiameter(), bal1.bouncePaddle(paddledir1, 2).getDiameter());
 		
 		//bal2 botst niet tegen een paddle
 		
 		//bal 3 botst linkerkant paddle 3
 		int paddledir3 = 2;
 		BallState newball3 = new BallState(new Point(25000,15000), 1000, new Vector(3,3));
-		assertEquals(newball3.getCenter(), bal3.bouncePaddle(paddle3,paddledir3, 1).getCenter());
-		assertEquals(newball3.getVelocity(), bal3.bouncePaddle(paddle3,paddledir3, 1).getVelocity());
-		assertEquals(newball3.getDiameter(), bal3.bouncePaddle(paddle3,paddledir3, 1).getDiameter());
+		assertEquals(newball3.getCenter(), bal3.bouncePaddle(paddledir3, 1).getCenter());
+		assertEquals(newball3.getVelocity(), bal3.bouncePaddle(paddledir3, 1).getVelocity());
+		assertEquals(newball3.getDiameter(), bal3.bouncePaddle(paddledir3, 1).getDiameter());
 	}
 	
 	@Test

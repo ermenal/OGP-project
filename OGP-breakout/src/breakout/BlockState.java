@@ -29,7 +29,7 @@ public class BlockState {
 
 	
 	/**
-	 * Return a new BlockState with given topLeft and bottomRight coordinates
+	 * Initializes this object so that it stores the given topLeft and bottomRight coordinates
 	 * 
 	 * @pre {@code topLeft} is not {@code null}
 	 *     | topLeft != null

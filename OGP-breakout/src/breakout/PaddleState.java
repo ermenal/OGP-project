@@ -27,6 +27,8 @@ public class PaddleState {
 	private final Vector size;
 	
 	/**
+	 * Initializes this object so that it stores the given center and size
+	 * 
 	 * @pre The argument {@code center} is not {@code null}
 	 *     | center != null
 	 * @pre The argument {@code size} is not {@code null}

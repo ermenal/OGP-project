@@ -133,11 +133,20 @@ public class BallState {
 	 * 
 	 * @creates | result
 	 * 
-	 * @pre argument {@code wallNumber} should be 1, 2 or 3, indicating which wall the ball made contact with 
+	 * @pre Argument {@code wallNumber} should be 1, 2 or 3, indicating which wall the ball made contact with 
 	 * 		| wallNumber == 1 || wallNumber == 2 || wallNumber == 3
 	 * 
+	 * @post The result is not {@code null}
+	 * 		| result != null
 	 * 
+	 * @post The resulting ball's center and diameter remained the same
+	 * 		| result.getCenter() == getCenter() && 
+	 * 		| result.getDiameter() == getDiameter()
 	 * 
+	 * @post The resulting ball's velocity has been mirrored in accordance with the given {@code wallNumber}
+	 * 		| result.getVelocity().equals(getVelocity().mirrorOver(new Vector(1, 0))) && wallNumber == 1|| 
+	 * 		| result.getVelocity().equals(getVelocity().mirrorOver(new Vector(0, 1))) && wallNumber == 2 || 
+	 * 		| result.getVelocity().equals(getVelocity().mirrorOver(new Vector(-1, 0))) && wallNumber == 3
 	 */
 	
 	public BallState bounceWall(int wallNumber) {
@@ -160,7 +169,35 @@ public class BallState {
 		return null;
 	}
 	
-	public BallState bouncePaddle(PaddleState paddle, int paddleDir, int paddleSideNumber) {
+	/**
+	 * Returns a new ball that bounced against a given side of the paddle, indicated by the {@code paddleSideNumber}
+	 * and speeding the ball up or down by 2 units according to the paddle's current direction {@code paddleDir}
+	 * 
+	 * @creates | result
+	 * 
+	 * @pre Argument {@code paddleDir} should be -1, 0 or 1
+	 * 		| paddleDir == -1 || paddleDir == 0 || paddleDir == 1
+	 * @pre Argument {@code paddleSideNumber} should be 1, 2 or 3
+	 * 		| paddleSideNumber == 1 || paddleSideNumber == 2 || paddleSideNumber == 3
+	 * 
+	 * @post The resulting ball's center and diameter have remained unchanged
+	 * 		| result.getCenter() == getCenter() && 
+	 * 		| result.getDiameter() == getDiameter()
+	 * 
+	 * @post The resulting ball's velocity has been mirrored in accordance with the given {@code paddleSideNumber} 
+	 *  	 and its X-component has been changed in accordance with the paddle's given direction {@code paddleDir}
+	 *  	| result.getVelocity()
+	 *  	|	.equals(new Vector(getVelocity().mirrorOver(new Vector(-1, 0)).getX() + paddleDir * 2, getVelocity().mirrorOver(new Vector(-1, 0)).getY())) && 
+	 *  	| 	paddleSideNumber == 1 ||
+	 *  	| result.getVelocity()
+	 *  	|	.equals(new Vector(getVelocity().mirrorOver(new Vector(0, -1)).getX() + paddleDir * 2, getVelocity().mirrorOver(new Vector(0, -1)).getY())) && 
+	 *  	|	paddleSideNumber == 2 ||
+	 *  	| result.getVelocity()
+	 *  	|	.equals(new Vector(getVelocity().mirrorOver(new Vector(1, 0)).getX() + paddleDir * 2, getVelocity().mirrorOver(new Vector(1, 0)).getY())) && 
+	 *  	| 	paddleSideNumber == 3
+	 */
+	
+	public BallState bouncePaddle(int paddleDir, int paddleSideNumber) {
 		int addedVelocity = paddleDir * 2;
 		if (paddleSideNumber == 1) {
 			// leftSide
@@ -185,6 +222,10 @@ public class BallState {
 		Vector v = new Vector(-velocity.getX(), -velocity.getY());
 		return v.product(n) >= 0;
 	}
+	
+	/**
+	 * 
+	 */
 	
 	public BallState bounceBlock(int blockSideNumber) {
 		if (blockSideNumber == 1) {
