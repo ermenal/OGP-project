@@ -37,14 +37,17 @@ class BallStateTest {
 	BlockState blok1;
 	BlockState blok2;
 	BlockState blok3;
+	BlockState blok4;
 	
 	Point topleftBlock1;
 	Point topleftBlock2;
 	Point topleftBlock3;
+	Point topleftBlock4;
 	
 	Point bottomrightBlock1;
 	Point bottomrightBlock2;
 	Point bottomrightBlock3;
+	Point bottomrightBlock4;
 
 	@BeforeEach
 	void setUp() {
@@ -86,17 +89,21 @@ class BallStateTest {
 		bottomrightBlock3 = new Point(27000,17000);
 		blok3 = new BlockState(topleftBlock3, bottomrightBlock3);
 		
+		topleftBlock4 = new Point(-10,-10);
+		bottomrightBlock4 = new Point(0,10);
+		blok4 = new BlockState(topleftBlock4, bottomrightBlock4);
+		
 	}
 	
 	@Test
-	void testGetDiameter() {
+	void testGetDiameterbal() {
 		assertEquals(1,bal1.getDiameter());
 		assertEquals(33,bal2.getDiameter());
 		assertEquals(1000,bal3.getDiameter());
 	}
 
 	@Test
-	void testGetCenter() {
+	void testGetCenterbal() {
 		assertEquals(new Point(0,0), bal1.getCenter());
 		assertEquals(new Point(1000,0), bal2.getCenter());
 		assertEquals(new Point(25000,15000), bal3.getCenter());
@@ -105,7 +112,7 @@ class BallStateTest {
 	}
 	
 	@Test
-	void testGetVelocity() {
+	void testGetVelocitybal() {
 		assertEquals(new Vector(0,0), bal1.getVelocity());
 		assertEquals(new Vector(7,-3), bal2.getVelocity());
 		assertEquals(new Vector(1,3),bal3.getVelocity());
@@ -113,7 +120,7 @@ class BallStateTest {
 	}
 	
 	@Test
-	void testGetTopLeft() {
+	void testGetTopLeftbal() {
 		assertEquals(new Point( -1/2, -1/2), bal1.getTopLeftOfSurroundingRectangle());
 		assertEquals(new Point(1000 - 33/2, -33/2),bal2.getTopLeftOfSurroundingRectangle());
 		assertEquals(new Point(24500, 14500), bal3.getTopLeftOfSurroundingRectangle());
@@ -121,7 +128,7 @@ class BallStateTest {
 	}
 	
 	@Test
-	void testBottomRight() {
+	void testBottomRightbal() {
 		assertEquals(new Point(1/2, 1/2), bal1.getBottomRightOfSurroundingRectangle());
 		assertEquals(new Point(1000 + 33/2, 33/2), bal2.getBottomRightOfSurroundingRectangle());
 		assertEquals(new Point(25500, 15500), bal3.getBottomRightOfSurroundingRectangle());
@@ -150,48 +157,7 @@ class BallStateTest {
 		assertEquals(newball3.getDiameter(), bal3.moveBall(br3).getDiameter());
 
 	}
-	
-	@Test
-	void testRaakt() {
-		Point br = new Point(50000,30000);
-		 
-		 
-		//assertEquals(false, bal1.raaktOnder(br));
-		//assertEquals(false, bal1.raaktRechts(br));
-		//assertEquals(true, bal1.raaktLinks());
-		//assertEquals(true, bal1.raaktBoven());
 		
-		//assertEquals(false, bal2.raaktOnder(br));
-		//assertEquals(false, bal2.raaktRechts(br));
-		//assertEquals(false, bal2.raaktLinks());
-		//assertEquals(true, bal2.raaktBoven());
-		
-		//assertEquals(false, bal3.raaktOnder(br));
-		//assertEquals(false, bal3.raaktRechts(br));
-		//assertEquals(false, bal3.raaktLinks());
-		//assertEquals(false, bal3.raaktBoven());
-		
-		//assertNotEquals(null, bal1.raaktBoven());
-		
-	}
-	
-	@Test
-	void testRaaktPaddle() {
-		
-		//assertEquals(true, bal1.raaktPaddleBoven(paddle1));
-		//assertEquals(false, bal1.raaktPaddleLinks(paddle1));
-		//assertEquals(false, bal1.raaktPaddleRechts(paddle1));
-		
-		//assertEquals(false, bal2.raaktPaddleBoven(paddle2));
-		//assertEquals(false, bal2.raaktPaddleLinks(paddle2));
-		//assertEquals(false, bal2.raaktPaddleRechts(paddle2));
-		
-		//assertEquals(false, bal3.raaktPaddleBoven(paddle3));
-		//assertEquals(true, bal3.raaktPaddleLinks(paddle3));
-		//assertEquals(false, bal3.raaktPaddleRechts(paddle3));
-		
-	}
-	
 	@Test
 	void testbouncewall() {
 		//botst links en boven
@@ -235,21 +201,112 @@ class BallStateTest {
 	}
 	
 	@Test
-	void testraaktblock() {
-		//assertEquals(true, bal1.raaktBlockBoven(blok1));
-		//assertEquals(false, bal1.raaktBlockOnder(blok1));
-		//assertEquals(false, bal1.raaktBlockLinks(blok1));
-		//assertEquals(false, bal1.raaktBlockRechts(blok1));
+	void testbounceBlock() {
+		//bal1 raakt blok1 vanboven en blok4 langs rechts
+		BallState newball1 = new BallState(new Point(0,0), 1, new Vector(0,0));
+		assertEquals(newball1.getCenter(), bal1.bounceBlock(3).getCenter());
+		assertEquals(newball1.getVelocity(), bal1.bounceBlock(3).getVelocity());
+		assertEquals(newball1.getDiameter(), bal1.bounceBlock(3).getDiameter());
 		
-		//assertEquals(false, bal2.raaktBlockBoven(blok2));
-		//assertEquals(true, bal2.raaktBlockOnder(blok2));
-		//assertEquals(false, bal2.raaktBlockLinks(blok2));
-		//assertEquals(false, bal2.raaktBlockRechts(blok2));
+		assertEquals(newball1.getCenter(), bal1.bounceBlock(4).getCenter());
+		assertEquals(newball1.getVelocity(), bal1.bounceBlock(4).getVelocity());
+		assertEquals(newball1.getDiameter(), bal1.bounceBlock(4).getDiameter());
 		
-		//assertEquals(false, bal3.raaktBlockBoven(blok3));
-		//assertEquals(false, bal3.raaktBlockOnder(blok3));
-		//assertEquals(true, bal3.raaktBlockLinks(blok3));
-		//assertEquals(false, bal3.raaktBlockRechts(blok3));
+		//bal2 raakt blok2 langs onder
+		BallState newball2 = new BallState(new Point(1000,0), 33, new Vector(7,3));
+		assertEquals(newball2.getCenter(), bal2.bounceBlock(1).getCenter());
+		assertEquals(newball2.getVelocity(), bal2.bounceBlock(1).getVelocity());
+		assertEquals(newball2.getDiameter(), bal2.bounceBlock(1).getDiameter());
+		
+		//bal3 raakt blok3 langs links
+		BallState newball3 = new BallState(new Point(25000,15000), 1000, new Vector(-1,3));
+		assertEquals(newball3.getCenter(), bal3.bounceBlock(2).getCenter());
+		assertEquals(newball3.getVelocity(), bal3.bounceBlock(2).getVelocity());
+		assertEquals(newball3.getDiameter(), bal3.bounceBlock(2).getDiameter());
+	}
+	
+	@Test
+	void testraaktrechthoek() {
+		
+		//walls
+		
+		Rechthoek bovenmuur = new Rechthoek(new Point(0,-1), new Point(50000,0));
+		Rechthoek rechtsemuur = new Rechthoek(new Point(50000,0), new Point(50001,30000));
+		Rechthoek ondermuur = new Rechthoek(new Point(0,30000), new Point(50000,30001));
+		Rechthoek linksemuur = new Rechthoek(new Point(-1,0), new Point(0,30000));
+		
+		assertEquals(true, bal1.raaktRechthoek(bovenmuur, 1));
+		assertEquals(false, bal1.raaktRechthoek(rechtsemuur, 2));
+		assertEquals(false, bal1.raaktRechthoek(ondermuur, 3));
+		assertEquals(true, bal1.raaktRechthoek(linksemuur, 4));
+		
+		assertEquals(true, bal2.raaktRechthoek(bovenmuur, 1));
+		assertEquals(false, bal2.raaktRechthoek(rechtsemuur, 2));
+		assertEquals(false, bal2.raaktRechthoek(ondermuur, 3));
+		assertEquals(false, bal2.raaktRechthoek(linksemuur, 4));
+		
+		assertEquals(false, bal3.raaktRechthoek(bovenmuur, 1));
+		assertEquals(false, bal3.raaktRechthoek(rechtsemuur, 2));
+		assertEquals(false, bal3.raaktRechthoek(ondermuur, 3));
+		assertEquals(false, bal3.raaktRechthoek(linksemuur, 4));
+						
+		assertNotEquals(null, bal1.raaktRechthoek(bovenmuur,1));
+		
+		//blocks
+
+		assertEquals(false, bal1.raaktRechthoek(new Rechthoek(blok1.getTopLeft(),blok1.getBottomRight()),1));
+		assertEquals(false, bal1.raaktRechthoek(new Rechthoek(blok1.getTopLeft(),blok1.getBottomRight()),2));
+		assertEquals(true, bal1.raaktRechthoek(new Rechthoek(blok1.getTopLeft(),blok1.getBottomRight()),3));
+		assertEquals(false, bal1.raaktRechthoek(new Rechthoek(blok1.getTopLeft(),blok1.getBottomRight()),4));
+		
+		assertEquals(true, bal2.raaktRechthoek(new Rechthoek(blok2.getTopLeft(),blok2.getBottomRight()),1));
+		assertEquals(false, bal2.raaktRechthoek(new Rechthoek(blok2.getTopLeft(),blok2.getBottomRight()),2));
+		assertEquals(false, bal2.raaktRechthoek(new Rechthoek(blok2.getTopLeft(),blok2.getBottomRight()),3));
+		assertEquals(false, bal2.raaktRechthoek(new Rechthoek(blok2.getTopLeft(),blok2.getBottomRight()),4));
+		
+		assertEquals(false, bal3.raaktRechthoek(new Rechthoek(blok3.getTopLeft(),blok3.getBottomRight()),1));
+		assertEquals(true, bal3.raaktRechthoek(new Rechthoek(blok3.getTopLeft(),blok3.getBottomRight()),2));
+		assertEquals(false, bal3.raaktRechthoek(new Rechthoek(blok3.getTopLeft(),blok3.getBottomRight()),3));
+		assertEquals(false, bal3.raaktRechthoek(new Rechthoek(blok3.getTopLeft(),blok3.getBottomRight()),4));
+		
+		assertEquals(false, bal1.raaktRechthoek(new Rechthoek(blok4.getTopLeft(),blok4.getBottomRight()),1));
+		assertEquals(false, bal1.raaktRechthoek(new Rechthoek(blok4.getTopLeft(),blok4.getBottomRight()),2));
+		assertEquals(false, bal1.raaktRechthoek(new Rechthoek(blok4.getTopLeft(),blok4.getBottomRight()),3));
+		assertEquals(true, bal1.raaktRechthoek(new Rechthoek(blok4.getTopLeft(),blok4.getBottomRight()),4));
+		
+		//paddle
+		
+		assertEquals(false, bal1.raaktRechthoek(new Rechthoek(paddle1.getTopLeft(),paddle1.getBottomRight()), 1));
+		assertEquals(false, bal1.raaktRechthoek(new Rechthoek(paddle1.getTopLeft(),paddle1.getBottomRight()), 2));
+		assertEquals(true, bal1.raaktRechthoek(new Rechthoek(paddle1.getTopLeft(),paddle1.getBottomRight()), 3));
+		assertEquals(false, bal1.raaktRechthoek(new Rechthoek(paddle1.getTopLeft(),paddle1.getBottomRight()), 4));
+		
+		assertEquals(false, bal2.raaktRechthoek(new Rechthoek(paddle2.getTopLeft(),paddle2.getBottomRight()), 1));
+		assertEquals(false, bal2.raaktRechthoek(new Rechthoek(paddle2.getTopLeft(),paddle2.getBottomRight()), 2));
+		assertEquals(false, bal2.raaktRechthoek(new Rechthoek(paddle2.getTopLeft(),paddle2.getBottomRight()), 3));
+		assertEquals(false, bal2.raaktRechthoek(new Rechthoek(paddle2.getTopLeft(),paddle2.getBottomRight()), 4));
+		
+		assertEquals(false, bal3.raaktRechthoek(new Rechthoek(paddle3.getTopLeft(),paddle3.getBottomRight()), 1));
+		assertEquals(true, bal3.raaktRechthoek(new Rechthoek(paddle3.getTopLeft(),paddle3.getBottomRight()), 2));
+		assertEquals(false, bal3.raaktRechthoek(new Rechthoek(paddle3.getTopLeft(),paddle3.getBottomRight()), 3));
+		assertEquals(false, bal3.raaktRechthoek(new Rechthoek(paddle3.getTopLeft(),paddle3.getBottomRight()), 4));
+		
+	}
+	
+	@Test
+	void testGetTopLeftBlock() {
+		assertEquals(new Point(-1,0), blok1.getTopLeft());
+		assertEquals(new Point(900,-10), blok2.getTopLeft());
+		assertEquals(new Point(25500,14500), blok3.getTopLeft());
+		assertEquals(new Point(-10,-10), blok4.getTopLeft());
+	}
+	
+	@Test
+	void testGetBottomRightBlock() {
+		assertEquals(new Point(1,1),blok1.getBottomRight());
+		assertEquals(new Point(1100,0),blok2.getBottomRight());
+		assertEquals(new Point(27000,17000),blok3.getBottomRight());
+		assertEquals(new Point(0,10),blok4.getBottomRight());
 	}
 	
 	@Test
