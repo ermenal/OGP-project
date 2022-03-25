@@ -252,35 +252,69 @@ public class BallState {
 	}
 	
 	public boolean raaktRechthoek(Rechthoek rechthoek, int sideNumber) {
+		Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);
+		Point ballBovenstePunt = new Point(center.getX(), center.getY() - diameter/2);
+		Point ballLinksePunt = new Point(center.getX() - diameter/2, center.getY());
+		Point ballRechtsePunt = new Point(center.getX() + diameter/2, center.getY());
 		// bottomSide
 		if (sideNumber == 1) {
-			Point ballBovenstePunt = new Point(center.getX(), center.getY() - diameter/2);
+			Point rechthoekLinksOnderPunt = new Point(rechthoek.getTopLeft().getX(), rechthoek.getBottomRight().getY());
 			if (ballBovenstePunt.getX() >= rechthoek.getTopLeft().getX() && ballBovenstePunt.getX() <= rechthoek.getBottomRight().getX() && ballBovenstePunt.getY() <= rechthoek.getBottomRight().getY() && ballBovenstePunt.getY() >= rechthoek.getBottomRight().getY() - diameter/2) {
 				return raakDottedProduct(velocity, new Vector(0, 1));
 			}
+			if ((getDiameter()/2) * (getDiameter()/2) >= distanceCenterToPointPowerOf2(rechthoekLinksOnderPunt) && ballBovenstePunt.getY() <= rechthoek.getBottomRight().getY() && center.getY() >= rechthoek.getBottomRight().getY() && center.getX() <= rechthoek.getTopLeft().getX() && ballRechtsePunt.getX() >= rechthoek.getTopLeft().getX()) {
+				return raakDottedProduct(velocity, new Vector(0, 1));
+			}
+			if ((getDiameter()/2) * (getDiameter()/2) >= distanceCenterToPointPowerOf2(rechthoek.getBottomRight()) && ballBovenstePunt.getY() <= rechthoek.getBottomRight().getY() && center.getY() >= rechthoek.getBottomRight().getY() && center.getX() >= rechthoek.getBottomRight().getX() && ballLinksePunt.getX() <= rechthoek.getBottomRight().getX()) {
+				return raakDottedProduct(velocity, new Vector(0, 1));
+			}
+			
 		}
 		// leftSide
 		if (sideNumber == 2) {
-			Point ballRechtsePunt = new Point(center.getX() + diameter/2, center.getY());
+			Point rechthoekLinksOnderPunt = new Point(rechthoek.getTopLeft().getX(), rechthoek.getBottomRight().getY());
 			if (ballRechtsePunt.getX() >= rechthoek.getTopLeft().getX() && ballRechtsePunt.getX() <= rechthoek.getTopLeft().getX() + diameter/2 && ballRechtsePunt.getY() <= rechthoek.getBottomRight().getY() && ballRechtsePunt.getY() >= rechthoek.getTopLeft().getY()) {
 				return raakDottedProduct(velocity, new Vector(-1, 0));
 			}
+			if ((getDiameter()/2) * (getDiameter()/2) >= distanceCenterToPointPowerOf2(rechthoek.getTopLeft()) && center.getY() <= rechthoek.getTopLeft().getY() && center.getX() <= rechthoek.getTopLeft().getX() && ballRechtsePunt.getX() >= rechthoek.getTopLeft().getX() && ballOnderstePunt.getY() >= rechthoek.getTopLeft().getY()) {
+				return raakDottedProduct(velocity, new Vector(-1, 0));
+			}
+			if ((getDiameter()/2) * (getDiameter()/2) >= distanceCenterToPointPowerOf2(rechthoekLinksOnderPunt) && ballBovenstePunt.getY() <= rechthoek.getBottomRight().getY() && center.getY() >= rechthoek.getBottomRight().getY() && center.getX() <= rechthoek.getTopLeft().getX() && ballRechtsePunt.getX() >= rechthoek.getTopLeft().getX()) {
+				return raakDottedProduct(velocity, new Vector(-1, 0));
+			}
+			
 		}
 		//topSide
 		if (sideNumber == 3) {
-			Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);
+			Point rechthoekRechtsBovenPunt = new Point(rechthoek.getBottomRight().getX(), rechthoek.getTopLeft().getY());
 			if (ballOnderstePunt.getX() >= rechthoek.getTopLeft().getX() && ballOnderstePunt.getX() <= rechthoek.getBottomRight().getX() && ballOnderstePunt.getY() >= rechthoek.getTopLeft().getY() && ballOnderstePunt.getY() <= rechthoek.getTopLeft().getY() + diameter/2) {
+				return raakDottedProduct(velocity, new Vector(0, -1));
+			}
+			if ((getDiameter()/2) * (getDiameter()/2) >= distanceCenterToPointPowerOf2(rechthoek.getTopLeft()) && center.getX() <= rechthoek.getTopLeft().getX() && ballRechtsePunt.getX() >= rechthoek.getTopLeft().getX() && center.getY() <= rechthoek.getTopLeft().getY() && ballOnderstePunt.getY() >= rechthoek.getTopLeft().getY()){
+				return raakDottedProduct(velocity, new Vector(0, -1));
+			}
+			if ((getDiameter()/2) * (getDiameter()/2) >= distanceCenterToPointPowerOf2(rechthoekRechtsBovenPunt) && ballLinksePunt.getX() <= rechthoek.getBottomRight().getX() && center.getX() >= rechthoek.getBottomRight().getX() && center.getY() <= rechthoek.getTopLeft().getY() && ballOnderstePunt.getY() >= rechthoek.getTopLeft().getY()) {
 				return raakDottedProduct(velocity, new Vector(0, -1));
 			}
 		}
 		//rightSide
 		if (sideNumber == 4) {
-			Point ballLinksePunt = new Point(center.getX() - diameter/2, center.getY());
+			Point rechthoekRechtsBovenPunt = new Point(rechthoek.getBottomRight().getX(), rechthoek.getTopLeft().getY());
 			if(ballLinksePunt.getX() <= rechthoek.getBottomRight().getX() && ballLinksePunt.getX() >= rechthoek.getBottomRight().getX()-diameter/2 && ballLinksePunt.getY() >= rechthoek.getTopLeft().getY() && ballLinksePunt.getY() <= rechthoek.getBottomRight().getY()) {
+				return raakDottedProduct(velocity, new Vector(1, 0));
+			}
+			if ((getDiameter()/2) * (getDiameter()/2) >= distanceCenterToPointPowerOf2(rechthoekRechtsBovenPunt) && ballLinksePunt.getX() <= rechthoek.getBottomRight().getX() && center.getX() >= rechthoek.getBottomRight().getX() && center.getY() <= rechthoek.getTopLeft().getY() && ballOnderstePunt.getY() >= rechthoek.getTopLeft().getY()){
+				return raakDottedProduct(velocity, new Vector(1, 0));
+			}
+			if ((getDiameter()/2) * (getDiameter()/2) >= distanceCenterToPointPowerOf2(rechthoek.getBottomRight()) && ballLinksePunt.getX() <= rechthoek.getBottomRight().getX() && center.getX() >= rechthoek.getBottomRight().getX() && center.getY() >= rechthoek.getBottomRight().getY() && ballBovenstePunt.getY() <= rechthoek.getBottomRight().getY()) {
 				return raakDottedProduct(velocity, new Vector(1, 0));
 			}
 		}
 		return false;
+	}
+	
+	private int distanceCenterToPointPowerOf2(Point punt) {
+		return (punt.getX() - center.getX()) * (punt.getX() - center.getX()) + (punt.getY() - center.getY()) * (punt.getY() - center.getY());
 	}
 	
 }
