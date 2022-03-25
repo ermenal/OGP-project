@@ -13,23 +13,28 @@ import java.util.stream.IntStream;
  *     | Arrays.stream(getBalls()).allMatch(e -> e != null)
  * @invar This object's balls array's elements are entirely inside the field 
  *     | Arrays.stream(getBalls()).allMatch(e -> e.getCenter().getX() - e.getDiameter()/2 >= 0 && 
- *     |     e.getCenter().getX() + e.getDiameter()/2 <= getBottomRight().getX() && e.getCenter().getY() - e.getDiameter()/2 >= 0 && 
- *     |     e.getCenter().getY() + e.getDiameter()/2 <= getBottomRight().getY())
+ *     | e.getCenter().getX() + e.getDiameter()/2 <= getBottomRight().getX() && 
+ *     | e.getCenter().getY() - e.getDiameter()/2 >= 0 && 
+ *     | e.getCenter().getY() + e.getDiameter()/2 <= getBottomRight().getY())
  *     
  * @invar This object's blocks array is not {@code null} 
  *     | getBlocks() != null
  * @invar This object's blocks array has no elements that are {@code null}
  *     | Arrays.stream(getBlocks()).allMatch(e -> e != null)
  * @invar This object's blocks array's elements are entirely inside the field 
- *     | Arrays.stream(getBlocks()).allMatch(e -> e.getTopLeft().getX() >= 0 && e.getBottomRight().getX() <= getBottomRight().getX() &&
- *     |  e.getTopLeft().getY() >= 0 && e.getBottomRight().getY() <= getBottomRight().getY())
+ *     | Arrays.stream(getBlocks()).allMatch(e -> e.getTopLeft().getX() >= 0 && 
+ *     | e.getBottomRight().getX() <= getBottomRight().getX() &&
+ *     | e.getTopLeft().getY() >= 0 && 
+ *     | e.getBottomRight().getY() <= getBottomRight().getY())
  *     
  * @invar This object's bottomRight point is not {@code null}
  *     | getBottomRight() != null
  *     
  * @invar This object's paddle is entirely inside the field
- *     | getPaddle().getTopLeft().getX() >= 0 && getPaddle().getBottomRight().getX() <= getBottomRight().getX() && 
- *     |     getPaddle().getTopLeft().getY() >= 0 && getPaddle().getBottomRight().getY() <= getBottomRight().getY()
+ *     | getPaddle().getTopLeft().getX() >= 0 && 
+ *     | getPaddle().getBottomRight().getX() <= getBottomRight().getX() && 
+ *     | getPaddle().getTopLeft().getY() >= 0 && 
+ *     | getPaddle().getBottomRight().getY() <= getBottomRight().getY()
  */
 
 public class BreakoutState {
@@ -37,23 +42,31 @@ public class BreakoutState {
 	/**
 	 * @invar | balls != null
 	 * @invar | Arrays.stream(balls).noneMatch(e -> e == null)
-	 * @invar | Arrays.stream(balls).noneMatch(e -> e.getCenter().getX() - e.getDiameter()/2 < 0 || e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX())
-	 * @invar | Arrays.stream(balls).noneMatch(e -> e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() || e.getCenter().getY() - e.getDiameter()/2 < 0)
+	 * @invar | Arrays.stream(balls).noneMatch(e -> e.getCenter().getX() - e.getDiameter()/2 < 0 ||
+	 *        | e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX())
+	 * @invar | Arrays.stream(balls).noneMatch(e -> e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() ||
+	 *        | e.getCenter().getY() - e.getDiameter()/2 < 0)
 	 * 
 	 * @invar | blocks != null
 	 * @invar | Arrays.stream(blocks).noneMatch(e -> e == null)
-	 * @invar | Arrays.stream(blocks).noneMatch(e -> e.getTopLeft().getX() < 0 || e.getBottomRight().getX() > bottomRight.getX())
-	 * @invar | Arrays.stream(blocks).noneMatch(e -> e.getTopLeft().getY() < 0 || e.getBottomRight().getY() > bottomRight.getY())
+	 * @invar | Arrays.stream(blocks).noneMatch(e -> e.getTopLeft().getX() < 0 || 
+	 *        | e.getBottomRight().getX() > bottomRight.getX())
+	 * @invar | Arrays.stream(blocks).noneMatch(e -> e.getTopLeft().getY() < 0 || 
+	 *        | e.getBottomRight().getY() > bottomRight.getY())
 	 * 
 	 * @invar | bottomRight != null
 	 * 
 	 * @invar | paddle != null
-	 * @invar | paddle.getBottomRight().getX() <= bottomRight.getX() && paddle.getBottomRight().getY() <= bottomRight.getY() && paddle.getTopLeft().getX() >= 0 && paddle.getTopLeft().getY() >= 0 
+	 * @invar | paddle.getBottomRight().getX() <= bottomRight.getX() && 
+	 *        | paddle.getBottomRight().getY() <= bottomRight.getY() && 
+	 *        | paddle.getTopLeft().getX() >= 0 && 
+	 *        | paddle.getTopLeft().getY() >= 0 
 	 * 
 	 * @representationObject
 	 */
 	
 	private BallState[] balls;
+	/** @representationObject */
 	private BlockState[] blocks;
 	private final Point bottomRight;
 	private PaddleState paddle;
@@ -66,14 +79,20 @@ public class BreakoutState {
 	 * @throws IllegalArgumentException if any of the given balls array's elements are null
 	 *     | Arrays.stream(balls).anyMatch(b -> b == null)
 	 * @throws IllegalArgumentException if any of the given balls array's elements are outside of the field
-	 * 	   | Arrays.stream(balls).anyMatch(e -> e.getCenter().getX() - e.getDiameter()/2 < 0 || e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX()) || Arrays.stream(balls).anyMatch(e -> e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() || e.getCenter().getY() - e.getDiameter()/2 < 0)
+	 * 	   | Arrays.stream(balls).anyMatch(e -> e.getCenter().getX() - e.getDiameter()/2 < 0 || 
+	 *     | e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX()) || 
+	 *     | Arrays.stream(balls).anyMatch(e -> e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() || 
+	 *     | e.getCenter().getY() - e.getDiameter()/2 < 0)
 	 *     
 	 * @throws IllegalArgumentException if the given blocks array is null
 	 * 	   | blocks == null
 	 * @throws IllegalArgumentException if any of the given blocks array's elements are null
 	 *     | Arrays.stream(blocks).anyMatch(b -> b == null)
 	 * @throws IllegalArgumentException if any of the given block array's elements are outside of the field    
-	 *     | Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getX() < 0 || e.getBottomRight().getX() > bottomRight.getX()) || Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getY() < 0 || e.getBottomRight().getY() > bottomRight.getY())
+	 *     | Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getX() < 0 || 
+	 *     | e.getBottomRight().getX() > bottomRight.getX()) || 
+	 *     | Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getY() < 0 || 
+	 *     | e.getBottomRight().getY() > bottomRight.getY())
 	 *     
 	 * @throws IllegalArgumentException if the given bottomRight is null
 	 * 	   | blocks == null
@@ -81,21 +100,27 @@ public class BreakoutState {
 	 * @throws IllegalArgumentException if the given paddle is null
 	 * 	   | paddle == null
 	 * @throws IllegalArgumentException if the given paddle is outside of the field
-	 *     | paddle.getBottomRight().getX() > bottomRight.getX() || paddle.getBottomRight().getY() > bottomRight.getY() || paddle.getTopLeft().getX() < 0 || paddle.getTopLeft().getY() < 0 
+	 *     | paddle.getBottomRight().getX() > bottomRight.getX() || 
+	 *     | paddle.getBottomRight().getY() > bottomRight.getY() || 
+	 *     | paddle.getTopLeft().getX() < 0 || 
+	 *     | paddle.getTopLeft().getY() < 0 
 	 * 
 	 * @inspects | balls, blocks
 	 * 
 	 * @post This object's BallState array's elements are equal to and in the same order as the given array of balls' elements
-	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].equals(balls[i]))
+	 * 	   | IntStream.range(0, getBalls().length).
+	 * 	   | 	allMatch(i -> getBalls()[i].equals(balls[i]))
 	 * 
 	 * @post This object's BlockState array's elements are equal to and in the same order as the given array of blocks' elements
-	 * 	   | IntStream.range(0, getBlocks().length).allMatch(i -> getBlocks()[i].equals(blocks[i]))
+	 * 	   | IntStream.range(0, getBlocks().length).
+	 * 	   |	allMatch(i -> getBlocks()[i].equals(blocks[i]))
 	 * 
 	 * @post This object's bottom right Point has the same coordinates as the given bottomRight point
 	 * 	   | bottomRight.equals(getBottomRight())
 	 * 
 	 * @post This object's paddle has the same center and size as the given paddle
-	 *     | paddle.getCenter().equals(getPaddle().getCenter()) && getPaddle().getSize().equals(getPaddle().getSize())
+	 *     | paddle.getCenter().equals(getPaddle().getCenter()) && 
+	 *     | getPaddle().getSize().equals(getPaddle().getSize())
 	 */
 	
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
@@ -123,7 +148,8 @@ public class BreakoutState {
 	
 	
 	/**
-	 * returns a new array containing all the balls
+	 * Returns a new array containing all the balls
+	 * 
 	 * @creates | result
 	 * @post the result is not {@code null} 
 	 *    | result != null
@@ -135,7 +161,7 @@ public class BreakoutState {
 	}
 
 	/**
-	 * returns a new array containing all the blocks 
+	 * Returns a new array containing all the blocks 
 	 * 
 	 * @creates | result
 	 * @post the result is not {@code null} 
@@ -149,18 +175,20 @@ public class BreakoutState {
 
 	
 	/**
-	 * returns the paddle 
+	 * Returns the paddle 
 	 * 
-	 * @post | result != null
+	 * @post the result is not {@code null}
+	 *     | result != null
 	 */
 	public PaddleState getPaddle() {
 		return paddle;
 	}
 
 	/**
-	 * returns the coordinates of the bottom right of the field
+	 * Returns the coordinates of the bottom right of the field
 	 * 
-	 * @post | result != null
+	 * @post the result is not {@code null}
+	 *     | result != null
 	 * 
 	 * @immutable This object is associated with the same bottom right point throughout its lifetime
 	 */
@@ -169,6 +197,12 @@ public class BreakoutState {
 		return bottomRight;
 	}
 
+	/**
+	 * Calls all methods nescessary for moving the balls and collisions
+	 * 
+	 * @mutates | this, getBalls(), getBlocks()
+	 */
+	
 	public void tick(int paddleDir) {
 		
 		moveAllBalls();
@@ -189,7 +223,7 @@ public class BreakoutState {
 	}
 	
 	/**
-	 * moves all the balls currently in the game according to their current velocity
+	 * Moves all the balls currently in the game according to their current velocity
 	 *    
 	 * @mutates | this, getBalls()
 	 * @inspects | getBottomRight()
@@ -225,7 +259,8 @@ public class BreakoutState {
 	 * @post If a ball did not touch the left wall, it remained the exact same object at the exact same index they were before in the balls array. 
 	 * 		 If a ball did touch the left wall, its velocity gets mirrored according to the wall by calling bounceWall(1) on the ball , while its center remains unchanged
 	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> (getBalls()[i].equals(old(getBalls())[i])) || 
-	 *     |     (getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceWall(1).getVelocity())))
+	 *     | 		(getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && 
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceWall(1).getVelocity())))
 	 * 
 	 */
 	public void raaktWallLinks() {
@@ -255,7 +290,8 @@ public class BreakoutState {
 	 * @post If a ball did not touch the top wall, it remained the exact same object at the exact same index they were before in the balls array. 
 	 * 		 If a ball did touch the top wall, its velocity gets mirrored according to the wall by calling bounceWall(2) on the ball , while its center remains unchanged
 	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> (getBalls()[i].equals(old(getBalls())[i])) || 
-	 *     |     (getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceWall(2).getVelocity())))
+	 *     |		(getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && 
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceWall(2).getVelocity())))
 	 * 
 	 */
 	
@@ -286,7 +322,8 @@ public class BreakoutState {
 	 * @post If a ball did not touch the right wall, it remained the exact same object at the exact same index they were before in the balls array. 
 	 * 		 If a ball did touch the right wall, its velocity gets mirrored according to the wall by calling bounceWall(3) on the ball , while its center remains unchanged
 	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> (getBalls()[i].equals(old(getBalls())[i])) || 
-	 *     |     (getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceWall(3).getVelocity())))
+	 *     |		(getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && 
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceWall(3).getVelocity())))
 	 * 
 	 */
 	
@@ -316,7 +353,8 @@ public class BreakoutState {
 	 * 	   | getBalls().length <= old(getBalls()).length
 	 * @post Any ball that collided with the bottom of the field, got removed from the object's balls array. 
 	 *       If a ball did not collide with the bottom of the field, it stays in the object's balls array.
-	 *     |  IntStream.range(0, getBalls().length).noneMatch(i -> getBalls()[i].raaktRechthoek(new Rechthoek(new Point(0, getBottomRight().getY()), new Point(getBottomRight().getX(), getBottomRight().getY()+1)), 3))
+	 *     | IntStream.range(0, getBalls().length).noneMatch(i -> getBalls()[i].
+	 *     |	raaktRechthoek(new Rechthoek(new Point(0, getBottomRight().getY()), new Point(getBottomRight().getX(), getBottomRight().getY()+1)), 3))
 	 *     
 	 */
 	
@@ -337,8 +375,9 @@ public class BreakoutState {
 	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktRechthoek(new Rechthoek(e.getTopLeft(), e.getBottomRight()), 1)))
 	 * @post All balls remained unchanged, unless the ball bounced off a block's bottom side. 
 	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() &&
-	 * 	   |     getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
-	 *     |     getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceBlock(1).getVelocity())))
+	 * 	   |    getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && 
+	 * 	   |		(getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceBlock(1).getVelocity())))
 	 */
 	
 	public void raaktBlockOnder() {
@@ -373,8 +412,9 @@ public class BreakoutState {
 	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktRechthoek(new Rechthoek(e.getTopLeft(), e.getBottomRight()), 2)))
 	 * @post All balls remained unchanged, unless the ball bounced off a block's left side. 
 	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() &&
-	 * 	   |     getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
-	 *     |     getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceBlock(2).getVelocity())))
+	 * 	   |    getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && 
+	 * 	   |		(getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceBlock(2).getVelocity())))
 	 */
 	
 	public void raaktBlockLinks() {
@@ -409,8 +449,9 @@ public class BreakoutState {
 	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktRechthoek(new Rechthoek(e.getTopLeft(), e.getBottomRight()), 3)))
 	 * @post All balls remained unchanged, unless the ball bounced off a block's top side. 
 	 *     |IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() &&
-	 * 	   |     getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
-	 *     |     getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceBlock(3).getVelocity())))
+	 * 	   |    getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && 
+	 * 	   |		(getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceBlock(3).getVelocity())))
 	 */
 	
 	public void raaktBlockBoven() {
@@ -446,8 +487,9 @@ public class BreakoutState {
 	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktRechthoek(new Rechthoek(e.getTopLeft(), e.getBottomRight()), 4)))
 	 * @post All balls remained unchanged, unless the ball bounced off a block's right side. 
 	 *     |IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() &&
-	 * 	   |     getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
-	 *     |     getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceBlock(4).getVelocity())))
+	 * 	   |    getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && 
+	 * 	   |		(getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceBlock(4).getVelocity())))
 	 */
 	
 	public void raaktBlockRechts() {
@@ -482,8 +524,9 @@ public class BreakoutState {
 	 *     | getPaddle().equals(old(getPaddle()))
 	 * @post This object's balls have remained unchanged, unless they bounced off the left side of the paddle, in which case the velocity has changed
 	 *     | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) &&
-	 *     |     getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() && 
-	 *     |     (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) || getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(getPaddle(), paddleDir, 1).getVelocity())))
+	 *     |    getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() && 
+	 *     |		(getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) || 
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(getPaddle(), paddleDir, 1).getVelocity())))
 	 */
 	
 	public void raaktPaddleLinks(int paddleDir) {
@@ -514,8 +557,9 @@ public class BreakoutState {
 	 *     | getPaddle().equals(old(getPaddle())) 
 	 * @post This object's balls have remained unchanged, unless they bounced off the top side of the paddle, in which case the velocity has changed
 	 *     | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) &&
-	 *     |     getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() && 
-	 *     |     (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) || getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(getPaddle(), paddleDir, 2).getVelocity())))
+	 *     |    getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() && 
+	 *     |		(getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) || 
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(getPaddle(), paddleDir, 2).getVelocity())))
 	 */
 	
 	public void raaktPaddleBoven(int paddleDir) {
@@ -546,8 +590,9 @@ public class BreakoutState {
 	 *     | getPaddle().equals(old(getPaddle())) 
 	 * @post This object's balls have remained unchanged, unless they bounced off the right side of the paddle, in which case the velocity has changed
 	 *     | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) &&
-	 *     |     getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() && 
-	 *     |     (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) || getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(getPaddle(), paddleDir, 3).getVelocity())))
+	 *     |    getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() && 
+	 *     |		(getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) || 
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bouncePaddle(getPaddle(), paddleDir, 3).getVelocity())))
 	 */
 	
 	public void raaktPaddleRechts(int paddleDir) {
@@ -574,7 +619,8 @@ public class BreakoutState {
 	 * @inspects | getBottomRight()
 	 * 
 	 * @post the paddle has moved to the right by 10 units, unless it would have gone outside of the field, in which case it does not go any further than the right of the field
-	 * 	   | getPaddle().getCenter().getX() == old(getPaddle()).getCenter().getX() + 10 || getPaddle().getCenter().getX() == getBottomRight().getX() - getPaddle().getSize().getX()
+	 * 	   | getPaddle().getCenter().getX() == old(getPaddle()).getCenter().getX() + 10 || 
+	 * 	   | getPaddle().getCenter().getX() == getBottomRight().getX() - getPaddle().getSize().getX()
 	 */
 	
 	public void movePaddleRight() {
@@ -588,7 +634,8 @@ public class BreakoutState {
 	 * @inspects | getBottomRight()
 	 * 
 	 * @post the paddle has moved to the left by 10 units, unless it would have gone outside of the fiels, in which case it did not go any further than the left of the field
-	 *     | getPaddle().getCenter().getX() == old(getPaddle()).getCenter().getX() - 10 || getPaddle().getCenter().getX() == getPaddle().getSize().getX()
+	 *     | getPaddle().getCenter().getX() == old(getPaddle()).getCenter().getX() - 10 || 
+	 *     | getPaddle().getCenter().getX() == getPaddle().getSize().getX()
 	 */
 
 	public void movePaddleLeft() {

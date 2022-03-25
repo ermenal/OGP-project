@@ -40,8 +40,8 @@ public class BlockState {
 	 *     | bottomRight.getX() > topLeft.getX() && 
 	 *     | bottomRight.getY() > topLeft.getY()
 	 * 
-	 * @post getTopLeft() == topLeft
-	 * @post getBottomRight == bottomRight
+	 * @post | getTopLeft() == topLeft
+	 * @post | getBottomRight() == bottomRight
 	 */
 	public BlockState(Point topLeft, Point bottomRight) {
 		this.topLeft = topLeft;

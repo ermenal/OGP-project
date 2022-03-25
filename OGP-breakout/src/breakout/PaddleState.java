@@ -8,18 +8,19 @@ package breakout;
  * @invar | getCenter() != null
  * @invar | getSize() != null
  * 
- * @invar the paddle's size 
+ * @invar the paddle's size vector should not be pointing to the left or up 
  *     | getSize().getX() >= 0 && getSize().getY() >= 0
  */
 
 public class PaddleState {
-	// TODO: VOLLEDIGE DOCUMENTATIE, nog niks is af
 	
 	/**
 	 * @invar | center != null
 	 * @invar | size != null
 	 * 
-	 * @invar 
+	 * @invar The size vector should not be pointing to the left or up
+	 *     | size.getX() >= 0 &&
+	 *     | size.getY() >= 0
 	 */
 	
 	private final Point center;
@@ -49,8 +50,8 @@ public class PaddleState {
 	 * @post The result is not {@code null}
 	 *     | result != null
 	 * @post The result is a Point object representing the top left point of the paddle
-	 *      | result.getX() == getCenter().minus(getSize()).getX() &&
-	 *      | result.getY() == getCenter().minus(getSize()).getY()
+	 *      | result.getX() == getCenter().getX() - getSize().getX() &&
+	 *      | result.getY() == getCenter().getY() - getSize().getY()
 	 */
 	
 	public Point getTopLeft() {
@@ -58,14 +59,33 @@ public class PaddleState {
 		return tl;
 	}
 	
+	/**
+	 * Returns the bottom right coordinates of the paddle
+	 * 
+	 * @creates | result
+	 * 
+	 * @post The result is not {@code null} 
+	 * 	   | result != null
+	 * @post The result is a Point object representing the bottom right point of the paddle
+	 *     | result.getX() == getCenter().getX() + getSize().getX() &&
+	 *     | result.getY() == getCenter().getY() + getSize().getY()
+	 */
+	
 	public Point getBottomRight() {
 		Point br = center.plus(size);
 		return br;
 	}
 	
+	/**
+	 * Returns the paddle's center
+	 */
 	public Point getCenter() {
 		return center;
 	}
+	
+	/**
+	* Returns the paddle's size
+	*/
 	
 	public Vector getSize() {
 		return size;
