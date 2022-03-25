@@ -161,6 +161,8 @@ public class BreakoutState {
 	 * returns the coordinates of the bottom right of the field
 	 * 
 	 * @post | result != null
+	 * 
+	 * @immutable This object is associated with the same bottom right point throughout its lifetime
 	 */
 	
 	public Point getBottomRight() {
