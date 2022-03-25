@@ -624,7 +624,7 @@ public class BreakoutState {
 	 */
 	
 	public void movePaddleRight() {
-		paddle = paddle.movePaddleRightBy(getBottomRight());
+		paddle = paddle.movePaddleRight(getBottomRight());
 	}
 	
 	/**
@@ -639,7 +639,7 @@ public class BreakoutState {
 	 */
 
 	public void movePaddleLeft() {
-		paddle = paddle.movePaddleLeftBy();
+		paddle = paddle.movePaddleLeft();
 	}
 	
 	/**
