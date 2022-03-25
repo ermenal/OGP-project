@@ -151,6 +151,7 @@ public class BreakoutState {
 	 * Returns a new array containing all the balls
 	 * 
 	 * @creates | result
+	 * 
 	 * @post the result is not {@code null} 
 	 *    | result != null
 	 * @post the result's elements are not {@code null}
@@ -164,6 +165,7 @@ public class BreakoutState {
 	 * Returns a new array containing all the blocks 
 	 * 
 	 * @creates | result
+	 * 
 	 * @post the result is not {@code null} 
 	 *    | result != null
 	 * @post the result's elements are not {@code null}
@@ -329,7 +331,7 @@ public class BreakoutState {
 	
 	public void raaktWallRechts() {
 		for (BallState ball: balls) {
-			if (ball.raaktRechthoek(new Rechthoek(new Point(bottomRight.getX(), -1), new Point(bottomRight.getX() + 1, bottomRight.getY())), 2)) {
+			if (ball.raaktRechthoek(new Rechthoek(new Point(bottomRight.getX(), 0), new Point(bottomRight.getX() + 1, bottomRight.getY())), 2)) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
 					if (okBal != ball){

@@ -47,8 +47,6 @@ public class PaddleState {
 	/**
 	 * Returns the top left coordinates of the paddle
 	 * 
-	 * @creates | result
-	 * 
 	 * @post The result is not {@code null}
 	 *     | result != null
 	 * @post The result is a Point object representing the top left point of the paddle
@@ -63,8 +61,6 @@ public class PaddleState {
 	
 	/**
 	 * Returns the bottom right coordinates of the paddle
-	 * 
-	 * @creates | result
 	 * 
 	 * @post The result is not {@code null} 
 	 * 	   | result != null
@@ -96,8 +92,6 @@ public class PaddleState {
 	/**
 	 * Returns a new paddle object that has moved 10 units to the right, keeping in mind that it can't go outside of the field
 	 * 
-	 * @creates | result
-	 * 
 	 * @pre argument {@code br} is not {@code null}
 	 * 		| br != null
 	 * 
@@ -122,8 +116,6 @@ public class PaddleState {
 	
 	/**
 	 * Returns a new paddle object that has moved 10 units to the left, keeping in mind that it can't go outside of the field
-	 * 
-	 * @creates | result
 	 * 
 	 * @post the result is not {@code null}
 	 * 		|  result != null
