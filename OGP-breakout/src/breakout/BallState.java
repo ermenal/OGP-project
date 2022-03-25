@@ -61,58 +61,6 @@ public class BallState {
 		return new BallState(newCenter, diameter, velocity);
 	}
 	
-	public boolean raaktOnder(Point br) {
-		if (center.getY() + diameter/2 >= br.getY()) {
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean raaktRechts(Point br){
-		if (center.getX() + diameter/2 >= br.getX()){
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean raaktLinks() {
-		if (center.getX() - diameter/2 <= 0) {
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean raaktBoven() {
-		if (center.getY() - diameter/2 <= 0) {
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean raaktPaddleBoven(PaddleState paddle) {
-		Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);
-		if (ballOnderstePunt.getY() <= paddle.getTopLeft().getY() + diameter/2 && ballOnderstePunt.getY() >= paddle.getTopLeft().getY() && paddle.getTopLeft().getX() <= ballOnderstePunt.getX() && paddle.getBottomRight().getX() >= ballOnderstePunt.getX()) {
-			return raakDottedProduct(new Vector(velocity.getX(), velocity.getY()), new Vector(0, -1));
-		}
-		return false;
-	}
-	
-	public boolean raaktPaddleLinks(PaddleState paddle) {
-		Point ballRechtsePunt = new Point(center.getX() + diameter/2, center.getY());
-		if (ballRechtsePunt.getX() <= paddle.getTopLeft().getX() + diameter && ballRechtsePunt.getY() <= paddle.getBottomRight().getY() && ballRechtsePunt.getY() >= paddle.getTopLeft().getY() && ballRechtsePunt.getX() >= paddle.getTopLeft().getX()) {
-			return raakDottedProduct(new Vector(velocity.getX(), velocity.getY()), new Vector(-1, 0));
-		}
-		return false;
-	}
-	
-	public boolean raaktPaddleRechts(PaddleState paddle) {
-		Point ballLinksePunt = new Point(center.getX() - diameter/2, center.getY());
-		if (ballLinksePunt.getX() >= paddle.getBottomRight().getX() - diameter && ballLinksePunt.getY() <= paddle.getBottomRight().getY() && ballLinksePunt.getY() >= paddle.getTopLeft().getY() && ballLinksePunt.getX() <= paddle.getBottomRight().getX()) {
-			return raakDottedProduct(new Vector(velocity.getX(), velocity.getY()), new Vector(1, 0));
-		}
-		return false;
-	}
-	
 	public BallState bounceWall(int wallNumber) {
 		
 		if (wallNumber == 1) {
@@ -159,38 +107,6 @@ public class BallState {
 		return v.product(n) >= 0;
 	}
 	
-	public boolean raaktBlockOnder(BlockState block) {
-		Point ballBovenstePunt = new Point(center.getX(), center.getY() - diameter/2);
-		if (ballBovenstePunt.getX() >= block.getTopLeft().getX() && ballBovenstePunt.getX() <= block.getBottomRight().getX() && ballBovenstePunt.getY() <= block.getBottomRight().getY() && ballBovenstePunt.getY() >= (block.getBottomRight().getY() - diameter/2)) {
-			return raakDottedProduct(new Vector(velocity.getX(), velocity.getY()), new Vector(0, 1));
-		}
-		return false;
-	}
-	
-	public boolean raaktBlockLinks(BlockState block) {
-		Point ballRechtsePunt = new Point(center.getX() + diameter/2, center.getY());
-		if (ballRechtsePunt.getX() >= block.getTopLeft().getX() && ballRechtsePunt.getX() <= block.getTopLeft().getX() + diameter/2 && ballRechtsePunt.getY() <= block.getBottomRight().getY() && ballRechtsePunt.getY() >= block.getTopLeft().getY()) {
-			return raakDottedProduct(new Vector(velocity.getX(), velocity.getY()), new Vector(-1, 0));
-		}
-		return false;
-	}
-	
-	public boolean raaktBlockBoven(BlockState block) {
-		Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);
-		if (ballOnderstePunt.getX() >= block.getTopLeft().getX() && ballOnderstePunt.getX() <= block.getBottomRight().getX() && ballOnderstePunt.getY() >= block.getTopLeft().getY() && ballOnderstePunt.getY() <= block.getTopLeft().getY() + diameter/2) {
-			return raakDottedProduct(new Vector(velocity.getX(), velocity.getY()), new Vector(0, -1));
-		}
-		return false;
-	}
-	
-	public boolean raaktBlockRechts(BlockState block) {
-		Point ballLinksePunt = new Point(center.getX() - diameter/2, center.getY());
-		if(ballLinksePunt.getX() <= block.getBottomRight().getX() && ballLinksePunt.getX() >= block.getBottomRight().getX()-diameter/2 && ballLinksePunt.getY() >= block.getTopLeft().getY() && ballLinksePunt.getY() <= block.getBottomRight().getY()) {
-			return raakDottedProduct(new Vector(velocity.getX(), velocity.getY()), new Vector(1, 0));
-		}
-		return false;
-	}
-	
 	public BallState bounceBlock(int blockSideNumber) {
 		if (blockSideNumber == 1) {
 			//bottomSide
@@ -215,5 +131,36 @@ public class BallState {
 		return null;
 	}
 	
+	public boolean raaktRechthoek(Rechthoek rechthoek, int sideNumber) {
+		// bottomSide
+		if (sideNumber == 1) {
+			Point ballBovenstePunt = new Point(center.getX(), center.getY() - diameter/2);
+			if (ballBovenstePunt.getX() >= rechthoek.getTopLeft().getX() && ballBovenstePunt.getX() <= rechthoek.getBottomRight().getX() && ballBovenstePunt.getY() <= rechthoek.getBottomRight().getY() && ballBovenstePunt.getY() >= rechthoek.getBottomRight().getY() - diameter/2) {
+				return raakDottedProduct(new Vector(velocity.getX(), velocity.getY()), new Vector(0, 1));
+			}
+		}
+		// leftSide
+		if (sideNumber == 2) {
+			Point ballRechtsePunt = new Point(center.getX() + diameter/2, center.getY());
+			if (ballRechtsePunt.getX() >= rechthoek.getTopLeft().getX() && ballRechtsePunt.getX() <= rechthoek.getTopLeft().getX() + diameter/2 && ballRechtsePunt.getY() <= rechthoek.getBottomRight().getY() && ballRechtsePunt.getY() >= rechthoek.getTopLeft().getY()) {
+				return raakDottedProduct(new Vector(velocity.getX(), velocity.getY()), new Vector(-1, 0));
+			}
+		}
+		//topSide
+		if (sideNumber == 3) {
+			Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);
+			if (ballOnderstePunt.getX() >= rechthoek.getTopLeft().getX() && ballOnderstePunt.getX() <= rechthoek.getBottomRight().getX() && ballOnderstePunt.getY() >= rechthoek.getTopLeft().getY() && ballOnderstePunt.getY() <= rechthoek.getTopLeft().getY() + diameter/2) {
+				return raakDottedProduct(new Vector(velocity.getX(), velocity.getY()), new Vector(0, -1));
+			}
+		}
+		//rightSide
+		if (sideNumber == 4) {
+			Point ballLinksePunt = new Point(center.getX() - diameter/2, center.getY());
+			if(ballLinksePunt.getX() <= rechthoek.getBottomRight().getX() && ballLinksePunt.getX() >= rechthoek.getBottomRight().getX()-diameter/2 && ballLinksePunt.getY() >= rechthoek.getTopLeft().getY() && ballLinksePunt.getY() <= rechthoek.getBottomRight().getY()) {
+				return raakDottedProduct(new Vector(velocity.getX(), velocity.getY()), new Vector(1, 0));
+			}
+		}
+		return false;
+	}
 	
 }

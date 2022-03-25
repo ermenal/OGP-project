@@ -228,7 +228,7 @@ public class BreakoutState {
 	 */
 	public void raaktWallLinks() {
 		for (BallState ball: balls) {
-			if (ball.raaktLinks()) {
+			if (ball.raaktRechthoek(new Rechthoek(new Point(-1, 0), new Point(0, bottomRight.getY())), 4)) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
 					if (okBal != ball){
@@ -259,7 +259,7 @@ public class BreakoutState {
 	
 	public void raaktWallBoven() {
 		for (BallState ball: balls) {
-			if (ball.raaktBoven()) {
+			if (ball.raaktRechthoek(new Rechthoek(new Point(0, -1), new Point(getBottomRight().getX(), 0)), 1)) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
 					if (okBal != ball){
@@ -290,7 +290,7 @@ public class BreakoutState {
 	
 	public void raaktWallRechts() {
 		for (BallState ball: balls) {
-			if (ball.raaktRechts(bottomRight)) {
+			if (ball.raaktRechthoek(new Rechthoek(new Point(bottomRight.getX(), -1), new Point(bottomRight.getX() + 1, bottomRight.getY())), 2)) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
 					if (okBal != ball){
@@ -314,12 +314,12 @@ public class BreakoutState {
 	 * 	   | getBalls().length <= old(getBalls()).length
 	 * @post Any ball that collided with the bottom of the field, got removed from the object's balls array. 
 	 *       If a ball did not collide with the bottom of the field, it stays in the object's balls array.
-	 *     |  IntStream.range(0, getBalls().length).noneMatch(i -> getBalls()[i].raaktOnder(getBottomRight()))
+	 *     |  IntStream.range(0, getBalls().length).noneMatch(i -> getBalls()[i].raaktRechthoek(new Rechthoek(new Point(0, getBottomRight().getY()), new Point(getBottomRight().getX(), getBottomRight().getY()+1)), 3))
 	 *     
 	 */
 	
 	public void raaktOnder() {
-		balls = Arrays.stream(balls).filter(e -> !(e.raaktOnder(getBottomRight()))).toArray(BallState[]::new);
+		balls = Arrays.stream(balls).filter(e -> !(e.raaktRechthoek(new Rechthoek(new Point(0, bottomRight.getY()), new Point(bottomRight.getX(), bottomRight.getY()+1)), 3))).toArray(BallState[]::new);
 	}
 	
 	/**
@@ -332,7 +332,7 @@ public class BreakoutState {
 	 * @post This object's blocks array's  number of elements is equal to or less than its old number of elements
 	 * 	   | getBlocks().length <= old(getBlocks()).length 
 	 * @post All blocks that were hit by a ball on their bottom side get removed from the game
-	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktBlockOnder(e)))
+	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktRechthoek(new Rechthoek(e.getTopLeft(), e.getBottomRight()), 1)))
 	 * @post All balls remained unchanged, unless the ball bounced off a block's bottom side. 
 	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() &&
 	 * 	   |     getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
@@ -342,7 +342,7 @@ public class BreakoutState {
 	public void raaktBlockOnder() {
 		for (BallState ball: balls) {
 			for (BlockState block: blocks) {
-				if (ball.raaktBlockOnder(block)) {
+				if (ball.raaktRechthoek(new Rechthoek(block.getTopLeft(), block.getBottomRight()), 1)) {
 					ArrayList<BallState> newBalls = new ArrayList<BallState>();
 					for (BallState okBal: balls) {
 						if (okBal != ball){
@@ -368,7 +368,7 @@ public class BreakoutState {
 	 * @post This object's blocks array's  number of elements is equal to or less than its old number of elements
 	 * 	   | getBlocks().length <= old(getBlocks()).length
 	 * @post All blocks that were hit by a ball on their left side get removed from the game
-	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktBlockLinks(e)))
+	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktRechthoek(new Rechthoek(e.getTopLeft(), e.getBottomRight()), 2)))
 	 * @post All balls remained unchanged, unless the ball bounced off a block's left side. 
 	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() &&
 	 * 	   |     getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
@@ -378,7 +378,7 @@ public class BreakoutState {
 	public void raaktBlockLinks() {
 		for (BallState ball: balls) {
 			for (BlockState block: blocks) {
-				if (ball.raaktBlockLinks(block)) {
+				if (ball.raaktRechthoek(new Rechthoek(block.getTopLeft(), block.getBottomRight()), 2)) {
 					ArrayList<BallState> newBalls = new ArrayList<BallState>();
 					for (BallState okBal: balls) {
 						if (okBal != ball){
@@ -404,7 +404,7 @@ public class BreakoutState {
 	 * @post This object's blocks array's  number of elements is equal to or less than its old number of elements
 	 * 	   | getBlocks().length <= old(getBlocks()).length
 	 * @post Any block that was hit by a ball on its top side got removed from the game
-	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktBlockBoven(e)))
+	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktRechthoek(new Rechthoek(e.getTopLeft(), e.getBottomRight()), 3)))
 	 * @post All balls remained unchanged, unless the ball bounced off a block's top side. 
 	 *     |IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() &&
 	 * 	   |     getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
@@ -414,7 +414,7 @@ public class BreakoutState {
 	public void raaktBlockBoven() {
 		for (BallState ball: balls) {
 			for (BlockState block: blocks) {
-				if (ball.raaktBlockBoven(block)) {
+				if (ball.raaktRechthoek(new Rechthoek(block.getTopLeft(), block.getBottomRight()), 3)) {
 					ArrayList<BallState> newBalls = new ArrayList<BallState>();
 					for (BallState okBal: balls) {
 						if (okBal != ball){
@@ -441,7 +441,7 @@ public class BreakoutState {
 	 * @post This object's blocks array's  number of elements is equal to or less than its old number of elements
 	 * 	   | getBlocks().length <= old(getBlocks()).length
 	 * @post Any block that was hit by a ball on its right side got removed from the game
-	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktBlockRechts(e)))
+	 * 	   | Arrays.stream(getBlocks()).noneMatch(e -> Arrays.stream(getBalls()).anyMatch(b -> b.raaktRechthoek(new Rechthoek(e.getTopLeft(), e.getBottomRight()), 4)))
 	 * @post All balls remained unchanged, unless the ball bounced off a block's right side. 
 	 *     |IntStream.range(0, getBalls().length).allMatch(i -> getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter() &&
 	 * 	   |     getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && (getBalls()[i].getVelocity().equals(old(getBalls())[i].getVelocity()) ||
@@ -451,7 +451,7 @@ public class BreakoutState {
 	public void raaktBlockRechts() {
 		for (BallState ball: balls) {
 			for (BlockState block: blocks) {
-				if (ball.raaktBlockRechts(block)) {
+				if (ball.raaktRechthoek(new Rechthoek(block.getTopLeft(), block.getBottomRight()), 4)) {
 					ArrayList<BallState> newBalls = new ArrayList<BallState>();
 					for (BallState okBal: balls) {
 						if (okBal != ball){
@@ -486,7 +486,7 @@ public class BreakoutState {
 	
 	public void raaktPaddleLinks(int paddleDir) {
 		for (BallState ball: balls) {
-			if (ball.raaktPaddleLinks(paddle)) {
+			if (ball.raaktRechthoek(new Rechthoek(paddle.getTopLeft(), paddle.getBottomRight()), 2)) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
 					if (okBal != ball){
@@ -518,7 +518,7 @@ public class BreakoutState {
 	
 	public void raaktPaddleBoven(int paddleDir) {
 		for (BallState ball: balls) {
-			if (ball.raaktPaddleBoven(paddle)) {
+			if (ball.raaktRechthoek(new Rechthoek(paddle.getTopLeft(), paddle.getBottomRight()), 3)) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
 					if (okBal != ball){
@@ -550,7 +550,7 @@ public class BreakoutState {
 	
 	public void raaktPaddleRechts(int paddleDir) {
 		for (BallState ball: balls) {
-			if (ball.raaktPaddleRechts(paddle)) {
+			if (ball.raaktRechthoek(new Rechthoek(paddle.getTopLeft(), paddle.getBottomRight()), 4)) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
 					if (okBal != ball){
@@ -602,25 +602,20 @@ public class BreakoutState {
 	 *     | result == (getBlocks().length == 0 && getBalls().length > 0)
 	 */
 	
-//TODO
-	
 	public boolean isWon() {
-		if (blocks.length == 0 && balls.length > 0) {
-		return true;
-		}
-		return false;
+		return blocks.length == 0 && balls.length > 0;
 	}
 
 	/**
-	 * Returns true if there are no more balls left in the game
+	 * Returns whether the game is lost or not
 	 * 
 	 * @inspects | getBalls()
+	 * 
+	 * @post  The result is {@code true} if there are no more balls left in the game
+	 *    | result == (getBalls().length == 0)
 	 */
 	
 	public boolean isDead() {
-		if (balls.length == 0) {
-			return true;
-		}
-		return false;
+		return balls.length == 0;
 	}
 }

@@ -7,6 +7,9 @@ package breakout;
  *
  * @invar | getCenter() != null
  * @invar | getSize() != null
+ * 
+ * @invar the paddle's size 
+ *     | getSize().getX() >= 0 && getSize().getY() >= 0
  */
 
 public class PaddleState {
@@ -15,6 +18,8 @@ public class PaddleState {
 	/**
 	 * @invar | center != null
 	 * @invar | size != null
+	 * 
+	 * @invar 
 	 */
 	
 	private final Point center;
@@ -40,8 +45,14 @@ public class PaddleState {
 	 * Returns the top left coordinates of the paddle
 	 * 
 	 * @creates | result
-	 * @post The result 
+	 * 
+	 * @post The result is not {@code null}
+	 *     | result != null
+	 * @post The result is a Point object representing the top left point of the paddle
+	 *      | result.getX() == getCenter().minus(getSize()).getX() &&
+	 *      | result.getY() == getCenter().minus(getSize()).getY()
 	 */
+	
 	public Point getTopLeft() {
 		Point tl = center.minus(size);
 		return tl;
