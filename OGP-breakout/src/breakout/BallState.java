@@ -222,7 +222,7 @@ public class BallState {
 	 * 		| result == velocity.scaled(-1).product(n) >= 0
 	 */
 	
-	public boolean raakDottedProduct(Vector velocity, Vector n) {
+	private boolean raakDottedProduct(Vector velocity, Vector n) {
 		Vector v = velocity.scaled(-1);
 		return v.product(n) >= 0;
 	}
@@ -279,23 +279,16 @@ public class BallState {
 	 * 		| rechthoek != null
 	 * 
 	 * @post The result is true if the distance between the circle's center to the given side is smaller than or equal to the circle's radius.
-	 * 	| result == false||
-	 * 	| result == (getDiameter()/2 * getDiameter()/2 >= distanceCenterTo2Points
-	 * 	|		(new Point(rechthoek.getTopLeft().getX(), rechthoek.getBottomRight().getY()), rechthoek.getBottomRight())) &&
-	 * 	|	raakDottedProduct(getVelocity(), new Vector(0, 1))  && 
-	 * 	|	sideNumber == 1||
-	 * 	| result == (getDiameter()/2 * getDiameter()/2 >= distanceCenterTo2Points
-	 * 	|		(rechthoek.getTopLeft(), new Point(rechthoek.getTopLeft().getX(), rechthoek.getBottomRight().getY()))) && 
-	 * 	|	raakDottedProduct(getVelocity(), new Vector(-1, 0))	&&
-	 * 	|	sideNumber == 2 ||
-	 * 	| result == (getDiameter()/2 * getDiameter()/2 >= distanceCenterTo2Points
-	 * 	|		(rechthoek.getTopLeft(), new Point(rechthoek.getBottomRight().getX(), rechthoek.getTopLeft().getY()))) &&
-	 * 	|	raakDottedProduct(getVelocity(), new Vector (0, -1)) && 
-	 * 	|	sideNumber == 3 ||
-	 * 	| result == (getDiameter()/2 * getDiameter()/2 >= distanceCenterTo2Points
-	 * 	|		(rechthoek.getBottomRight(), new Point(rechthoek.getBottomRight().getX(), rechthoek.getTopLeft().getY()))) &&
-	 * 	|	raakDottedProduct(getVelocity(), new Vector (1, 0)) &&
-	 * 	|	sideNumber == 4
+	 * 		| result == ((Math.max(rechthoek.getTopLeft().getX(), Math.min(getCenter().getX(), rechthoek.getBottomRight().getX())) - getCenter().getX()) -
+	 * 		|			(Math.max(rechthoek.getTopLeft().getX(), Math.min(getCenter().getX(), rechthoek.getBottomRight().getX())) - getCenter().getX()) + 
+	 * 		|		(Math.max(rechthoek.getTopLeft().getY(), Math.min(getCenter().getY(), rechthoek.getBottomRight().getY())) - getCenter().getY()) * 
+	 * 		|			(Math.max(rechthoek.getTopLeft().getY(), Math.min(getCenter().getY(), rechthoek.getBottomRight().getY())) - getCenter().getY())) 
+	 * 		|	<= getDiameter()/2 * getDiameter()/2 &&
+	 * 		| 		(getVelocity().scaled(-1).product(new Vector (0, 1)) >= 0 || 
+	 * 		|		getVelocity().scaled(-1).product(new Vector(-1, 0)) >= 0 ||
+	 * 		|		getVelocity().scaled(-1).product(new Vector(0, -1)) >= 0 ||
+	 * 		|		getVelocity().scaled(-1).product(new Vector(1, 0)) >= 0) ||
+	 * 		| 	result == false
 	 */
 	
 	public boolean raaktRechthoek(Rechthoek rechthoek, int sideNumber) {
@@ -312,7 +305,6 @@ public class BallState {
 					return raakDottedProduct(velocity, new Vector(0, 1));
 				}
 			}
-			
 		}
 		// leftSide
 		if (sideNumber == 2) {
@@ -323,7 +315,6 @@ public class BallState {
 					return raakDottedProduct(velocity, new Vector(-1, 0));
 				}
 			}
-			
 		}
 		//topSide
 		if (sideNumber == 3) {
@@ -367,7 +358,7 @@ public class BallState {
 	 * 		|		(punt2.getY() - punt1.getY()) * (punt2.getY() - punt1.getY()))
 	 */
 	
-	public int distanceCenterTo2Points(Point punt1, Point punt2) {
+	private int distanceCenterTo2Points(Point punt1, Point punt2) {
 		int x1 = punt1.getX();
 		int x2 = punt2.getX();
 		int y1 = punt1.getY();
