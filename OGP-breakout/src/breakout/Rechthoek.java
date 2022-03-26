@@ -5,12 +5,12 @@ package breakout;
  * 
  * @immutable
  * 
- * @invar the bottom right point is not {@code null}
+ * @invar The bottom right point is not {@code null}
  *    | getBottomRight() != null
- * @invar the top left point is not {@code null}
+ * @invar The top left point is not {@code null}
  *    | getTopLeft() != null
  *    
- * @invar the bottom right point of the rectangle is not positioned above or to the left of the top left point
+ * @invar The bottom right point of the rectangle is not positioned above or to the left of the top left point
  *    | getBottomRight().getX() >= getTopLeft().getX() &&
  *    | getBottomRight().getY() >= getTopLeft().getY()
  */
@@ -23,7 +23,7 @@ public class Rechthoek {
 	 * @invar {@code bottomRight} is not {@code null} 
 	 *    | bottomRight != null
 	 *
-	 * @invar the {@code bottomRight} point is not positioned above or to the left of the {@code topLeft} point
+	 * @invar The {@code bottomRight} point is not positioned above or to the left of the {@code topLeft} point
 	 *     | bottomRight.getX() >= topLeft.getX() && 
 	 *	   | bottomRight.getY() >= topLeft.getY()
 	 */
@@ -34,9 +34,9 @@ public class Rechthoek {
 	/**
 	 * Initializes the object with the given topLeft and bottomRight points 
 	 * 
-	 * @pre parameter {@code topLeft} is not {@code null}
+	 * @pre Parameter {@code topLeft} is not {@code null}
 	 *     | topLeft != null
-	 * @pre parameter {@code bottomRight} is not {@code null}
+	 * @pre Parameter {@code bottomRight} is not {@code null}
 	 *     | bottomRight != null
 	 *     
 	 * @pre {@code bottomRight} is not positioned above or to the left of {@code topLeft}

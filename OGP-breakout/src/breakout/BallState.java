@@ -88,7 +88,7 @@ public class BallState {
 	/** 
 	 * Returns a new ball that moved according to the ball's current velocity
 	 * 
-	 * @pre argument {@code br} is not {@code null} 
+	 * @pre Argument {@code br} is not {@code null} 
 	 * 		| br != null
 	 * 
 	 * @post | result != null
@@ -210,9 +210,20 @@ public class BallState {
 		return null;
 	}
 	
-	private boolean raakDottedProduct(Vector velocity, Vector n) {
-		//avoiding weird effects
-		Vector v = new Vector(-velocity.getX(), -velocity.getY());
+	/**
+	 * Returns the dot product of the  and the vector {@code n} and vector constructed by scaling {@code velocity} with -1
+	 * 
+	 * @pre {@code velocity} should not be null
+	 * 		| velocity != null
+	 * @pre {@code n} should not be null
+	 * 		| n != null
+	 * 
+	 * @post The result is true if the angle between the velocity and vector v is sharp
+	 * 		| result == velocity.scaled(-1).product(n) >= 0
+	 */
+	
+	public boolean raakDottedProduct(Vector velocity, Vector n) {
+		Vector v = velocity.scaled(-1);
 		return v.product(n) >= 0;
 	}
 	
@@ -267,13 +278,24 @@ public class BallState {
 	 * @pre Argument {@code rechthoek} should not be {@code null}
 	 * 		| rechthoek != null
 	 * 
-	 * @post the ball's properties have remained unchanged
-	 * 		| getCenter() == old(getCenter()) &&
-	 * 		| getDiameter() == old(getDiameter()) &&
-	 * 		| getVelocity() == old(getVelocity())
-	 * 
-	 * @post The result is true if a collision happened between the ball and the rectangle's given side 
-	 * 	
+	 * @post The result is true if the distance between the circle's center to the given side is smaller than or equal to the circle's radius.
+	 * 	| result == false||
+	 * 	| result == (getDiameter()/2 * getDiameter()/2 >= distanceCenterTo2Points
+	 * 	|		(new Point(rechthoek.getTopLeft().getX(), rechthoek.getBottomRight().getY()), rechthoek.getBottomRight())) &&
+	 * 	|	raakDottedProduct(getVelocity(), new Vector(0, 1))  && 
+	 * 	|	sideNumber == 1||
+	 * 	| result == (getDiameter()/2 * getDiameter()/2 >= distanceCenterTo2Points
+	 * 	|		(rechthoek.getTopLeft(), new Point(rechthoek.getTopLeft().getX(), rechthoek.getBottomRight().getY()))) && 
+	 * 	|	raakDottedProduct(getVelocity(), new Vector(-1, 0))	&&
+	 * 	|	sideNumber == 2 ||
+	 * 	| result == (getDiameter()/2 * getDiameter()/2 >= distanceCenterTo2Points
+	 * 	|		(rechthoek.getTopLeft(), new Point(rechthoek.getBottomRight().getX(), rechthoek.getTopLeft().getY()))) &&
+	 * 	|	raakDottedProduct(getVelocity(), new Vector (0, -1)) && 
+	 * 	|	sideNumber == 3 ||
+	 * 	| result == (getDiameter()/2 * getDiameter()/2 >= distanceCenterTo2Points
+	 * 	|		(rechthoek.getBottomRight(), new Point(rechthoek.getBottomRight().getX(), rechthoek.getTopLeft().getY()))) &&
+	 * 	|	raakDottedProduct(getVelocity(), new Vector (1, 0)) &&
+	 * 	|	sideNumber == 4
 	 */
 	
 	public boolean raaktRechthoek(Rechthoek rechthoek, int sideNumber) {
@@ -286,7 +308,7 @@ public class BallState {
 			if (ballRechtsePunt.getX() >= rechthoek.getTopLeft().getX() && ballLinksePunt.getX() <= rechthoek.getBottomRight().getX() && center.getY() >= rechthoek.getBottomRight().getY() && ballBovenstePunt.getY() <= rechthoek.getBottomRight().getY()) {
 				Point linksOnder = new Point(rechthoek.getTopLeft().getX(), rechthoek.getBottomRight().getY());
 				Point rechtsOnder = rechthoek.getBottomRight();
-				if (getDiameter()/2 * getDiameter()/2 >= (((rechtsOnder.getX() - linksOnder.getX())*(linksOnder.getY() - center.getY()) - (linksOnder.getX() - center.getX())*(rechtsOnder.getY() - linksOnder.getY())) * ((rechtsOnder.getX() - linksOnder.getX())*(linksOnder.getY() - center.getY()) - (linksOnder.getX() - center.getX())*(rechtsOnder.getY() - linksOnder.getY()))) / ((rechtsOnder.getX() - linksOnder.getX())*(rechtsOnder.getX() - linksOnder.getX()) + (rechtsOnder.getY() - linksOnder.getY())*(rechtsOnder.getY() - linksOnder.getY()))) {
+				if (getDiameter()/2 * getDiameter()/2 >= distanceCenterTo2Points(linksOnder, rechtsOnder)) {
 					return raakDottedProduct(velocity, new Vector(0, 1));
 				}
 			}
@@ -325,7 +347,7 @@ public class BallState {
 	}
 	
 	/**
-	 * Returns the distance of the center of the ball to a line constructed by 2 points
+	 * Returns the distance of the center of the ball to a line constructed by 2 points to the power of 2
 	 * 
 	 * @pre {@code punt1} is not {@code null}
 	 * 		| punt1 != null
@@ -335,7 +357,7 @@ public class BallState {
 	 * 		| punt1.getX() != punt2.getX() || 
 	 * 		|	punt1.getY() != punt2.getY()
 	 * 
-	 * @post the result is the distance between the center of the ball and the line constructed by the 2 given points
+	 * @post The result is the distance between the center of the ball and the line constructed by the 2 given points
 	 * 		| result == 
 	 * 		|	((punt2.getX() - punt1.getX()) * (punt1.getY() - getCenter().getY()) - 
 	 * 		| 			(punt1.getX() - getCenter().getX()) * (punt2.getY() - punt1.getY())) * 
@@ -344,6 +366,7 @@ public class BallState {
 	 * 		|	((punt2.getX() - punt1.getX()) * (punt2.getX() - punt1.getX()) + 
 	 * 		|		(punt2.getY() - punt1.getY()) * (punt2.getY() - punt1.getY()))
 	 */
+	
 	public int distanceCenterTo2Points(Point punt1, Point punt2) {
 		int x1 = punt1.getX();
 		int x2 = punt2.getX();
