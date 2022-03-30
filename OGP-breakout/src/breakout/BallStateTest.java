@@ -310,6 +310,11 @@ class BallStateTest {
 	}
 	
 	@Test
+	void testGetTopLeftPaddle() {
+		
+	}
+	
+	@Test
 	void testBreakoutState() {
 		BreakoutState bs = new BreakoutState(new BallState[0], new BlockState[0], new Point(0, 0), new PaddleState(new Point(0, 0), new Vector(0, 0)));
 		assertThrows(IllegalArgumentException.class, () -> new BreakoutState(null,null,null,null) );
