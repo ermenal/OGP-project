@@ -181,7 +181,7 @@ class BallStateTest {
 		
 	}
 	
-	@Test
+	
 	void testbouncePaddle() {
 		//bal1 raakt bovenkant paddle 1
 		int paddledir1 = 0;
@@ -327,6 +327,10 @@ class BallStateTest {
 		Rechthoek testRechthoek = new Rechthoek(new Point(3000, 3000), new Point(7000, 4700));
 		
 		assertEquals(true, testBall.raaktRechthoek(testRechthoek, 1));
+		
+		BallState testHoekBall = new BallState(new Point(5000, 5000), 482, new Vector(-120, -209));
+		Rechthoek testHoekRechthoek = new Rechthoek(new Point(3000, 3000), new Point(4900, 4900));
+		assertTrue(testHoekBall.raaktRechthoek(testHoekRechthoek, 1));
 	}
 	
 	

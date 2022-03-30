@@ -137,7 +137,6 @@ public class GameView extends JPanel {
 		//ball
 		g.setColor(Color.red);
 		for (BallState ball : breakoutState.getBalls()) {
-			// DONE: figure out top-left and bottom right Point of surrounding rectangle of ball
 			Point tl = ball.getTopLeftOfSurroundingRectangle();
 			Point br = ball.getBottomRightOfSurroundingRectangle(); 
 			paintBall(g, tl, br);

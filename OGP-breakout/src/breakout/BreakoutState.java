@@ -151,9 +151,10 @@ public class BreakoutState {
 	 * Returns a new array containing all the balls
 	 * 
 	 * @creates | result
-	 * @post the result is not {@code null} 
+	 * 
+	 * @post The result is not {@code null} 
 	 *    | result != null
-	 * @post the result's elements are not {@code null}
+	 * @post The result's elements are not {@code null}
 	 *    | Arrays.stream(result).noneMatch(e -> e == null)
 	 */
 	public BallState[] getBalls() {
@@ -164,9 +165,10 @@ public class BreakoutState {
 	 * Returns a new array containing all the blocks 
 	 * 
 	 * @creates | result
-	 * @post the result is not {@code null} 
+	 * 
+	 * @post The result is not {@code null} 
 	 *    | result != null
-	 * @post the result's elements are not {@code null}
+	 * @post The result's elements are not {@code null}
 	 *    | Arrays.stream(result).noneMatch(e -> e == null)
 	 */
 	public BlockState[] getBlocks() {
@@ -177,7 +179,7 @@ public class BreakoutState {
 	/**
 	 * Returns the paddle 
 	 * 
-	 * @post the result is not {@code null}
+	 * @post The result is not {@code null}
 	 *     | result != null
 	 */
 	public PaddleState getPaddle() {
@@ -187,7 +189,7 @@ public class BreakoutState {
 	/**
 	 * Returns the coordinates of the bottom right of the field
 	 * 
-	 * @post the result is not {@code null}
+	 * @post The result is not {@code null}
 	 *     | result != null
 	 * 
 	 * @immutable This object is associated with the same bottom right point throughout its lifetime
@@ -226,7 +228,6 @@ public class BreakoutState {
 	 * Moves all the balls currently in the game according to their current velocity
 	 *    
 	 * @mutates | this, getBalls()
-	 * @inspects | getBottomRight()
 	 * 
 	 * @post This object's balls array's number of elements equals its old number of elements
 	 *     | getBalls().length == old(getBalls()).length
@@ -251,16 +252,15 @@ public class BreakoutState {
 	 * Checks for a collision between a ball and the left wall, and if there is a collision, bounces the ball off the wall
 	 * 
 	 * @mutates | this, getBalls()
-	 * @inspects | getBottomRight()
 	 * 
 	 * @post This object's balls array's number of elements equals its old number of elements
 	 *     | getBalls().length == old(getBalls()).length
-	 *     
 	 * @post If a ball did not touch the left wall, it remained the exact same object at the exact same index they were before in the balls array. 
-	 * 		 If a ball did touch the left wall, its velocity gets mirrored according to the wall by calling bounceWall(1) on the ball , while its center remains unchanged
+	 * 		 If a ball did touch the left wall, its velocity gets mirrored according to the wall by calling bounceWall(1) on the ball , while its center and diameter remain unchanged
 	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> (getBalls()[i].equals(old(getBalls())[i])) || 
 	 *     | 		(getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && 
-	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceWall(1).getVelocity())))
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceWall(1).getVelocity()) &&
+	 *     |		getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter()))
 	 * 
 	 */
 	public void raaktWallLinks() {
@@ -283,15 +283,15 @@ public class BreakoutState {
 	 * Checks for a collision beween a ball and the top wall, and if there is a collision, bounces the ball off the wall
 	 * 
 	 * @mutates | this, getBalls()
-	 * @inspects | getBottomRight()
 	 * 
 	 * @post This object's balls array's number of elements equals its old number of elements
 	 *     | getBalls().length == old(getBalls()).length
 	 * @post If a ball did not touch the top wall, it remained the exact same object at the exact same index they were before in the balls array. 
-	 * 		 If a ball did touch the top wall, its velocity gets mirrored according to the wall by calling bounceWall(2) on the ball , while its center remains unchanged
+	 * 		 If a ball did touch the top wall, its velocity gets mirrored according to the wall by calling bounceWall(2) on the ball , while its center and diameter remain unchanged
 	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> (getBalls()[i].equals(old(getBalls())[i])) || 
 	 *     |		(getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && 
-	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceWall(2).getVelocity())))
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceWall(2).getVelocity()) &&
+	 *     |		getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter()))
 	 * 
 	 */
 	
@@ -315,21 +315,21 @@ public class BreakoutState {
 	 * Checks for a collision beween a ball and the top wall, and if there is a collision, bounces the ball off the wall
 	 * 
 	 * @mutates | this, getBalls()
-	 * @inspects | getBottomRight()
 	 * 
 	 * @post This object's balls array's number of elements equals its old number of elements
 	 *     | getBalls().length == old(getBalls()).length
 	 * @post If a ball did not touch the right wall, it remained the exact same object at the exact same index they were before in the balls array. 
-	 * 		 If a ball did touch the right wall, its velocity gets mirrored according to the wall by calling bounceWall(3) on the ball , while its center remains unchanged
+	 * 		 If a ball did touch the right wall, its velocity gets mirrored according to the wall by calling bounceWall(3) on the ball , while its center and diameter remain unchanged
 	 * 	   | IntStream.range(0, getBalls().length).allMatch(i -> (getBalls()[i].equals(old(getBalls())[i])) || 
 	 *     |		(getBalls()[i].getCenter().equals(old(getBalls())[i].getCenter()) && 
-	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceWall(3).getVelocity())))
+	 *     |		getBalls()[i].getVelocity().equals(old(getBalls())[i].bounceWall(3).getVelocity()) &&
+	 *     |		getBalls()[i].getDiameter() == old(getBalls())[i].getDiameter()))
 	 * 
 	 */
 	
 	public void raaktWallRechts() {
 		for (BallState ball: balls) {
-			if (ball.raaktRechthoek(new Rechthoek(new Point(bottomRight.getX(), -1), new Point(bottomRight.getX() + 1, bottomRight.getY())), 2)) {
+			if (ball.raaktRechthoek(new Rechthoek(new Point(bottomRight.getX(), 0), new Point(bottomRight.getX() + 1, bottomRight.getY())), 2)) {
 				ArrayList<BallState> newBalls = new ArrayList<BallState>();
 				for (BallState okBal: balls) {
 					if (okBal != ball){
@@ -347,7 +347,6 @@ public class BreakoutState {
 	 * Checks for a collision between a ball and the bottom of the field, and if there is a collision, removes the ball from the game
 	 * 
 	 * @mutates | this, getBalls()
-	 * @inspects | getBottomRight()
 	 * 
 	 * @post This object's balls array's number of elements is equal to or less than its old number of elements
 	 * 	   | getBalls().length <= old(getBalls()).length
@@ -618,7 +617,7 @@ public class BreakoutState {
 	 * @mutates | this, getPaddle()
 	 * @inspects | getBottomRight()
 	 * 
-	 * @post the paddle has moved to the right by 10 units, unless it would have gone outside of the field, in which case it does not go any further than the right of the field
+	 * @post The paddle has moved to the right by 10 units, unless it would have gone outside of the field, in which case it does not go any further than the right of the field
 	 * 	   | getPaddle().getCenter().getX() == old(getPaddle()).getCenter().getX() + 10 || 
 	 * 	   | getPaddle().getCenter().getX() == getBottomRight().getX() - getPaddle().getSize().getX()
 	 */
