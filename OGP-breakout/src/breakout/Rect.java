@@ -15,7 +15,7 @@ package breakout;
  *    | getBottomRight().getY() >= getTopLeft().getY()
  */
 
-public class Rechthoek {
+public class Rect {
 	
 	/**
 	 * @invar {@code topLeft} is not {@code null}
@@ -47,7 +47,7 @@ public class Rechthoek {
 	 * @post | getTopLeft() == topLeft
 	 */
 	
-	public Rechthoek(Point topLeft, Point bottomRight) {
+	public Rect(Point topLeft, Point bottomRight) {
 		this.topLeft = topLeft;
 		this.bottomRight = bottomRight;
 	}
