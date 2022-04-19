@@ -10,7 +10,7 @@ package breakout;
  * @invar | getVelocity() != null
  */
 
-public class BallState {
+public class Ball {
 	
 	/**
 	 * @invar | center != null
@@ -31,7 +31,7 @@ public class BallState {
 	 * @post | getVelocity() == velocity
 	 */
 	
-	public BallState(Point center, int diameter, Vector velocity) {
+	public Ball(Point center, int diameter, Vector velocity) {
 		this.center = center;
 		this.diameter = Math.abs(diameter);
 		this.velocity = velocity;
@@ -103,7 +103,7 @@ public class BallState {
 	 * 		| result.getVelocity() == getVelocity()
 	 */
 	
-	public BallState moveBall(Point br) {
+	public Ball moveBall(Point br) {
 		Point newCenter = center.plus(velocity);
 		if (newCenter.getX() - diameter/2 < 0) {
 			newCenter = new Point(diameter/2, newCenter.getY());
@@ -119,7 +119,7 @@ public class BallState {
 		if (newCenter.getY() - diameter/2 < 0) {
 			newCenter = new Point(newCenter.getX(), diameter/2);
 		}
-		return new BallState(newCenter, diameter, velocity);
+		return new Ball(newCenter, diameter, velocity);
 	}
 	
 	/**
@@ -142,22 +142,22 @@ public class BallState {
 	 * 		| result.getVelocity().equals(getVelocity().mirrorOver(new Vector(-1, 0))) && wallNumber == 3
 	 */
 	
-	public BallState bounceWall(int wallNumber) {
+	public Ball bounceWall(int wallNumber) {
 		
 		if (wallNumber == 1) {
 			// leftWall
 			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0));
-			return new BallState(center, diameter, newVelocity);
+			return new Ball(center, diameter, newVelocity);
 		}
 		if (wallNumber == 2) {
 			// topWall
 			Vector newVelocity = velocity.mirrorOver(new Vector(0, 1));
-			return new BallState(center, diameter, newVelocity);
+			return new Ball(center, diameter, newVelocity);
 		}
 		if (wallNumber == 3) {
 			// righttWall
 			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0));
-			return new BallState(center, diameter, newVelocity);
+			return new Ball(center, diameter, newVelocity);
 		}
 		return null;
 	}
@@ -190,22 +190,22 @@ public class BallState {
 	 *  	| 	paddleSideNumber == 3
 	 */
 	
-	public BallState bouncePaddle(int paddleDir, int paddleSideNumber) {
+	public Ball bouncePaddle(int paddleDir, int paddleSideNumber) {
 		int addedVelocity = paddleDir * 2;
 		if (paddleSideNumber == 1) {
 			// leftSide
 			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0)).plus(new Vector(addedVelocity, 0));
-			return new BallState(center, diameter, newVelocity);
+			return new Ball(center, diameter, newVelocity);
 		}
 		if (paddleSideNumber == 2) {
 			// topSide
 			Vector newVelocity = velocity.mirrorOver(new Vector(0, -1)).plus(new Vector(addedVelocity, 0));
-			return new BallState(center, diameter, newVelocity);
+			return new Ball(center, diameter, newVelocity);
 		}
 		if (paddleSideNumber == 3) {
 			// rightSide
 			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0)).plus(new Vector(addedVelocity, 0));
-			return new BallState(center, diameter, newVelocity);
+			return new Ball(center, diameter, newVelocity);
 		}
 		return null;
 	}
@@ -245,26 +245,26 @@ public class BallState {
 	 * 
 	 */
 	
-	public BallState bounceBlock(int blockSideNumber) {
+	public Ball bounceBlock(int blockSideNumber) {
 		if (blockSideNumber == 1) {
 			//bottomSide
 			Vector newVelocity = velocity.mirrorOver(new Vector(0, 1));
-			return new BallState(center, diameter, newVelocity);
+			return new Ball(center, diameter, newVelocity);
 		}
 		if (blockSideNumber == 2) {
 			//leftSide
 			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0));
-			return new BallState(center, diameter, newVelocity);
+			return new Ball(center, diameter, newVelocity);
 		}
 		if (blockSideNumber == 3) {
 			//topSide
 			Vector newVelocity = velocity.mirrorOver(new Vector(0, -1));
-			return new BallState(center, diameter, newVelocity);
+			return new Ball(center, diameter, newVelocity);
 		}
 		if (blockSideNumber == 4) {
 			//rightSide
 			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0));
-			return new BallState(center, diameter, newVelocity);
+			return new Ball(center, diameter, newVelocity);
 		}
 		return null;
 	}
@@ -291,7 +291,7 @@ public class BallState {
 	 * 		| 	result == false
 	 */
 	
-	public boolean raaktRechthoek(Rechthoek rechthoek, int sideNumber) {
+	public boolean raaktRechthoek(Rect rechthoek, int sideNumber) {
 		Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);
 		Point ballBovenstePunt = new Point(center.getX(), center.getY() - diameter/2);
 		Point ballLinksePunt = new Point(center.getX() - diameter/2, center.getY());

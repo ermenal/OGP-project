@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 
 class BallStateTest {
 	
-	BallState bal1;
-	BallState bal2;
-	BallState bal3;
+	Ball bal1;
+	Ball bal2;
+	Ball bal3;
 	
 	Vector velocity1;
 	Vector velocity2;
@@ -54,17 +54,17 @@ class BallStateTest {
 		velocity1 = new Vector(0,0);
 		center1 = new Point(0,0);
 		diameter1 = 1;
-		bal1 = new BallState(center1, diameter1, velocity1);
+		bal1 = new Ball(center1, diameter1, velocity1);
 		
 		velocity2 = new Vector(7,-3);
 		center2 = new Point(1000,0);
 		diameter2 = 33;
-		bal2 = new BallState(center2, diameter2, velocity2);
+		bal2 = new Ball(center2, diameter2, velocity2);
 		
 		velocity3 = new Vector(1,3);
 		center3 = new Point(25000,15000);
 		diameter3 = 1000;
-		bal3 = new BallState(center3, diameter3, velocity3);
+		bal3 = new Ball(center3, diameter3, velocity3);
 		
 		PaddleSize1 = new Vector(10,10);
 		centerPaddle1 = new Point(0,10);
@@ -139,19 +139,19 @@ class BallStateTest {
 	void testmoveBall() {
 
 		Point br1 = new Point(50000, 30000);
-		BallState newball1 = new BallState(new Point(0,0), 1, new Vector(0,0));
+		Ball newball1 = new Ball(new Point(0,0), 1, new Vector(0,0));
 		assertEquals(newball1.getCenter(), bal1.moveBall(br1).getCenter());
 		assertEquals(newball1.getVelocity(), bal1.moveBall(br1).getVelocity());
 		assertEquals(newball1.getDiameter(), bal1.moveBall(br1).getDiameter());
 		
 		Point br2 = new Point(100000, 100000);
-		BallState newball2 = new BallState(new Point(1007,16),33, new Vector(7,-3));
+		Ball newball2 = new Ball(new Point(1007,16),33, new Vector(7,-3));
 		assertEquals(newball2.getCenter(), bal2.moveBall(br2).getCenter());
 		assertEquals(newball2.getVelocity(), bal2.moveBall(br2).getVelocity());
 		assertEquals(newball2.getDiameter(), bal2.moveBall(br2).getDiameter());
 		
 		Point br3 = new Point(33333, 22222);
-		BallState newball3 = new BallState(new Point(25001, 15003), 1000, new Vector(1,3));
+		Ball newball3 = new Ball(new Point(25001, 15003), 1000, new Vector(1,3));
 		assertEquals(newball3.getCenter(), bal3.moveBall(br3).getCenter());
 		assertEquals(newball3.getVelocity(), bal3.moveBall(br3).getVelocity());
 		assertEquals(newball3.getDiameter(), bal3.moveBall(br3).getDiameter());
@@ -161,7 +161,7 @@ class BallStateTest {
 	@Test
 	void testbouncewall() {
 		//botst links en boven
-		BallState newball1 = new BallState(new Point(0,0), 1, new Vector(0,0));
+		Ball newball1 = new Ball(new Point(0,0), 1, new Vector(0,0));
 		assertEquals(newball1.getCenter(), bal1.bounceWall(1).getCenter());
 		assertEquals(newball1.getVelocity(), bal1.bounceWall(1).getVelocity());
 		assertEquals(newball1.getDiameter(), bal1.bounceWall(1).getDiameter());
@@ -171,7 +171,7 @@ class BallStateTest {
 		
 		//ball2 botst tegen bovenmuur
 
-		BallState newball2 = new BallState(new Point(1000,0), 33, new Vector(7,3));
+		Ball newball2 = new Ball(new Point(1000,0), 33, new Vector(7,3));
 		assertEquals(newball2.getCenter(), bal2.bounceWall(2).getCenter());
 		assertEquals(newball2.getVelocity(), bal2.bounceWall(2).getVelocity());
 		assertEquals(newball2.getDiameter(), bal2.bounceWall(2).getDiameter());
@@ -185,7 +185,7 @@ class BallStateTest {
 	void testbouncePaddle() {
 		//bal1 raakt bovenkant paddle 1
 		int paddledir1 = 0;
-		BallState newball1 = new BallState(new Point(0,0), 1, new Vector(0,0));
+		Ball newball1 = new Ball(new Point(0,0), 1, new Vector(0,0));
 		assertEquals(newball1.getCenter(), bal1.bouncePaddle(paddledir1, 2).getCenter());
 		assertEquals(newball1.getVelocity(), bal1.bouncePaddle(paddledir1, 2).getVelocity());
 		assertEquals(newball1.getDiameter(), bal1.bouncePaddle(paddledir1, 2).getDiameter());
@@ -194,7 +194,7 @@ class BallStateTest {
 		
 		//bal 3 botst linkerkant paddle 3
 		int paddledir3 = 2;
-		BallState newball3 = new BallState(new Point(25000,15000), 1000, new Vector(3,3));
+		Ball newball3 = new Ball(new Point(25000,15000), 1000, new Vector(3,3));
 		assertEquals(newball3.getCenter(), bal3.bouncePaddle(paddledir3, 1).getCenter());
 		assertEquals(newball3.getVelocity(), bal3.bouncePaddle(paddledir3, 1).getVelocity());
 		assertEquals(newball3.getDiameter(), bal3.bouncePaddle(paddledir3, 1).getDiameter());
@@ -316,20 +316,20 @@ class BallStateTest {
 	
 	@Test
 	void testBreakoutState() {
-		BreakoutState bs = new BreakoutState(new BallState[0], new BlockState[0], new Point(0, 0), new PaddleState(new Point(0, 0), new Vector(0, 0)));
+		BreakoutState bs = new BreakoutState(new Ball[0], new BlockState[0], new Point(0, 0), new PaddleState(new Point(0, 0), new Vector(0, 0)));
 		assertThrows(IllegalArgumentException.class, () -> new BreakoutState(null,null,null,null) );
 		
 	}
 	
 	@Test 
 	void nieuweRaakTest() {
-		BallState testBall = new BallState(new Point(5000, 5000), 1000, new Vector(100, -100));
-		Rechthoek testRechthoek = new Rechthoek(new Point(3000, 3000), new Point(7000, 4700));
+		Ball testBall = new Ball(new Point(5000, 5000), 1000, new Vector(100, -100));
+		Rect testRechthoek = new Rect(new Point(3000, 3000), new Point(7000, 4700));
 		
 		assertEquals(true, testBall.raaktRechthoek(testRechthoek, 1));
 		
-		BallState testHoekBall = new BallState(new Point(5000, 5000), 482, new Vector(-120, -209));
-		Rechthoek testHoekRechthoek = new Rechthoek(new Point(3000, 3000), new Point(4900, 4900));
+		Ball testHoekBall = new Ball(new Point(5000, 5000), 482, new Vector(-120, -209));
+		Rect testHoekRechthoek = new Rect(new Point(3000, 3000), new Point(4900, 4900));
 		assertTrue(testHoekBall.raaktRechthoek(testHoekRechthoek, 1));
 	}
 	
