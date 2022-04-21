@@ -103,8 +103,8 @@ public class Ball {
 	 * 		| result.getVelocity() == getVelocity()
 	 */
 	
-	public Ball moveBall(Point br) {
-		Point newCenter = center.plus(velocity);
+	public Ball moveBall(Point br, int timeElapsed) {
+		Point newCenter = center.plus(velocity.scaled(timeElapsed));
 		if (newCenter.getX() - diameter/2 < 0) {
 			newCenter = new Point(diameter/2, newCenter.getY());
 		}

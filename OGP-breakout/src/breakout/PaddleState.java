@@ -91,6 +91,7 @@ public class PaddleState {
 	
 	/**
 	 * Returns a new paddle object that has moved 10 units to the right, keeping in mind that it can't go outside of the field
+	 * @param elapsedTime 
 	 * 
 	 * @pre Argument {@code br} is not {@code null}
 	 * 		| br != null
@@ -105,8 +106,8 @@ public class PaddleState {
 	 * 		| result.getCenter().getX() == br.getX() - getSize().getX()
 	 */
 	
-	public PaddleState movePaddleRight(Point br) {
-		int moveBy = 10;
+	public PaddleState movePaddleRight(Point br, int elapsedTime) {
+		int moveBy = 10 * elapsedTime;
 		Point newCenter = new Point(center.getX() + moveBy, center.getY());
 		if (newCenter.getX() + size.getX() > br.getX()){
 			newCenter = new Point(br.getX() - size.getX(), newCenter.getY());
@@ -127,8 +128,8 @@ public class PaddleState {
 	 * 		| result.getCenter().getX() == getSize().getX()
 	 */
 	
-	public PaddleState movePaddleLeft() {
-		int moveBy = 10;
+	public PaddleState movePaddleLeft(int elapsedTime) {
+		int moveBy = 10 * elapsedTime;
 		Point newCenter = new Point(center.getX() - moveBy, center.getY());
 		if (newCenter.getX() - size.getX() < 0){
 			newCenter = new Point(size.getX(), newCenter.getY());
