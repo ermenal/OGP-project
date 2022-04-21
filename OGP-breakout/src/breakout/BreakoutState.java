@@ -73,7 +73,7 @@ public class BreakoutState {
 	private final Point bottomRight;
 	private PaddleState paddle;
 	
-	public static int MAX_ELAPSED_TIME;
+	public static final int MAX_ELAPSED_TIME = 30;
 	
 	/**
 	 * Initializes this object so that it stores the given balls, blocks, bottomRight point and paddle.
@@ -212,21 +212,23 @@ public class BreakoutState {
 	
 	public void tick(int paddleDir, int elapsedTime) {
 		
-		moveAllBalls();
+		if (elapsedTime < MAX_ELAPSED_TIME) {
+			moveAllBalls(elapsedTime);
 		
-		raaktWallLinks();
-		raaktWallBoven();
-		raaktWallRechts();
-		raaktOnder();
+			raaktWallLinks();
+			raaktWallBoven();
+			raaktWallRechts();
+			raaktOnder();
 		
-		raaktBlockOnder();
-		raaktBlockLinks();
-		raaktBlockBoven();
-		raaktBlockRechts();
+			raaktBlockOnder();
+			raaktBlockLinks();
+			raaktBlockBoven();
+			raaktBlockRechts();
 		
-		raaktPaddleLinks(paddleDir);
-		raaktPaddleBoven(paddleDir);
-		raaktPaddleRechts(paddleDir);
+			raaktPaddleLinks(paddleDir);
+			raaktPaddleBoven(paddleDir);
+			raaktPaddleRechts(paddleDir);
+		}
 	}
 	
 	/**
@@ -245,10 +247,10 @@ public class BreakoutState {
 	 * 
 	 */
 	
-	public void moveAllBalls() {
+	public void moveAllBalls(int elapsedTime) {
 		ArrayList<Ball> newBalls = new ArrayList<Ball>();
 		for (Ball ball: balls) {
-			newBalls.add(ball.moveBall(getBottomRight()));
+			newBalls.add(ball.moveBall(getBottomRight(), elapsedTime));
 		}
 		balls = newBalls.toArray(new Ball[] {});
 	}
@@ -629,7 +631,7 @@ public class BreakoutState {
 	 */
 	
 	public void movePaddleRight(int elapsedTime) {
-		paddle = paddle.movePaddleRight(getBottomRight());
+		paddle = paddle.movePaddleRight(getBottomRight(), elapsedTime);
 	}
 	
 	/**
@@ -645,7 +647,7 @@ public class BreakoutState {
 	 */
 
 	public void movePaddleLeft(int elapsedTime) {
-		paddle = paddle.movePaddleLeft();
+		paddle = paddle.movePaddleLeft(elapsedTime);
 	}
 	
 	/**
