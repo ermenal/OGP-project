@@ -1,5 +1,7 @@
 package breakout;
 
+import java.awt.Color;
+
 /**
  * This class represents a paddle on a 2D-grid
  * 
@@ -26,6 +28,8 @@ public class PaddleState {
 	private final Point center;
 	private final Vector size;
 	
+	private final boolean replicatorPaddle;
+	
 	/**
 	 * Initializes this object so that it stores the given center and size
 	 * 
@@ -38,9 +42,10 @@ public class PaddleState {
 	 * @post | getSize() == size
 	 */
 	
-	public PaddleState(Point center, Vector size){
+	public PaddleState(Point center, Vector size, boolean replicatorPaddle){
 		this.center = center;
 		this.size = size;
+		this.replicatorPaddle = replicatorPaddle;
 	}
 	
 	
@@ -89,6 +94,12 @@ public class PaddleState {
 		return size;
 	}
 	
+	public Color getColor() {
+		if (replicatorPaddle)
+			return Color.GREEN;
+		return Color.CYAN;
+	}
+	
 	/**
 	 * Returns a new paddle object that has moved 10 units to the right, keeping in mind that it can't go outside of the field
 	 * @param elapsedTime 
@@ -112,7 +123,7 @@ public class PaddleState {
 		if (newCenter.getX() + size.getX() > br.getX()){
 			newCenter = new Point(br.getX() - size.getX(), newCenter.getY());
 		}
-		return new PaddleState(newCenter, size);
+		return new PaddleState(newCenter, size, replicatorPaddle);
 	}
 	
 	/**
@@ -134,7 +145,7 @@ public class PaddleState {
 		if (newCenter.getX() - size.getX() < 0){
 			newCenter = new Point(size.getX(), newCenter.getY());
 		}
-		return new PaddleState(newCenter, size);
+		return new PaddleState(newCenter, size, replicatorPaddle);
 	}
 	
 	

@@ -1,35 +1,12 @@
 package breakout;
 
-/**
- * This class represents a ball on a 2D-grid
- * 
- * @immutable
- *
- * @invar | getCenter() != null
- * @invar | getDiameter() >= 0
- * @invar | getVelocity() != null
- */
+import java.awt.Color;
 
-public class Ball {
+public abstract class Ball {
 	
-	/**
-	 * @invar | center != null
-	 * @invar | diameter >= 0
-	 * @invar | velocity != null
-	 */
-	
-	private final Point center;
+	private Point center;
 	private final int diameter;
-	private final Vector velocity;
-	
-	/**
-	 * @pre | center != null
-	 * @pre | velocity != null
-	 * 
-	 * @post | getCenter() == center
-	 * @post | getDiameter() == Math.abs(diameter)
-	 * @post | getVelocity() == velocity
-	 */
+	private Vector velocity;
 	
 	public Ball(Point center, int diameter, Vector velocity) {
 		this.center = center;
@@ -61,12 +38,7 @@ public class Ball {
 		return velocity;
 	}
 	
-	/**
-	 * Returns the top left point of the rectangle that surrounds the ball
-	 * 
-	 * @post | result.getX() == getCenter().getX() - getDiameter()/2 &&
-	 * 		 | result.getY() == getCenter().getY() - getDiameter()/2
-	 */
+	public abstract Color getColor();
 	
 	public Point getTopLeftOfSurroundingRectangle() {
 		Point topLeft = new Point(center.getX() - diameter/2, center.getY() - diameter/2);
@@ -85,25 +57,7 @@ public class Ball {
 		return bottomRight;
 	}
 	
-	/** 
-	 * Returns a new ball that moved according to the ball's current velocity
-	 * 
-	 * @pre Argument {@code br} is not {@code null} 
-	 * 		| br != null
-	 * 
-	 * @post | result != null
-	 * @post The ball has moved according to its velocity, keeping in mind that it can't go outside of the field
-	 * 		| result.getCenter().getX() == getCenter().plus(getVelocity()).getX()  || 
-	 * 		| result.getCenter().getX() == getDiameter()/2  || 
-	 * 		| result.getCenter().getX() == br.getX() - getDiameter()/2 ||
-	 * 		| result.getCenter().getY() == getDiameter()/2  ||
-	 * 		| result.getCenter().getY() == br.getY() - getDiameter()/2
-	 * @post The resulting ball's velocity and diameter remained unchanged
-	 * 		| result.getDiameter() == getDiameter() && 
-	 * 		| result.getVelocity() == getVelocity()
-	 */
-	
-	public Ball moveBall(Point br, int timeElapsed) {
+	public void moveBall(Point br, int timeElapsed) {
 		Point newCenter = center.plus(velocity.scaled(timeElapsed));
 		if (newCenter.getX() - diameter/2 < 0) {
 			newCenter = new Point(diameter/2, newCenter.getY());
@@ -119,95 +73,39 @@ public class Ball {
 		if (newCenter.getY() - diameter/2 < 0) {
 			newCenter = new Point(newCenter.getX(), diameter/2);
 		}
-		return new Ball(newCenter, diameter, velocity);
+		center = newCenter;
 	}
 	
-	/**
-	 * Returns a new ball that bounced against a given wall, indicated by the {@code wallNumber} parameter
-	 * 			(1 indicates the left wall, 2 indicates the top wall and 3 indicates the right wall)
-	 * 
-	 * @pre Argument {@code wallNumber} should be 1, 2 or 3, indicating which wall the ball made contact with.
-	 * 		| wallNumber == 1 || wallNumber == 2 || wallNumber == 3
-	 * 
-	 * @post The result is not {@code null}
-	 * 		| result != null
-	 * 
-	 * @post The resulting ball's center and diameter remained the same
-	 * 		| result.getCenter() == getCenter() && 
-	 * 		| result.getDiameter() == getDiameter()
-	 * 
-	 * @post The resulting ball's velocity has been mirrored in accordance with the given {@code wallNumber}
-	 * 		| result.getVelocity().equals(getVelocity().mirrorOver(new Vector(1, 0))) && wallNumber == 1|| 
-	 * 		| result.getVelocity().equals(getVelocity().mirrorOver(new Vector(0, 1))) && wallNumber == 2 || 
-	 * 		| result.getVelocity().equals(getVelocity().mirrorOver(new Vector(-1, 0))) && wallNumber == 3
-	 */
-	
-	public Ball bounceWall(int wallNumber) {
+	public void bounceWall(int wallNumber) {
 		
 		if (wallNumber == 1) {
 			// leftWall
-			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0));
-			return new Ball(center, diameter, newVelocity);
+			velocity = velocity.mirrorOver(new Vector(1, 0));
 		}
 		if (wallNumber == 2) {
 			// topWall
-			Vector newVelocity = velocity.mirrorOver(new Vector(0, 1));
-			return new Ball(center, diameter, newVelocity);
+			velocity = velocity.mirrorOver(new Vector(0, 1));
 		}
 		if (wallNumber == 3) {
 			// righttWall
-			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0));
-			return new Ball(center, diameter, newVelocity);
+			velocity = velocity.mirrorOver(new Vector(-1, 0));
 		}
-		return null;
 	}
 	
-	/**
-	 * Returns a new ball that bounced against a given side of the paddle, indicated by the {@code paddleSideNumber}
-	 * 			(1 indicates left side, 2 indicates top side and 3 indicates right side)
-	 * and speeding the ball up or down by 2 units according to the paddle's current direction {@code paddleDir}:
-	 * 			(-1 indicates the paddle is moving left, 0 indicates it's standing still and 1 indicates it's moving right)
-	 * 
-	 * @pre Argument {@code paddleDir} should be -1, 0 or 1
-	 * 		| paddleDir == -1 || paddleDir == 0 || paddleDir == 1
-	 * @pre Argument {@code paddleSideNumber} should be 1, 2 or 3
-	 * 		| paddleSideNumber == 1 || paddleSideNumber == 2 || paddleSideNumber == 3
-	 * 
-	 * @post The resulting ball's center and diameter have remained unchanged
-	 * 		| result.getCenter() == getCenter() && 
-	 * 		| result.getDiameter() == getDiameter()
-	 * 
-	 * @post The resulting ball's velocity has been mirrored in accordance with the given {@code paddleSideNumber} 
-	 *  	 and its X-component has been changed in accordance with the paddle's given direction {@code paddleDir}
-	 *  	| result.getVelocity()
-	 *  	|	.equals(new Vector(getVelocity().mirrorOver(new Vector(-1, 0)).getX() + paddleDir * 2, getVelocity().mirrorOver(new Vector(-1, 0)).getY())) && 
-	 *  	| 	paddleSideNumber == 1 ||
-	 *  	| result.getVelocity()
-	 *  	|	.equals(new Vector(getVelocity().mirrorOver(new Vector(0, -1)).getX() + paddleDir * 2, getVelocity().mirrorOver(new Vector(0, -1)).getY())) && 
-	 *  	|	paddleSideNumber == 2 ||
-	 *  	| result.getVelocity()
-	 *  	|	.equals(new Vector(getVelocity().mirrorOver(new Vector(1, 0)).getX() + paddleDir * 2, getVelocity().mirrorOver(new Vector(1, 0)).getY())) && 
-	 *  	| 	paddleSideNumber == 3
-	 */
-	
-	public Ball bouncePaddle(int paddleDir, int paddleSideNumber) {
+	public void bouncePaddle(int paddleDir, int paddleSideNumber) {
 		int addedVelocity = paddleDir * 2;
 		if (paddleSideNumber == 1) {
 			// leftSide
-			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0)).plus(new Vector(addedVelocity, 0));
-			return new Ball(center, diameter, newVelocity);
+			velocity = velocity.mirrorOver(new Vector(-1, 0)).plus(new Vector(addedVelocity, 0));
 		}
 		if (paddleSideNumber == 2) {
 			// topSide
-			Vector newVelocity = velocity.mirrorOver(new Vector(0, -1)).plus(new Vector(addedVelocity, 0));
-			return new Ball(center, diameter, newVelocity);
+			velocity = velocity.mirrorOver(new Vector(0, -1)).plus(new Vector(addedVelocity, 0));
 		}
 		if (paddleSideNumber == 3) {
 			// rightSide
-			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0)).plus(new Vector(addedVelocity, 0));
-			return new Ball(center, diameter, newVelocity);
+			velocity = velocity.mirrorOver(new Vector(1, 0)).plus(new Vector(addedVelocity, 0));
 		}
-		return null;
 	}
 	
 	/**
@@ -222,74 +120,41 @@ public class Ball {
 	 * 		| result == velocity.scaled(-1).product(n) >= 0
 	 */
 	
-	private boolean raakDottedProduct(Vector velocity, Vector n) {
+	public boolean raakDottedProduct(Vector velocity, Vector n) {
 		Vector v = velocity.scaled(-1);
 		return v.product(n) >= 0;
 	}
 	
-	/**
-	 * Returns a new ball that bounced against a given side of a block, indicated by the {@code blockSideNumber}.
-	 * 			(1 indicates the bottom side, 2 indicates the left side, 3 indicates the top side and 4 indicates the right side)
-	 * 
-	 * @pre Argument {@code blockSideNumber} should be 1, 2, 3 or 4
-	 * 		| blockSideNumber == 1 || blockSideNumber == 2 || blockSideNumber == 3 || blockSideNumber == 4
-	 * @post The resulting ball's center and diameter have not changed
-	 * 		| result.getCenter() == getCenter() && 
-	 * 		| result.getDiameter() == getDiameter()
-	 * 
-	 * @post The resulting ball's velocity has been mirrored in accordance with the given {@code blockSideNumber}
-	 * 		| result.getVelocity().equals(getVelocity().mirrorOver(new Vector(0, 1))) && blockSideNumber == 1 ||
-	 * 		| result.getVelocity().equals(getVelocity().mirrorOver(new Vector(-1, 0))) && blockSideNumber == 2 ||
-	 *		| result.getVelocity().equals(getVelocity().mirrorOver(new Vector(0, -1))) && blockSideNumber == 3 ||
-	 *		| result.getVelocity().equals(getVelocity().mirrorOver(new Vector(1, 0))) && blockSideNumber == 4
-	 * 
-	 */
-	
-	public Ball bounceBlock(int blockSideNumber) {
+	public void bounceBlock(int blockSideNumber) {
 		if (blockSideNumber == 1) {
 			//bottomSide
-			Vector newVelocity = velocity.mirrorOver(new Vector(0, 1));
-			return new Ball(center, diameter, newVelocity);
+			velocity = velocity.mirrorOver(new Vector(0, 1));
 		}
 		if (blockSideNumber == 2) {
 			//leftSide
-			Vector newVelocity = velocity.mirrorOver(new Vector(-1, 0));
-			return new Ball(center, diameter, newVelocity);
+			velocity = velocity.mirrorOver(new Vector(-1, 0));
 		}
 		if (blockSideNumber == 3) {
 			//topSide
-			Vector newVelocity = velocity.mirrorOver(new Vector(0, -1));
-			return new Ball(center, diameter, newVelocity);
+			velocity = velocity.mirrorOver(new Vector(0, -1));
 		}
 		if (blockSideNumber == 4) {
 			//rightSide
-			Vector newVelocity = velocity.mirrorOver(new Vector(1, 0));
-			return new Ball(center, diameter, newVelocity);
+			velocity = velocity.mirrorOver(new Vector(1, 0));
 		}
-		return null;
 	}
 	
-	/**
-	 * Returns true if the ball has hit {@code rechthoek} on the given side, indicated by {@code sideNumber} 
-	 * 			(1 indicates the bottom side, 2 indicates the left side, 3 indicates the top side and 4 indicates the right side)
-	 * 
-	 * @pre Argument {@code sideNumber} should be 1, 2, 3 or 4
-	 * 		| sideNumber == 1 || sideNumber == 2 || sideNumber == 3 || sideNumber == 4
-	 * @pre Argument {@code rechthoek} should not be {@code null}
-	 * 		| rechthoek != null
-	 * 
-	 * @post The result is true if the distance between the circle's center to the given side is smaller than or equal to the circle's radius.
-	 * 		| result == ((Math.max(rechthoek.getTopLeft().getX(), Math.min(getCenter().getX(), rechthoek.getBottomRight().getX())) - getCenter().getX()) -
-	 * 		|			(Math.max(rechthoek.getTopLeft().getX(), Math.min(getCenter().getX(), rechthoek.getBottomRight().getX())) - getCenter().getX()) + 
-	 * 		|		(Math.max(rechthoek.getTopLeft().getY(), Math.min(getCenter().getY(), rechthoek.getBottomRight().getY())) - getCenter().getY()) * 
-	 * 		|			(Math.max(rechthoek.getTopLeft().getY(), Math.min(getCenter().getY(), rechthoek.getBottomRight().getY())) - getCenter().getY())) 
-	 * 		|	<= getDiameter()/2 * getDiameter()/2 &&
-	 * 		| 		(getVelocity().scaled(-1).product(new Vector (0, 1)) >= 0 || 
-	 * 		|		getVelocity().scaled(-1).product(new Vector(-1, 0)) >= 0 ||
-	 * 		|		getVelocity().scaled(-1).product(new Vector(0, -1)) >= 0 ||
-	 * 		|		getVelocity().scaled(-1).product(new Vector(1, 0)) >= 0) ||
-	 * 		| 	result == false
-	 */
+	public void hitBlock(Rect rect, boolean destroyed) {
+			if (raaktRechthoek(rect, 1))
+				velocity = velocity.mirrorOver(new Vector(0, 1));
+			if (raaktRechthoek(rect, 2))
+				velocity = velocity.mirrorOver(new Vector(-1, 0));
+			if (raaktRechthoek(rect, 3))
+				velocity = velocity.mirrorOver(new Vector(0, -1));
+			if (raaktRechthoek(rect, 4))
+				velocity = velocity.mirrorOver(new Vector(1, 0));
+		
+	}
 	
 	public boolean raaktRechthoek(Rect rechthoek, int sideNumber) {
 		Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);

@@ -1,5 +1,6 @@
 package breakout;
 
+import java.awt.Color;
 
 /**
  * This class represents a block on a 2D-grid
@@ -13,7 +14,7 @@ package breakout;
  *     | getTopLeft().getX() < getBottomRight().getX() &&
  *     | getTopLeft().getY() < getBottomRight().getY()
  */
-public class BlockState {
+public abstract class BlockState {
 	
 	/**
 	 * @invar | bottomRight != null
@@ -62,4 +63,19 @@ public class BlockState {
 	public Point getBottomRight() {
 		return bottomRight;
 	}
+	
+	public abstract boolean getsDestroyedOnCollision();
+	
+	public abstract Color getColor();
+	
+	public int getHealth() {
+		return 1;
+	}
+	
+	public abstract boolean equals(Object obj);
+	
+	public boolean replicator() {
+		return false;
+	}
+	
 }

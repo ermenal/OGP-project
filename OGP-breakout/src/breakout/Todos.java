@@ -9,5 +9,7 @@ public @interface Todos {
 	 * Make Ball mutable (Documentatie) + evt breakoutState documentatie aanpassen ? idk 
 	 * 
 	 * evt paddle size static final maken --> performance
+	 * 
+	 * BreakoutState ball raakt block methodes: block deel aanpassen voor verschillende blocks, ball deel aanpassen voor verschillende balls
 	 */
 }
