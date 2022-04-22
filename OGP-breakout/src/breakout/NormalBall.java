@@ -12,4 +12,7 @@ public class NormalBall extends Ball{
 		return Color.WHITE;
 	}
 	
+	public Ball cloneBallWithChangedVelocity(Vector addedVelocity) {
+		return new NormalBall(getCenter(), getDiameter(), getVelocity().plus(addedVelocity));
+	}
 }

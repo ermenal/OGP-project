@@ -40,6 +40,10 @@ public abstract class Ball {
 	
 	public abstract Color getColor();
 	
+	public int getTime() {
+		return -1;
+	}
+	
 	public Point getTopLeftOfSurroundingRectangle() {
 		Point topLeft = new Point(center.getX() - diameter/2, center.getY() - diameter/2);
 		return topLeft;
@@ -56,6 +60,8 @@ public abstract class Ball {
 		Point bottomRight = new Point(center.getX() + diameter/2, center.getY() + diameter/2);
 		return bottomRight;
 	}
+	
+	public abstract Ball cloneBallWithChangedVelocity(Vector addedVelocity);
 	
 	public void moveBall(Point br, int timeElapsed) {
 		Point newCenter = center.plus(velocity.scaled(timeElapsed));
@@ -123,25 +129,6 @@ public abstract class Ball {
 	public boolean raakDottedProduct(Vector velocity, Vector n) {
 		Vector v = velocity.scaled(-1);
 		return v.product(n) >= 0;
-	}
-	
-	public void bounceBlock(int blockSideNumber) {
-		if (blockSideNumber == 1) {
-			//bottomSide
-			velocity = velocity.mirrorOver(new Vector(0, 1));
-		}
-		if (blockSideNumber == 2) {
-			//leftSide
-			velocity = velocity.mirrorOver(new Vector(-1, 0));
-		}
-		if (blockSideNumber == 3) {
-			//topSide
-			velocity = velocity.mirrorOver(new Vector(0, -1));
-		}
-		if (blockSideNumber == 4) {
-			//rightSide
-			velocity = velocity.mirrorOver(new Vector(1, 0));
-		}
 	}
 	
 	public void hitBlock(Rect rect, boolean destroyed) {

@@ -33,4 +33,8 @@ public class PowerupBlockState extends BlockState {
 		return true;
 	}
 	
+	public String soortBlock() {
+		return "Powerup";
+	}
+	
 }

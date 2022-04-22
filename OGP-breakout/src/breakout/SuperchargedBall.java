@@ -5,9 +5,9 @@ import java.awt.Color;
 public class SuperchargedBall extends Ball {
 	private int time;
 	
-	SuperchargedBall(Point center, int diameter, Vector velocity){
+	SuperchargedBall(Point center, int diameter, Vector velocity, int time){
 		super(center, diameter, velocity);
-		time = 0;
+		this.time = time;
 	}
 
 	public void moveBall(Point br, int timeElapsed) {
@@ -27,4 +27,12 @@ public class SuperchargedBall extends Ball {
 		}
 	}
 	
+	public int getTime() {
+		return time;
+	}
+	
+	public Ball cloneBallWithChangedVelocity(Vector addedVelocity) {
+		return new SuperchargedBall(getCenter(), getDiameter(), getVelocity().plus(addedVelocity), time);
+	}
+
 }

@@ -69,13 +69,11 @@ public abstract class BlockState {
 	public abstract Color getColor();
 	
 	public int getHealth() {
-		return 1;
+		return -1;
 	}
 	
 	public abstract boolean equals(Object obj);
 	
-	public boolean replicator() {
-		return false;
-	}
+	public abstract String soortBlock();
 	
 }

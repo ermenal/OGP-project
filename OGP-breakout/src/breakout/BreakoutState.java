@@ -15,6 +15,7 @@ public class BreakoutState {
 	private int amountOfReplications = 0;
 	
 	public static final int MAX_ELAPSED_TIME = 30;
+	public static final int MAX_SUPERCHARGED_TIME = 10000;
 	
 	
 	public BreakoutState(Ball[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
@@ -60,7 +61,9 @@ public class BreakoutState {
 	
 	public void tick(int paddleDir, int elapsedTime) {
 		
-		if (elapsedTime < MAX_ELAPSED_TIME) {
+		if (elapsedTime > MAX_ELAPSED_TIME) {
+			elapsedTime = MAX_ELAPSED_TIME;
+		}
 			moveAllBalls(elapsedTime);
 		
 			raaktWallLinks();
@@ -76,12 +79,14 @@ public class BreakoutState {
 			raaktPaddleLinks(paddleDir);
 			raaktPaddleBoven(paddleDir);
 			raaktPaddleRechts(paddleDir);
-		}
 	}
 	
 	public void moveAllBalls(int elapsedTime) {
-		for (Ball ball: balls) {
-			ball.moveBall(getBottomRight(), elapsedTime);
+		for (int i=0; i<balls.length; i++) {
+			balls[i].moveBall(getBottomRight(), elapsedTime);
+			if (balls[i].getTime() > MAX_SUPERCHARGED_TIME) {
+				balls[i] = new NormalBall(balls[i].getCenter(), balls[i].getDiameter(), balls[i].getVelocity());
+			}
 		}
 	}
 	
@@ -114,15 +119,12 @@ public class BreakoutState {
 	}
 	
 	public void raaktBlockOnder() {
-		for (Ball ball: balls) {
+		for (int j=0; j < balls.length;j++) {
 			for (int i=0; i<blocks.length; i++) {
 				Rect blockRechthoek = new Rect(blocks[i].getTopLeft(), blocks[i].getBottomRight());
-				if (ball.raaktRechthoek(blockRechthoek, 1)) {
-					ball.hitBlock(blockRechthoek, blocks[i].getsDestroyedOnCollision());
-					if (blocks[i].replicator()){
-						amountOfReplications = 3;
-						paddle = new PaddleState(paddle.getCenter(), paddle.getSize(), true);
-					}
+				if (balls[j].raaktRechthoek(blockRechthoek, 1)) {
+					balls[j].hitBlock(blockRechthoek, blocks[i].getsDestroyedOnCollision());
+					balls[j] = specialBlockHandler(balls[j], blocks[i]);
 					if (blocks[i].getsDestroyedOnCollision() == false) {
 						blocks[i] = new SturdyBlockState(blocks[i].getTopLeft(), blocks[i].getBottomRight(), blocks[i].getHealth()-1);
 					}else {
@@ -135,15 +137,12 @@ public class BreakoutState {
 	}
 	
 	public void raaktBlockLinks() {
-		for (Ball ball: balls) {
+		for (int j=0; j < balls.length;j++) {
 			for (int i=0; i<blocks.length; i++) {
 				Rect blockRechthoek = new Rect(blocks[i].getTopLeft(), blocks[i].getBottomRight());
-				if (ball.raaktRechthoek(blockRechthoek, 2)) {
-					ball.hitBlock(blockRechthoek, blocks[i].getsDestroyedOnCollision());
-					if (blocks[i].replicator()){
-						amountOfReplications = 3;
-						paddle = new PaddleState(paddle.getCenter(), paddle.getSize(), true);
-					}
+				if (balls[j].raaktRechthoek(blockRechthoek, 2)) {
+					balls[j].hitBlock(blockRechthoek, blocks[i].getsDestroyedOnCollision());
+					balls[j] = specialBlockHandler(balls[j], blocks[i]);
 					if (blocks[i].getsDestroyedOnCollision() == false) {
 						blocks[i] = new SturdyBlockState(blocks[i].getTopLeft(), blocks[i].getBottomRight(), blocks[i].getHealth()-1);
 					}else {
@@ -156,15 +155,12 @@ public class BreakoutState {
 	}
 	
 	public void raaktBlockBoven() {
-		for (Ball ball: balls) {
+		for (int j=0; j < balls.length;j++) {
 			for (int i=0; i<blocks.length; i++) {
 				Rect blockRechthoek = new Rect(blocks[i].getTopLeft(), blocks[i].getBottomRight());
-				if (ball.raaktRechthoek(blockRechthoek, 3)) {
-					ball.hitBlock(blockRechthoek, blocks[i].getsDestroyedOnCollision());
-					if (blocks[i].replicator()){
-						amountOfReplications = 3;
-						paddle = new PaddleState(paddle.getCenter(), paddle.getSize(), true);
-					}
+				if (balls[j].raaktRechthoek(blockRechthoek, 3)) {
+					balls[j].hitBlock(blockRechthoek, blocks[i].getsDestroyedOnCollision());
+					balls[j] = specialBlockHandler(balls[j], blocks[i]);
 					if (blocks[i].getsDestroyedOnCollision() == false) {
 						blocks[i] = new SturdyBlockState(blocks[i].getTopLeft(), blocks[i].getBottomRight(), blocks[i].getHealth()-1);
 					}else {
@@ -177,15 +173,12 @@ public class BreakoutState {
 	}
 	
 	public void raaktBlockRechts() {
-		for (Ball ball: balls) {
+		for (int j=0; j < balls.length;j++) {
 			for (int i=0; i<blocks.length; i++) {
 				Rect blockRechthoek = new Rect(blocks[i].getTopLeft(), blocks[i].getBottomRight());
-				if (ball.raaktRechthoek(blockRechthoek, 4)) {
-					ball.hitBlock(blockRechthoek, blocks[i].getsDestroyedOnCollision());
-					if (blocks[i].replicator()){
-						amountOfReplications = 3;
-						paddle = new PaddleState(paddle.getCenter(), paddle.getSize(), true);
-					}
+				if (balls[j].raaktRechthoek(blockRechthoek, 4)) {
+					balls[j].hitBlock(blockRechthoek, blocks[i].getsDestroyedOnCollision());
+					balls[j] = specialBlockHandler(balls[j], blocks[i]);
 					if (blocks[i].getsDestroyedOnCollision() == false) {
 						blocks[i] = new SturdyBlockState(blocks[i].getTopLeft(), blocks[i].getBottomRight(), blocks[i].getHealth()-1);
 					}else {
@@ -195,6 +188,17 @@ public class BreakoutState {
 			}
 			blocks = Arrays.stream(blocks).filter(b -> b != null).toArray(BlockState[]::new);
 		}
+	}
+	
+	public Ball specialBlockHandler(Ball ball, BlockState block) {
+		if (block.soortBlock() == "Replicator"){
+			amountOfReplications = 3;
+			paddle = new PaddleState(paddle.getCenter(), paddle.getSize(), true);
+		}
+		if (block.soortBlock() == "Powerup"){
+			ball = new SuperchargedBall(ball.getCenter(), ball.getDiameter(), ball.getVelocity(), 0);
+		}
+		return ball;
 	}
 	
 	public void raaktPaddleLinks(int paddleDir) {
@@ -239,21 +243,21 @@ public class BreakoutState {
 		}
 		
 		if (amountOfReplications == 1) {
-			newBalls[i] = new NormalBall(ball.getCenter(), ball.getDiameter(), ball.getVelocity().plus(new Vector(2, -2)));
+			newBalls[i] = ball.cloneBallWithChangedVelocity(new Vector(2, -2));
 			paddle = new PaddleState(paddle.getCenter(), paddle.getSize(), false);
 		}
 		
 		if (amountOfReplications == 2) {
-			newBalls[i] = new NormalBall(ball.getCenter(), ball.getDiameter(), ball.getVelocity().plus(new Vector(2, -2)));
-			newBalls[i+1] = new NormalBall(ball.getCenter(), ball.getDiameter(), ball.getVelocity().plus(new Vector(-2, 2)));
+			newBalls[i++] = ball.cloneBallWithChangedVelocity(new Vector(2, -2));
+			newBalls[i] = ball.cloneBallWithChangedVelocity(new Vector(-2, 2));
 		}
 		
 		if (amountOfReplications == 3) {
-			newBalls[i] = new NormalBall(ball.getCenter(), ball.getDiameter(), ball.getVelocity().plus(new Vector(2, -2)));
-			newBalls[i+1] = new NormalBall(ball.getCenter(), ball.getDiameter(), ball.getVelocity().plus(new Vector(-2, 2)));
-			newBalls[i+2] = new NormalBall(ball.getCenter(), ball.getDiameter(), ball.getVelocity().plus(new Vector(2, 2)));
+			newBalls[i++] = ball.cloneBallWithChangedVelocity(new Vector(2, -2));
+			newBalls[i++] = ball.cloneBallWithChangedVelocity(new Vector(-2, 2));
+			newBalls[i] = ball.cloneBallWithChangedVelocity(new Vector(2, 2));
 		}
-		balls = newBalls;
+		balls = Arrays.stream(newBalls).filter(b -> b != null).toArray(Ball[]::new);
 		amountOfReplications--;
 	}
 	

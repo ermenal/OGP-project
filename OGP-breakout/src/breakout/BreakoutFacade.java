@@ -13,7 +13,7 @@ public class BreakoutFacade {
 	}
 
 	public Ball createSuperchargedBall(Point center, int diameter, Vector initBallVelocity, int lifetime) {
-		return new SuperchargedBall(center, diameter, initBallVelocity);
+		return new SuperchargedBall(center, diameter, initBallVelocity, lifetime);
 	}
 
 	public BreakoutState createBreakoutState(Ball[] balls, BlockState[] blocks, Point bottomRight,

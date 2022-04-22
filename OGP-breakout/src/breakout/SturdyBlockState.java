@@ -45,4 +45,8 @@ public class SturdyBlockState extends BlockState {
 			return false;
 		return true;
 	}
+	
+	public String soortBlock() {
+		return "Sturdy";
+	}
 }

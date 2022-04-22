@@ -33,8 +33,8 @@ public class ReplicatorBlockState extends BlockState {
 		return true;
 	}
 	
-	public boolean replicator() {
-		return true;
+	public String soortBlock() {
+		return "Replicator";
 	}
 	
 }
