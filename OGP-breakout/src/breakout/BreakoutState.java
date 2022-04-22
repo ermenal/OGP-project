@@ -191,13 +191,17 @@ public class BreakoutState {
 	}
 	
 	public Ball specialBlockHandler(Ball ball, BlockState block) {
-		if (block.soortBlock() == "Replicator"){
+		
+		switch(block.soortBlock()) {
+		case "Replicator":
 			amountOfReplications = 3;
-			paddle = new PaddleState(paddle.getCenter(), paddle.getSize(), true);
-		}
-		if (block.soortBlock() == "Powerup"){
+			paddle = new PaddleState(paddle.getCenter(), true);
+			break;
+		case "Powerup":
 			ball = new SuperchargedBall(ball.getCenter(), ball.getDiameter(), ball.getVelocity(), 0);
+			break;
 		}
+		
 		return ball;
 	}
 	
@@ -242,21 +246,22 @@ public class BreakoutState {
 			newBalls[i] = balls[i];
 		}
 		
-		if (amountOfReplications == 1) {
+		switch(amountOfReplications) {
+		case 1:
 			newBalls[i] = ball.cloneBallWithChangedVelocity(new Vector(2, -2));
-			paddle = new PaddleState(paddle.getCenter(), paddle.getSize(), false);
-		}
-		
-		if (amountOfReplications == 2) {
+			paddle = new PaddleState(paddle.getCenter(), false);
+			break;
+		case 2:
 			newBalls[i++] = ball.cloneBallWithChangedVelocity(new Vector(2, -2));
 			newBalls[i] = ball.cloneBallWithChangedVelocity(new Vector(-2, 2));
-		}
-		
-		if (amountOfReplications == 3) {
+			break;
+		case 3:
 			newBalls[i++] = ball.cloneBallWithChangedVelocity(new Vector(2, -2));
 			newBalls[i++] = ball.cloneBallWithChangedVelocity(new Vector(-2, 2));
 			newBalls[i] = ball.cloneBallWithChangedVelocity(new Vector(2, 2));
+			break;
 		}
+		
 		balls = Arrays.stream(newBalls).filter(b -> b != null).toArray(Ball[]::new);
 		amountOfReplications--;
 	}

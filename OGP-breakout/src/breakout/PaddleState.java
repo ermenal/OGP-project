@@ -26,7 +26,7 @@ public class PaddleState {
 	 */
 	
 	private final Point center;
-	private final Vector size;
+	private static final Vector size = new Vector(22000, 250);
 	
 	private final boolean replicatorPaddle;
 	
@@ -35,16 +35,13 @@ public class PaddleState {
 	 * 
 	 * @pre The argument {@code center} is not {@code null}
 	 *     | center != null
-	 * @pre The argument {@code size} is not {@code null}
-	 * 	   | size != null
 	 * 
 	 * @post | getCenter() == center
-	 * @post | getSize() == size
+	 * @post | getSize() == new Vector(22000, 250)
 	 */
 	
-	public PaddleState(Point center, Vector size, boolean replicatorPaddle){
+	public PaddleState(Point center, boolean replicatorPaddle){
 		this.center = center;
-		this.size = size;
 		this.replicatorPaddle = replicatorPaddle;
 	}
 	
@@ -123,7 +120,7 @@ public class PaddleState {
 		if (newCenter.getX() + size.getX() > br.getX()){
 			newCenter = new Point(br.getX() - size.getX(), newCenter.getY());
 		}
-		return new PaddleState(newCenter, size, replicatorPaddle);
+		return new PaddleState(newCenter, replicatorPaddle);
 	}
 	
 	/**
@@ -145,7 +142,7 @@ public class PaddleState {
 		if (newCenter.getX() - size.getX() < 0){
 			newCenter = new Point(size.getX(), newCenter.getY());
 		}
-		return new PaddleState(newCenter, size, replicatorPaddle);
+		return new PaddleState(newCenter, replicatorPaddle);
 	}
 	
 	

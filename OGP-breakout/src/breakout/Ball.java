@@ -2,11 +2,34 @@ package breakout;
 
 import java.awt.Color;
 
+/**
+ * This class represents a ball on a 2D-grid
+ *
+ * @invar | getCenter() != null
+ * @invar | getDiameter() >= 0
+ * @invar | getVelocity() != null
+ */
+
 public abstract class Ball {
+	
+	/**
+	 * @invar | center != null
+	 * @invar | diameter >= 0
+	 * @invar | velocity != null
+	 */
 	
 	private Point center;
 	private final int diameter;
 	private Vector velocity;
+	
+	/**
+	 * @pre | center != null
+	 * @pre | velocity != null
+	 * 
+	 * @post | getCenter() == center
+	 * @post | getDiameter() == Math.abs(diameter)
+	 * @post | getVelocity() == velocity
+	 */
 	
 	public Ball(Point center, int diameter, Vector velocity) {
 		this.center = center;
@@ -38,28 +61,31 @@ public abstract class Ball {
 		return velocity;
 	}
 	
+	/**
+	 * Returns the ball's color. Either white if it is a normal ball, or green if it is a supercharged ball.
+	 * 
+	 * @post 
+	 * 		| result == Color.GREEN || result == Color.WHITE
+	 */
 	public abstract Color getColor();
+	
+	/**
+	 * Returns the amount of time the ball has been supercharged for. If the ball is not supercharged, the result will be {@code -1}
+	 * 
+	 * @post
+	 * 		| result == -1 || result >= 0
+	 */
 	
 	public int getTime() {
 		return -1;
 	}
 	
-	public Point getTopLeftOfSurroundingRectangle() {
-		Point topLeft = new Point(center.getX() - diameter/2, center.getY() - diameter/2);
-		return topLeft;
-	}
-	
 	/**
-	 * Returns the bottom right point of the rectangle that surrounds the ball 
+	 * Returns either a normal ball or a supercharged ball, that has an altered velocity in accordance with {@code addedVelocity}
 	 * 
-	 * @post | result.getX() == getCenter().getX() + getDiameter()/2 && 
-	 * 		 | result.getY() == getCenter().getY() + getDiameter()/2
+	 * @pre {@code addedVelocity} is not {@code null}
+	 * 		| addedVelocity != null
 	 */
-	
-	public Point getBottomRightOfSurroundingRectangle() {
-		Point bottomRight = new Point(center.getX() + diameter/2, center.getY() + diameter/2);
-		return bottomRight;
-	}
 	
 	public abstract Ball cloneBallWithChangedVelocity(Vector addedVelocity);
 	
