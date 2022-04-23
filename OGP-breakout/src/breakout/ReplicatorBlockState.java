@@ -21,7 +21,7 @@ public class ReplicatorBlockState extends BlockState {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj.getClass() != this.getClass()))
+		if (obj.getClass() != this.getClass())
 			return false;
 		SturdyBlockState other = (SturdyBlockState) obj;
 		if (!(other.getColor().equals(this.getColor())))

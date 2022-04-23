@@ -26,7 +26,7 @@ public class PaddleState {
 	 */
 	
 	private final Point center;
-	private static final Vector size = new Vector(22000, 250);
+	private static final Vector size = new Vector(1500, 250);
 	
 	private final boolean replicatorPaddle;
 	
@@ -37,7 +37,7 @@ public class PaddleState {
 	 *     | center != null
 	 * 
 	 * @post | getCenter() == center
-	 * @post | getSize() == new Vector(22000, 250)
+	 * @post | getSize().equals(new Vector(1500, 250))
 	 */
 	
 	public PaddleState(Point center, boolean replicatorPaddle){
@@ -110,7 +110,7 @@ public class PaddleState {
 	 * 		| result.getCenter().getY() == old(getCenter()).getY()
 	 * @post The result's X coordinate has moved right by 10 units, unless it would have gone outside of the field,
 	 * 		 in which case its center has been adjusted keeping the paddle's size in mind 
-	 * 		| result.getCenter().getX() == old(getCenter()).getX() + 10 ||
+	 * 		| result.getCenter().getX() == old(getCenter()).getX() + 10*elapsedTime ||
 	 * 		| result.getCenter().getX() == br.getX() - getSize().getX()
 	 */
 	
@@ -132,7 +132,7 @@ public class PaddleState {
 	 * 		| result.getCenter().getY() == old(getCenter()).getY()
 	 * @post The result's X coordinate has moved left by 10 units, unless it would have gone outside of the field, 
 	 * 		 in which case its center has been adjusted keeping the paddle's size in mind
-	 * 		| result.getCenter().getX() == old(getCenter()).getX() - 10 || 
+	 * 		| result.getCenter().getX() == old(getCenter()).getX() - 10*elapsedTime || 
 	 * 		| result.getCenter().getX() == getSize().getX()
 	 */
 	

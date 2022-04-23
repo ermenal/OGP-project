@@ -28,22 +28,6 @@ public abstract class BlockState {
 	private final Point topLeft;
 	private final Point bottomRight;
 
-	
-	/**
-	 * Initializes this object so that it stores the given topLeft and bottomRight coordinates
-	 * 
-	 * @pre {@code topLeft} is not {@code null}
-	 *     | topLeft != null
-	 * @pre {@code bottomRight} is not {@code null}
-	 *     | bottomRight != null
-	 * 
-	 * @pre {@code bottomRight} coordinates of the block are below and to the right of its {@code topLeft} coordinates
-	 *     | bottomRight.getX() > topLeft.getX() && 
-	 *     | bottomRight.getY() > topLeft.getY()
-	 * 
-	 * @post | getTopLeft() == topLeft
-	 * @post | getBottomRight() == bottomRight
-	 */
 	public BlockState(Point topLeft, Point bottomRight) {
 		this.topLeft = topLeft;
 		this.bottomRight = bottomRight;

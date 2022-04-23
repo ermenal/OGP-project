@@ -14,7 +14,7 @@ public class BreakoutState {
 	
 	private int amountOfReplications = 0;
 	
-	public static final int MAX_ELAPSED_TIME = 30;
+	public static final int MAX_ELAPSED_TIME = 60;
 	public static final int MAX_SUPERCHARGED_TIME = 10000;
 	
 	
@@ -206,7 +206,7 @@ public class BreakoutState {
 	}
 	
 	public void raaktPaddleLinks(int paddleDir) {
-		for (Ball ball: balls) {
+		for (Ball ball: getBalls()) {
 			if (ball.raaktRechthoek(new Rect(paddle.getTopLeft(), paddle.getBottomRight()), 2)) {
 				ball.bouncePaddle(paddleDir, 1);
 				if (amountOfReplications > 0) {
@@ -217,7 +217,7 @@ public class BreakoutState {
 	}
 	
 	public void raaktPaddleBoven(int paddleDir) {
-		for (Ball ball: balls) {
+		for (Ball ball: getBalls()) {
 			if (ball.raaktRechthoek(new Rect(paddle.getTopLeft(), paddle.getBottomRight()), 3)) {
 				ball.bouncePaddle(paddleDir, 2);
 				if (amountOfReplications > 0) {
@@ -228,7 +228,7 @@ public class BreakoutState {
 	}
 	
 	public void raaktPaddleRechts(int paddleDir) {
-		for (Ball ball: balls) {
+		for (Ball ball: getBalls()) {
 			if (ball.raaktRechthoek(new Rect(paddle.getTopLeft(), paddle.getBottomRight()), 4)) {
 				ball.bouncePaddle(paddleDir, 3);
 				if (amountOfReplications > 0) {
