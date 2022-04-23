@@ -284,12 +284,18 @@ public abstract class Ball {
 	 */
 	
 	public void hitBlock(Rect rect, boolean destroyed) {
-			if (raaktRechthoek(rect, 1))
+			if (raaktRechthoek(rect, 1)) {
 				velocity = velocity.mirrorOver(new Vector(0, 1));
-			if (raaktRechthoek(rect, 2))
+				return;
+			}
+			if (raaktRechthoek(rect, 2)) {
 				velocity = velocity.mirrorOver(new Vector(-1, 0));
-			if (raaktRechthoek(rect, 3))
+				return;
+			}
+			if (raaktRechthoek(rect, 3)) {
 				velocity = velocity.mirrorOver(new Vector(0, -1));
+				return;
+			}
 			if (raaktRechthoek(rect, 4))
 				velocity = velocity.mirrorOver(new Vector(1, 0));
 		
