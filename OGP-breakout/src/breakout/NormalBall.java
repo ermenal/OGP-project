@@ -38,7 +38,7 @@ public class NormalBall extends Ball{
 	}
 	
 	/**
-	 * Returns either a normal ball or a supercharged ball, that has an altered velocity in accordance with {@code addedVelocity}
+	 * Returns a normal ball, that has an altered velocity in accordance with {@code addedVelocity}
 	 * 
 	 * @pre Argument {@code addedVelocity} is not {@code null}
 	 * 		| addedVelocity != null

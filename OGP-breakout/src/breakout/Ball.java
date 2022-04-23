@@ -2,8 +2,6 @@ package breakout;
 
 import java.awt.Color;
 
-//comment voor github probleem
-
 /**
  * This class represents a ball on a 2D-grid
  *

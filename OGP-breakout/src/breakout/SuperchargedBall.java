@@ -97,10 +97,10 @@ public class SuperchargedBall extends Ball {
 	 * 
 	 * @post For a non-destroyable block, the ball's velocity got changed according with the side of the block it hit.
 	 * 		 For a destroyable block, the ball's velocity remained unchanged.
-	 * 		| (!destroyed && 
+	 * 		| (!destroyed && (
 	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, 1))) ||
 	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(-1, 0))) ||
-	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, -1))) ||
+	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, -1))) )||
 	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(1, 0))) ) || 
 	 * 		| (destroyed &&
 	 * 		| 	getVelocity().equals(old(getVelocity())))
@@ -116,13 +116,42 @@ public class SuperchargedBall extends Ball {
 		}
 	}
 	
+	/**
+	 * Returns the amount of time the ball has been supercharged for in milliseconds  
+	 */
+	
+	@Override
+	
 	public int getTime() {
 		return time;
 	}
 	
+	/**
+	 * Returns a supercharged ball, that has an altered velocity in accordance with {@code addedVelocity}
+	 * 
+	 * @pre Argument {@code addedVelocity} is not {@code null}
+	 * 		| addedVelocity != null
+	 * 
+	 * @inspects | this 
+	 * 
+	 * @creates | result
+	 * 
+	 * @post The ball's velocity is the result of adding {@code addedVelocity} to its old velocity
+	 * 		| result.getVelocity().equals(getVelocity().plus(addedVelocity))
+	 * 
+	 * @post The ball's center, diameter and time it's been supercharged for have remained unchanged
+	 * 		| result.getCenter().equals(getCenter()) &&
+	 * 		| result.getDiameter() == getDiameter() &&
+	 * 		| result.getTime() == getTime()
+	 */
+	
+	@Override
+	
 	public Ball cloneBallWithChangedVelocity(Vector addedVelocity) {
 		return new SuperchargedBall(getCenter(), getDiameter(), getVelocity().plus(addedVelocity), time);
 	}
+	
+	
 	
 	public boolean equals(Object obj) {
 		if (! (super.equals(obj)))

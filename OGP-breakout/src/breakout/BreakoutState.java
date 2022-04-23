@@ -14,7 +14,7 @@ public class BreakoutState {
 	
 	private int amountOfReplications = 0;
 	
-	public static final int MAX_ELAPSED_TIME = 60;
+	public static final int MAX_ELAPSED_TIME = 20;
 	public static final int MAX_SUPERCHARGED_TIME = 10000;
 	
 	
