@@ -140,7 +140,7 @@ public class SuperchargedBall extends Ball {
 	 * @post If the ball is supercharged, a new normal ball is returned if the ball has been supercharged longer than {@code maxTime}. 
 	 * 		 If the supercharged ball hasn't been supercharged for longer than {@code maxTime}, {@code this} is returned.
 	 * 		| result == this && this.getTime() <= maxTime || 
-	 * 		| result.getClass().equals((new NormalBall(new Point(5, 5), 5, new Vector(5, 5))).getClass()) && this.getTime() > maxTime
+	 * 		| result.getClass().equals(NormalBall.class) && this.getTime() > maxTime
 	 * 
 	 * @post The resulting ball's center, diameter and velocity have remained unchanged.
 	 * 		| result.getCenter() == getCenter() && 
@@ -149,7 +149,7 @@ public class SuperchargedBall extends Ball {
 	 * 
 	 * @post The resulting ball's time left supercharged has either remained the same, or it has become -1 because it is now a normal ball.
 	 * 		| result.getTime() == getTime() || 
-	 * 		| result.getTime() == -1 && result.getClass().equals((new NormalBall(new Point(5, 5), 5, new Vector(5, 5))).getClass())
+	 * 		| result.getTime() == -1 && result.getClass().equals(NormalBall.class)
 	 */
 	
 	@Override

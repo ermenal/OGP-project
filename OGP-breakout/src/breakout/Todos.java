@@ -20,5 +20,7 @@ public @interface Todos {
 	 * Document the overriden equals methods
 	 * 
 	 * Kijk superchargedTimeHandler documentatie na
+	 * 
+	 * paddleCollisionHandler niet dynamic blabla ??
 	 */
 }

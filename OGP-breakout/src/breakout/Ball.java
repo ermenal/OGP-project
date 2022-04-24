@@ -80,7 +80,7 @@ public abstract class Ball {
 	 * 
 	 * @post If the ball isn't supercharged, {@code this} is returned. If the ball is supercharged, a new normal ball is returned if the ball 
 	 * 		 has been supercharged longer than {@code maxTime}. If the supercharged ball hasn't been supercharged for longer than {@code maxTime}, {@code this} is returned.
-	 * 		| result == this || result.getClass().equals((new NormalBall(new Point(5, 5), 5, new Vector(5, 5))).getClass()) && this.getTime() > maxTime
+	 * 		| result == this || result.getClass().equals(NormalBall.class) && this.getTime() > maxTime
 	 * 
 	 * @post The resulting ball's center, diameter and velocity have remained unchanged.
 	 * 		| result.getCenter() == getCenter() && 

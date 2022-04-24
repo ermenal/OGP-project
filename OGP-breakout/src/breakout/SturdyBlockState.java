@@ -94,21 +94,22 @@ public class SturdyBlockState extends BlockState {
 	@Override
 	
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
+		if (!(super.equals(obj)))
 			return false;
-		if (!(obj.getClass() != this.getClass()))
-			return false;
+		
 		SturdyBlockState other = (SturdyBlockState) obj;
-		if (!(other.getColor().equals(this.getColor())))
-			return false;
-		if (!(other.getTopLeft().equals(this.getTopLeft())))
-			return false;
-		if (!(other.getBottomRight().equals(this.getBottomRight())))
-			return false;
-		return true;
+		return this == other || getTopLeft().equals(other.getTopLeft()) && 
+				getBottomRight().equals(other.getBottomRight()) && health == other.getHealth();
 	}
+	
+	/**
+	 * Returns {@code null}, unless this sturdy block has more than 1 health, in which case a new sturdy block that has 1 less health than this one is returned.
+	 * 
+	 * @post | result == null && getHealth() <= 1 || 
+	 * 		 | result.getClass().equals(SturdyBlockState.class)
+	 */
+	
+	@Override
 	
 	public BlockState specialBlockHandler() {
 		if (health > 1)
