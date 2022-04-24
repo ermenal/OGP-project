@@ -11,11 +11,9 @@ public class BreakoutState {
 	private BlockState[] blocks;
 	private final Point bottomRight;
 	private PaddleState paddle;
+	private final int MaxSuperchargedTime = 10000;
 	
-	private int amountOfReplications = 0;
-	
-	public static final int MAX_ELAPSED_TIME = 20;
-	public static final int MAX_SUPERCHARGED_TIME = 10000;
+	public final static int MAX_ELAPSED_TIME = 40;
 	
 	
 	public BreakoutState(Ball[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
@@ -66,204 +64,119 @@ public class BreakoutState {
 		}
 			moveAllBalls(elapsedTime);
 		
-			raaktWallLinks();
-			raaktWallBoven();
-			raaktWallRechts();
+			wallCollisionHandler();
 			raaktOnder();
 		
-			raaktBlockOnder();
-			raaktBlockLinks();
-			raaktBlockBoven();
-			raaktBlockRechts();
+			blockCollisionHandler();
 		
-			raaktPaddleLinks(paddleDir);
-			raaktPaddleBoven(paddleDir);
-			raaktPaddleRechts(paddleDir);
+			paddleCollisionHandler(paddleDir);
 	}
 	
 	public void moveAllBalls(int elapsedTime) {
 		for (int i=0; i<balls.length; i++) {
 			balls[i].moveBall(getBottomRight(), elapsedTime);
-			if (balls[i].getTime() > MAX_SUPERCHARGED_TIME) {
-				balls[i] = new NormalBall(balls[i].getCenter(), balls[i].getDiameter(), balls[i].getVelocity());
+			balls[i] = balls[i].superchargedTimeHandler(MaxSuperchargedTime);
+		}
+	}
+		public void wallCollisionHandler() {
+		for (Ball ball: balls) {
+			if (raaktWallLinks(ball)) {
+				continue;
+			}
+			if (raaktWallBoven(ball)) {
+				continue;
+			}
+			if (raaktWallRechts(ball)) {
+				continue;
 			}
 		}
 	}
 	
-	public void raaktWallLinks() {
-		for (Ball ball: balls) {
-			if (ball.raaktRechthoek(new Rect(new Point(-1, 0), new Point(0, bottomRight.getY())), 4)) {
-				ball.bounceWall(1);
-			}
+	public boolean raaktWallLinks(Ball ball) {
+		if (ball.raaktRechthoek(new Rect(new Point(-1, 0), new Point(0, bottomRight.getY())), 4)) {
+			ball.bounceWall(1);
+			return true;
 		}
+		return false;
+		
 	}
 	
-	public void raaktWallBoven() {
-		for (Ball ball: balls) {
-			if (ball.raaktRechthoek(new Rect(new Point(0, -1), new Point(getBottomRight().getX(), 0)), 1)) {
-				ball.bounceWall(2);
-			}
+	public boolean raaktWallBoven(Ball ball) {
+		if (ball.raaktRechthoek(new Rect(new Point(0, -1), new Point(getBottomRight().getX(), 0)), 1)) {
+			ball.bounceWall(2);
+			return true;
 		}
+		return false;
 	}
 	
-	public void raaktWallRechts() {
-		for (Ball ball: balls) {
-			if (ball.raaktRechthoek(new Rect(new Point(bottomRight.getX(), 0), new Point(bottomRight.getX() + 1, bottomRight.getY())), 2)) {
-				ball.bounceWall(3);
-			}
+	public boolean raaktWallRechts(Ball ball) {
+		if (ball.raaktRechthoek(new Rect(new Point(bottomRight.getX(), 0), new Point(bottomRight.getX() + 1, bottomRight.getY())), 2)) {
+			ball.bounceWall(3);
+			return true;
 		}
+		return false;
+		
 	}
 	
 	public void raaktOnder() {
 		balls = Arrays.stream(balls).filter(e -> !(e.raaktRechthoek(new Rect(new Point(0, bottomRight.getY()), new Point(bottomRight.getX(), bottomRight.getY()+1)), 3))).toArray(Ball[]::new);
 	}
 	
-	public void raaktBlockOnder() {
+	public void blockCollisionHandler() {
 		for (int j=0; j < balls.length;j++) {
-			for (int i=0; i<blocks.length; i++) {
-				Rect blockRechthoek = new Rect(blocks[i].getTopLeft(), blocks[i].getBottomRight());
+			BlockState[] tempBlocks = getBlocks();
+			for (int i=0; i<tempBlocks.length; i++) {
+				boolean geraakt = false;
+				Rect blockRechthoek = new Rect(tempBlocks[i].getTopLeft(), tempBlocks[i].getBottomRight());
 				if (balls[j].raaktRechthoek(blockRechthoek, 1)) {
-					balls[j].hitBlock(blockRechthoek, blocks[i].getsDestroyedOnCollision());
-					balls[j] = specialBlockHandler(balls[j], blocks[i]);
-					if (blocks[i].getsDestroyedOnCollision() == false) {
-						blocks[i] = new SturdyBlockState(blocks[i].getTopLeft(), blocks[i].getBottomRight(), blocks[i].getHealth()-1);
-					}else {
-						blocks[i] = null;
-					}
+					geraakt = true;
 				}
-			}
-			blocks = Arrays.stream(blocks).filter(b -> b != null).toArray(BlockState[]::new);
-		}
-	}
-	
-	public void raaktBlockLinks() {
-		for (int j=0; j < balls.length;j++) {
-			for (int i=0; i<blocks.length; i++) {
-				Rect blockRechthoek = new Rect(blocks[i].getTopLeft(), blocks[i].getBottomRight());
 				if (balls[j].raaktRechthoek(blockRechthoek, 2)) {
-					balls[j].hitBlock(blockRechthoek, blocks[i].getsDestroyedOnCollision());
-					balls[j] = specialBlockHandler(balls[j], blocks[i]);
-					if (blocks[i].getsDestroyedOnCollision() == false) {
-						blocks[i] = new SturdyBlockState(blocks[i].getTopLeft(), blocks[i].getBottomRight(), blocks[i].getHealth()-1);
-					}else {
-						blocks[i] = null;
-					}
+					geraakt = true;
 				}
-			}
-			blocks = Arrays.stream(blocks).filter(b -> b != null).toArray(BlockState[]::new);
-		}
-	}
-	
-	public void raaktBlockBoven() {
-		for (int j=0; j < balls.length;j++) {
-			for (int i=0; i<blocks.length; i++) {
-				Rect blockRechthoek = new Rect(blocks[i].getTopLeft(), blocks[i].getBottomRight());
 				if (balls[j].raaktRechthoek(blockRechthoek, 3)) {
-					balls[j].hitBlock(blockRechthoek, blocks[i].getsDestroyedOnCollision());
-					balls[j] = specialBlockHandler(balls[j], blocks[i]);
-					if (blocks[i].getsDestroyedOnCollision() == false) {
-						blocks[i] = new SturdyBlockState(blocks[i].getTopLeft(), blocks[i].getBottomRight(), blocks[i].getHealth()-1);
-					}else {
-						blocks[i] = null;
-					}
+					geraakt = true;
 				}
-			}
-			blocks = Arrays.stream(blocks).filter(b -> b != null).toArray(BlockState[]::new);
-		}
-	}
-	
-	public void raaktBlockRechts() {
-		for (int j=0; j < balls.length;j++) {
-			for (int i=0; i<blocks.length; i++) {
-				Rect blockRechthoek = new Rect(blocks[i].getTopLeft(), blocks[i].getBottomRight());
 				if (balls[j].raaktRechthoek(blockRechthoek, 4)) {
-					balls[j].hitBlock(blockRechthoek, blocks[i].getsDestroyedOnCollision());
-					balls[j] = specialBlockHandler(balls[j], blocks[i]);
-					if (blocks[i].getsDestroyedOnCollision() == false) {
-						blocks[i] = new SturdyBlockState(blocks[i].getTopLeft(), blocks[i].getBottomRight(), blocks[i].getHealth()-1);
-					}else {
-						blocks[i] = null;
-					}
+					geraakt = true;
+				}
+				if (geraakt) {
+				balls[j].hitBlock(blockRechthoek, tempBlocks[i].getsDestroyedOnCollision());
+				
+				paddle = tempBlocks[i].specialBlockHandler(paddle);
+				balls[j] = tempBlocks[i].specialBlockHandler(balls[j]);
+				tempBlocks[i] = tempBlocks[i].specialBlockHandler();
 				}
 			}
-			blocks = Arrays.stream(blocks).filter(b -> b != null).toArray(BlockState[]::new);
+			blocks = Arrays.stream(tempBlocks).filter(b -> b != null).toArray(BlockState[]::new);
 		}
 	}
 	
-	public Ball specialBlockHandler(Ball ball, BlockState block) {
-		
-		switch(block.soortBlock()) {
-		case "Replicator":
-			amountOfReplications = 3;
-			paddle = new PaddleState(paddle.getCenter(), true);
-			break;
-		case "Powerup":
-			ball = new SuperchargedBall(ball.getCenter(), ball.getDiameter(), ball.getVelocity(), 0);
-			break;
-		}
-		
-		return ball;
-	}
-	
-	public void raaktPaddleLinks(int paddleDir) {
+	public void paddleCollisionHandler(int paddleDir) {
+		Rect paddleRect = new Rect(paddle.getTopLeft(), paddle.getBottomRight());
 		for (Ball ball: getBalls()) {
-			if (ball.raaktRechthoek(new Rect(paddle.getTopLeft(), paddle.getBottomRight()), 2)) {
-				ball.bouncePaddle(paddleDir, 1);
-				if (amountOfReplications > 0) {
-					ballHitPaddleReplicator(ball);
-				}
-			}
-		}
-	}
-	
-	public void raaktPaddleBoven(int paddleDir) {
-		for (Ball ball: getBalls()) {
-			if (ball.raaktRechthoek(new Rect(paddle.getTopLeft(), paddle.getBottomRight()), 3)) {
+			boolean geraakt = false;
+			if (ball.raaktRechthoek(paddleRect, 3)) {
 				ball.bouncePaddle(paddleDir, 2);
-				if (amountOfReplications > 0) {
-					ballHitPaddleReplicator(ball);
-				}
+				geraakt = true;
 			}
-		}
-	}
-	
-	public void raaktPaddleRechts(int paddleDir) {
-		for (Ball ball: getBalls()) {
-			if (ball.raaktRechthoek(new Rect(paddle.getTopLeft(), paddle.getBottomRight()), 4)) {
+			if (ball.raaktRechthoek(paddleRect, 2)) {
+				ball.bouncePaddle(paddleDir, 1);
+				geraakt = true;
+			}
+			if (ball.raaktRechthoek(paddleRect, 4)) {
 				ball.bouncePaddle(paddleDir, 3);
-				if (amountOfReplications > 0) {
-					ballHitPaddleReplicator(ball);
-				}
+				geraakt = true;
+			}
+			if (geraakt) {
+				balls = Arrays.stream(paddle.hitPaddle(getBalls(), ball)).filter(b -> b != null).toArray(Ball[]::new);
+				paddle = new PaddleState(paddle.getCenter(), Math.max(0, paddle.getAmountOfReplications()-1));
 			}
 		}
-	}
+	} 
 	
 	public void ballHitPaddleReplicator(Ball ball) {
-		Ball[] newBalls = new Ball[balls.length + amountOfReplications];
 		
-		int i = 0;
-		for (;i<balls.length; i++) {
-			newBalls[i] = balls[i];
-		}
-		
-		switch(amountOfReplications) {
-		case 1:
-			newBalls[i] = ball.cloneBallWithChangedVelocity(new Vector(2, -2));
-			paddle = new PaddleState(paddle.getCenter(), false);
-			break;
-		case 2:
-			newBalls[i++] = ball.cloneBallWithChangedVelocity(new Vector(2, -2));
-			newBalls[i] = ball.cloneBallWithChangedVelocity(new Vector(-2, 2));
-			break;
-		case 3:
-			newBalls[i++] = ball.cloneBallWithChangedVelocity(new Vector(2, -2));
-			newBalls[i++] = ball.cloneBallWithChangedVelocity(new Vector(-2, 2));
-			newBalls[i] = ball.cloneBallWithChangedVelocity(new Vector(2, 2));
-			break;
-		}
-		
-		balls = Arrays.stream(newBalls).filter(b -> b != null).toArray(Ball[]::new);
-		amountOfReplications--;
 	}
 	
 	public void movePaddleRight(int elapsedTime) {

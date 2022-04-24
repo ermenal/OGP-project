@@ -2,17 +2,73 @@ package breakout;
 
 import java.awt.Color;
 
+/**
+ * This class represents a sturdy block on a 2D-grid
+ * 
+ * @immutable
+ * 
+ * @invar | getBottomRight() != null
+ * @invar | getTopLeft() != null
+ * @invar | getHealth() > 0 && getHealth() <= 3
+ * 
+ * @invar The bottom right coordinates of the block are below and to the right of top left coordinates of the block
+ *     | getTopLeft().getX() < getBottomRight().getX() &&
+ *     | getTopLeft().getY() < getBottomRight().getY()
+ */
+
 public class SturdyBlockState extends BlockState {
-	public final int health;
+	/**
+	 * @invar | health > 0 && health <= 3
+	 */
 	
-	SturdyBlockState(Point topLeft, Point bottomRight, int hp){
+	private final int health;
+	
+	/**
+	 * Initializes this object so that it stores the given topLeft and bottomRight coordinates and the given health
+	 * 
+	 * @pre {@code topLeft} is not {@code null}
+	 *     	| topLeft != null
+	 * @pre {@code bottomRight} is not {@code null}
+	 *     	| bottomRight != null
+	 * @pre {@code hp} is a value between 0 and 3, excluding 0.
+	 * 		| health > 0 && health <= 3
+	 * 
+	 * @pre {@code bottomRight} coordinates of the block are below and to the right of its {@code topLeft} coordinates
+	 *     	| bottomRight.getX() > topLeft.getX() && 
+	 *     	| bottomRight.getY() > topLeft.getY()
+	 * 
+	 * @post | getTopLeft() == topLeft
+	 * @post | getBottomRight() == bottomRight
+	 * @post | getHealth() == health
+	 */
+	
+	SturdyBlockState(Point topLeft, Point bottomRight, int health){
 		super(topLeft, bottomRight);
-		health = hp;
+		this.health = health;
 	}
+	
+	/**
+	 * Returns true if the sturdy block has 1 health left, false otherwise
+	 * 
+	 * @post | result == getHealth() <= 1
+	 */
+	
+	@Override
 	
 	public boolean getsDestroyedOnCollision() {
 		return health <= 1;
 	}
+	
+	/**
+	 * Returns the block's color, which is dependent on the amount of health the block has left.
+	 * 
+	 * @post If the block has 1 health, it is yellow. If the block has 2 health, it is orange. If the block has 3 health, it is red.
+	 * 		| result == Color.YELLOW && getHealth() == 1 || 
+	 * 		| result == Color.ORANGE && getHealth() == 2 || 
+	 * 		| result == Color.RED && getHealth() == 3
+	 */
+	
+	@Override
 	
 	public Color getColor() {
 		switch(health) {
@@ -25,9 +81,17 @@ public class SturdyBlockState extends BlockState {
 		}
 	}
 	
+	/**
+	 * Returns the block's health.
+	 */
+	
+	@Override
+	
 	public int getHealth() {
 		return health;
 	}
+	
+	@Override
 	
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -46,7 +110,9 @@ public class SturdyBlockState extends BlockState {
 		return true;
 	}
 	
-	public String soortBlock() {
-		return "Sturdy";
+	public BlockState specialBlockHandler() {
+		if (health > 1)
+			return new SturdyBlockState(getTopLeft(), getBottomRight(), health-1);
+		return null;
 	}
 }

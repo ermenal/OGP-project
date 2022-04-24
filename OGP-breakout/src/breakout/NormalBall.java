@@ -3,7 +3,7 @@ package breakout;
 import java.awt.Color;
 
 /**
- * This class represents a normal ball on a 2D-grid
+ * This class represents a normal ball on a 2D-grid.
  *
  * @invar | getCenter() != null
  * @invar | getDiameter() >= 0
@@ -26,7 +26,7 @@ public class NormalBall extends Ball{
 	}
 
 	/**
-	 * Returns the ball's 
+	 * Returns the ball's color, which for a normal ball is white.
 	 * 
 	 * @post | result.equals(Color.WHITE)
 	 */
@@ -46,6 +46,9 @@ public class NormalBall extends Ball{
 	 * @inspects | this 
 	 * 
 	 * @creates | result
+	 * 
+	 * @post
+	 * 		| result.getClass().equals(getClass())
 	 * 
 	 * @post The ball's velocity is the result of adding {@code addedVelocity} to its old velocity
 	 * 		| result.getVelocity().equals(getVelocity().plus(addedVelocity))
@@ -68,7 +71,9 @@ public class NormalBall extends Ball{
 			return false;
 		
 		NormalBall other = (NormalBall) obj;
-		return other.getCenter().equals(this.getCenter()) && other.getDiameter() == this.getDiameter() && other.getVelocity().equals(this.getVelocity());
+		return this == other || 
+				other.getCenter().equals(this.getCenter()) && other.getDiameter() == this.getDiameter() && 
+				other.getVelocity().equals(this.getVelocity());
 	
 	}
 	

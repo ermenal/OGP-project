@@ -34,7 +34,8 @@ public class SuperchargedBall extends Ball {
 	}
 
 	/** 
-	 * Changes the ball's center according with its velocity and the amount of milliseconds since the last time it moved
+	 * Changes the ball's center according with its velocity and the amount of milliseconds since the last time it moved.
+	 * Also changes the amount of time the ball has been supercharged for.
 	 * 
 	 * @pre Argument {@code br} is not {@code null} 
 	 * 		| br != null
@@ -66,7 +67,7 @@ public class SuperchargedBall extends Ball {
 	}
 	
 	/**
-	 * Returns the ball's 
+	 * Returns the ball's color, which for a supercharged ball is green.
 	 * 
 	 * @post | result.equals(Color.GREEN)
 	 */
@@ -83,7 +84,7 @@ public class SuperchargedBall extends Ball {
 	 * 
 	 * @pre {@code rect} is not {@code null}
 	 * 		| rect != null
-	 * @pre The ball hit the block on one of its sides
+	 * @pre The ball hit the block on one of its sides.
 	 * 		| raaktRechthoek(rect, 1) || 
 	 * 		| raaktRechthoek(rect, 2) || 
 	 * 		| raaktRechthoek(rect, 3) || 
@@ -91,7 +92,7 @@ public class SuperchargedBall extends Ball {
 	 * 
 	 * @mutates | this
 	 * 
-	 * @post The ball's center and diameter remained unchanged
+	 * @post The ball's center and diameter remained unchanged.
 	 * 		| getCenter() == old(getCenter()) &&
 	 * 		| getDiameter() == old(getDiameter())
 	 * 
@@ -117,7 +118,9 @@ public class SuperchargedBall extends Ball {
 	}
 	
 	/**
-	 * Returns the amount of time the ball has been supercharged for in milliseconds  
+	 * Returns the amount of time the ball has been supercharged for in milliseconds. 
+	 * 
+	 * @post | result >= 0
 	 */
 	
 	@Override
@@ -127,7 +130,39 @@ public class SuperchargedBall extends Ball {
 	}
 	
 	/**
-	 * Returns a supercharged ball, that has an altered velocity in accordance with {@code addedVelocity}
+	 * Returns {@code this} if the amount of time the ball has been supercharged for does not exceed {@code maxTime} or a new normal ball if it does.
+	 * 
+	 * @pre Argument {@code maxTime} should be greater than 0
+	 * 		| maxTime > 0
+	 * 
+	 * @inspects | this
+	 * 
+	 * @post If the ball is supercharged, a new normal ball is returned if the ball has been supercharged longer than {@code maxTime}. 
+	 * 		 If the supercharged ball hasn't been supercharged for longer than {@code maxTime}, {@code this} is returned.
+	 * 		| result == this && this.getTime() <= maxTime || 
+	 * 		| result.getClass().equals((new NormalBall(new Point(5, 5), 5, new Vector(5, 5))).getClass()) && this.getTime() > maxTime
+	 * 
+	 * @post The resulting ball's center, diameter and velocity have remained unchanged.
+	 * 		| result.getCenter() == getCenter() && 
+	 * 		| result.getDiameter() == getDiameter() && 
+	 * 		| result.getVelocity() == getVelocity()
+	 * 
+	 * @post The resulting ball's time left supercharged has either remained the same, or it has become -1 because it is now a normal ball.
+	 * 		| result.getTime() == getTime() || 
+	 * 		| result.getTime() == -1 && result.getClass().equals((new NormalBall(new Point(5, 5), 5, new Vector(5, 5))).getClass())
+	 */
+	
+	@Override
+	
+	public Ball superchargedTimeHandler(int maxTime) {
+		if (time > maxTime) {
+			return new NormalBall(getCenter(), getDiameter(), getVelocity());
+	}
+		return this;
+	}
+	
+	/**
+	 * Returns a supercharged ball, that has an altered velocity in accordance with {@code addedVelocity}.
 	 * 
 	 * @pre Argument {@code addedVelocity} is not {@code null}
 	 * 		| addedVelocity != null
@@ -136,10 +171,13 @@ public class SuperchargedBall extends Ball {
 	 * 
 	 * @creates | result
 	 * 
-	 * @post The ball's velocity is the result of adding {@code addedVelocity} to its old velocity
+	 * @post The result is also a supercharged ball
+	 * 		| result.getClass().equals(getClass())
+	 * 
+	 * @post The ball's velocity is the result of adding {@code addedVelocity} to its old velocity.
 	 * 		| result.getVelocity().equals(getVelocity().plus(addedVelocity))
 	 * 
-	 * @post The ball's center, diameter and time it's been supercharged for have remained unchanged
+	 * @post The ball's center, diameter and time it's been supercharged for have remained unchanged.
 	 * 		| result.getCenter().equals(getCenter()) &&
 	 * 		| result.getDiameter() == getDiameter() &&
 	 * 		| result.getTime() == getTime()
@@ -151,13 +189,15 @@ public class SuperchargedBall extends Ball {
 		return new SuperchargedBall(getCenter(), getDiameter(), getVelocity().plus(addedVelocity), time);
 	}
 	
-	
+	@Override
 	
 	public boolean equals(Object obj) {
 		if (! (super.equals(obj)))
 			return false;
 		
 		SuperchargedBall other = (SuperchargedBall) obj;
-		return other.getCenter().equals(this.getCenter()) && other.getDiameter() == this.getDiameter() && other.getVelocity().equals(this.getVelocity());
+		return this == other || 
+				other.getCenter().equals(this.getCenter()) && other.getDiameter() == this.getDiameter() && 
+				other.getVelocity().equals(this.getVelocity()) && other.getTime() == this.getTime();
 	}
 }

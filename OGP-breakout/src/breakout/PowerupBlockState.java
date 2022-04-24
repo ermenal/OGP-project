@@ -33,8 +33,7 @@ public class PowerupBlockState extends BlockState {
 		return true;
 	}
 	
-	public String soortBlock() {
-		return "Powerup";
+	public Ball specialBlockHandler(Ball ball) {
+		return new SuperchargedBall(ball.getCenter(), ball.getDiameter(), ball.getVelocity(), 0);
 	}
-	
 }

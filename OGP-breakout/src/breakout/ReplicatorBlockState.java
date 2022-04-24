@@ -2,19 +2,39 @@ package breakout;
 
 import java.awt.Color;
 
+/**
+ * This class represents a replicator block on a 2D-grid
+ * 
+ * @immutable
+ * 
+ * @invar | getBottomRight() != null
+ * @invar | getTopLeft() != null
+ * @invar | getHealth() == -1
+ * 
+ * @invar The bottom right coordinates of the block are below and to the right of top left coordinates of the block
+ *     | getTopLeft().getX() < getBottomRight().getX() &&
+ *     | getTopLeft().getY() < getBottomRight().getY()
+ */
+
 public class ReplicatorBlockState extends BlockState {
 
 	ReplicatorBlockState(Point topLeft, Point bottomRight){
 		super(topLeft, bottomRight);
 	}
 	
-	public boolean getsDestroyedOnCollision() {
-		return true;
-	}
+	/**
+	 * Returns the block's color, which is green.
+	 * 
+	 * @post | result == Color.GREEN
+	 */
+	
+	@Override
 	
 	public Color getColor() {
 		return Color.GREEN;
 	}
+	
+	@Override
 	
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -33,8 +53,8 @@ public class ReplicatorBlockState extends BlockState {
 		return true;
 	}
 	
-	public String soortBlock() {
-		return "Replicator";
+	public PaddleState specialBlockHandler(PaddleState paddle) {
+		return new PaddleState(paddle.getCenter(), 3);
 	}
 	
 }

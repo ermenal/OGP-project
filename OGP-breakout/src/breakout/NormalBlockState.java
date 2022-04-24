@@ -33,8 +33,4 @@ public class NormalBlockState extends BlockState {
 		return true;
 	}
 	
-	public String soortBlock() {
-		return "Normal";
-	}
-	
 }

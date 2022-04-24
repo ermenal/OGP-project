@@ -11,5 +11,14 @@ public @interface Todos {
 	 * evt paddle size static final maken --> performance
 	 * 
 	 * BreakoutState ball raakt block methodes: block deel aanpassen voor verschillende blocks, ball deel aanpassen voor verschillende balls
+	 * 
+	 * 
+	 * Split block & paddle raak functies in deelfuncties voor makkelijkere documentatie
+	 * 
+	 * PEER OBJECTS
+	 * 
+	 * Document the overriden equals methods
+	 * 
+	 * Kijk superchargedTimeHandler documentatie na
 	 */
 }

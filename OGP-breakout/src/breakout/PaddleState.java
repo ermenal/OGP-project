@@ -8,41 +8,34 @@ import java.awt.Color;
  * @immutable
  *
  * @invar | getCenter() != null
- * @invar | getSize() != null
- * 
- * @invar The paddle's size vector should not be pointing to the left or up 
- *     | getSize().getX() >= 0 && getSize().getY() >= 0
+ * @invar | getSize().equals(new Vector(1500, 250))
  */
 
 public class PaddleState {
 	
 	/**
 	 * @invar | center != null
-	 * @invar | size != null
-	 * 
-	 * @invar The size vector should not be pointing to the left or up
-	 *     | size.getX() >= 0 &&
-	 *     | size.getY() >= 0
+	 * @invar | size.equals(new Vector(1500, 250))
 	 */
 	
 	private final Point center;
 	private static final Vector size = new Vector(1500, 250);
 	
-	private final boolean replicatorPaddle;
+	private final int amountOfReplications;
 	
 	/**
-	 * Initializes this object so that it stores the given center and size
+	 * Initializes this object so that it stores the given center and size.
 	 * 
 	 * @pre The argument {@code center} is not {@code null}
 	 *     | center != null
 	 * 
 	 * @post | getCenter() == center
-	 * @post | getSize().equals(new Vector(1500, 250))
+	 * @post | getAmountOfReplications() == amountOfReplications
 	 */
 	
-	public PaddleState(Point center, boolean replicatorPaddle){
+	public PaddleState(Point center, int amountOfReplications){
 		this.center = center;
-		this.replicatorPaddle = replicatorPaddle;
+		this.amountOfReplications = amountOfReplications;
 	}
 	
 	
@@ -92,9 +85,36 @@ public class PaddleState {
 	}
 	
 	public Color getColor() {
-		if (replicatorPaddle)
+		if (amountOfReplications > 0)
 			return Color.GREEN;
 		return Color.CYAN;
+	}
+	
+	public int getAmountOfReplications() {
+		return amountOfReplications;
+	}
+	
+	public Ball[] hitPaddle(Ball[] balls, Ball ball) {
+		Ball[] newBalls = new Ball[balls.length + amountOfReplications];
+		
+		int i = 0;
+		for (;i<balls.length; i++) {
+			newBalls[i] = balls[i];
+		}
+		
+		Ball[] clonesToBeAdded = new Ball[amountOfReplications];
+		
+		Vector[] addedVelocities = {new Vector(2, -2), new Vector(2, 2), new Vector(-2, 2)};
+		for (int idx=0; idx<amountOfReplications;idx++) {
+			clonesToBeAdded[idx] = ball.cloneBallWithChangedVelocity(addedVelocities[idx]);
+		}
+		
+		for (int j=0;j<clonesToBeAdded.length;j++) {
+			newBalls[i] = clonesToBeAdded[j];
+			i++;
+		}
+		
+		return newBalls;
 	}
 	
 	/**
@@ -120,7 +140,7 @@ public class PaddleState {
 		if (newCenter.getX() + size.getX() > br.getX()){
 			newCenter = new Point(br.getX() - size.getX(), newCenter.getY());
 		}
-		return new PaddleState(newCenter, replicatorPaddle);
+		return new PaddleState(newCenter, amountOfReplications);
 	}
 	
 	/**
@@ -142,7 +162,7 @@ public class PaddleState {
 		if (newCenter.getX() - size.getX() < 0){
 			newCenter = new Point(size.getX(), newCenter.getY());
 		}
-		return new PaddleState(newCenter, replicatorPaddle);
+		return new PaddleState(newCenter, amountOfReplications);
 	}
 	
 	
