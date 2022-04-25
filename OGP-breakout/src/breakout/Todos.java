@@ -15,6 +15,6 @@ public @interface Todos {
 	 * 
 	 * paddleCollisionHandler niet dynamic blabla ??
 	 * 
-	 * Change MAX_TIME_ELAPSED documentatie naar == ... ipv >= 0
+	 * PaddleState opdelen
 	 */
 }

@@ -42,21 +42,11 @@ import java.util.stream.IntStream;
  *     
  * @invar The maximum amount of time a ball may be supercharged for after hitting a powerup block is greater than or equal to 0 milliseconds.
  * 		| getMaxSuperchargedTime() >= 0
- *     
- * @invar The maximum amount of time elapsed between two ticks is equal to 20 milliseconds.
- * 		| MAX_ELAPSED_TIME == 20
  */
 
 public class BreakoutState {
 	
 	/**
-	 * @invar | balls != null
-	 * @invar | Arrays.stream(balls).noneMatch(e -> e == null)
-	 * @invar | Arrays.stream(balls).noneMatch(e -> e.getCenter().getX() - e.getDiameter()/2 < 0 ||
-	 *        | e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX())
-	 * @invar | Arrays.stream(balls).noneMatch(e -> e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() ||
-	 *        | e.getCenter().getY() - e.getDiameter()/2 < 0)
-	 * 
 	 * @invar | blocks != null
 	 * @invar | Arrays.stream(blocks).noneMatch(e -> e == null)
 	 * @invar | Arrays.stream(blocks).noneMatch(e -> e.getTopLeft().getX() < 0 || 
@@ -74,8 +64,6 @@ public class BreakoutState {
 	 *        
 	 * @invar | maxSuperchargedTime >= 0
 	 * 
-	 * @invar | MAX_ELAPSED_TIME > 0
-	 * 
 	 * @representationObject
 	 */
 	
@@ -86,63 +74,63 @@ public class BreakoutState {
 	private PaddleState paddle;
 	private final int maxSuperchargedTime;
 	
-	private Ball[] latestCopy;
-	
 	public final static int MAX_ELAPSED_TIME = 20;
 	
 	/**
 	 * Initializes this object so that it stores the given balls, blocks, bottomRight point and paddle.
 	 * 
 	 * @throws IllegalArgumentException if the given balls array is null
-	 * 	   | balls == null
+	 * 	    | balls == null
 	 * @throws IllegalArgumentException if any of the given balls array's elements are null
-	 *     | Arrays.stream(balls).anyMatch(b -> b == null)
+	 *      | Arrays.stream(balls).anyMatch(b -> b == null)
 	 * @throws IllegalArgumentException if any of the given balls array's elements are outside of the field
-	 * 	   | Arrays.stream(balls).anyMatch(e -> e.getCenter().getX() - e.getDiameter()/2 < 0 || 
-	 *     | e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX()) || 
-	 *     | Arrays.stream(balls).anyMatch(e -> e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() || 
-	 *     | e.getCenter().getY() - e.getDiameter()/2 < 0)
+	 * 	    | Arrays.stream(balls).anyMatch(e -> e.getCenter().getX() - e.getDiameter()/2 < 0 || 
+	 *      | e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX()) || 
+	 *      | Arrays.stream(balls).anyMatch(e -> e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() || 
+	 *      | e.getCenter().getY() - e.getDiameter()/2 < 0)
 	 *     
 	 * @throws IllegalArgumentException if the given blocks array is null
-	 * 	   | blocks == null
+	 * 	    | blocks == null
 	 * @throws IllegalArgumentException if any of the given blocks array's elements are null
-	 *     | Arrays.stream(blocks).anyMatch(b -> b == null)
+	 *      | Arrays.stream(blocks).anyMatch(b -> b == null)
 	 * @throws IllegalArgumentException if any of the given block array's elements are outside of the field    
-	 *     | Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getX() < 0 || 
-	 *     | e.getBottomRight().getX() > bottomRight.getX()) || 
-	 *     | Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getY() < 0 || 
-	 *     | e.getBottomRight().getY() > bottomRight.getY())
+	 *      | Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getX() < 0 || 
+	 *      | e.getBottomRight().getX() > bottomRight.getX()) || 
+	 *      | Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getY() < 0 || 
+	 *      | e.getBottomRight().getY() > bottomRight.getY())
 	 *     
 	 * @throws IllegalArgumentException if the given bottomRight is null
-	 * 	   | blocks == null
+	 * 	    | blocks == null
 	 * 
 	 * @throws IllegalArgumentException if the given paddle is null
-	 * 	   | paddle == null
+	 * 	    | paddle == null
 	 * @throws IllegalArgumentException if the given paddle is outside of the field
-	 *     | paddle.getBottomRight().getX() > bottomRight.getX() || 
-	 *     | paddle.getBottomRight().getY() > bottomRight.getY() || 
-	 *     | paddle.getTopLeft().getX() < 0 || 
-	 *     | paddle.getTopLeft().getY() < 0 
+	 *      | paddle.getBottomRight().getX() > bottomRight.getX() || 
+	 *      | paddle.getBottomRight().getY() > bottomRight.getY() || 
+	 *      | paddle.getTopLeft().getX() < 0 || 
+	 *      | paddle.getTopLeft().getY() < 0 
 	 *     
 	 * @throws IllegalArgumentException if the given maxSuperchargedTime is smaller than 0
 	 * 		| maxSuperchargedTime < 0
 	 * 
 	 * @inspects | balls, blocks
 	 * 
-	 * @post This object's BallState array's elements are equal to and in the same order as the given array of balls' elements
-	 * 	   | IntStream.range(0, getBalls().length).
-	 * 	   | 	allMatch(i -> getBalls()[i].equals(balls[i]))
+	 * @post This object's {@code Ball} array's elements are equal to and in the same order as the given array of balls' elements
+	 * 	    | IntStream.range(0, getBalls().length).
+	 * 	    | 	allMatch(i -> getBalls()[i].equals(balls[i]))
 	 * 
 	 * @post This object's BlockState array's elements are equal to and in the same order as the given array of blocks' elements
-	 * 	   | IntStream.range(0, getBlocks().length).
-	 * 	   |	allMatch(i -> getBlocks()[i].equals(blocks[i]))
+	 * 	    | IntStream.range(0, getBlocks().length).
+	 * 	    |	allMatch(i -> getBlocks()[i].equals(blocks[i]))
 	 * 
 	 * @post This object's bottom right Point has the same coordinates as the given bottomRight point
-	 * 	   | bottomRight.equals(getBottomRight())
+	 * 	    | bottomRight.equals(getBottomRight())
 	 * 
 	 * @post This object's paddle has the same center and size as the given paddle
-	 *     | paddle.getCenter().equals(getPaddle().getCenter()) && 
-	 *     | getPaddle().getSize().equals(getPaddle().getSize())
+	 *      | paddle.getCenter().equals(getPaddle().getCenter()) && 
+	 *      | getPaddle().getSize().equals(getPaddle().getSize())
+	 * @post the maximum amount of time a ball may be supercharged for after hitting a powerup block is {@code maxSuperchargedTime}.
+	 * 		| getMaxSuperchargedTime() == maxSuperchargedTime
 	 */
 	
 	public BreakoutState(Ball[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle, int maxSuperchargedTime) {
@@ -169,8 +157,6 @@ public class BreakoutState {
 		this.bottomRight = bottomRight;
 		this.paddle = paddle;
 		this.maxSuperchargedTime = maxSuperchargedTime;
-		
-		latestCopy = kopieerBallsMetNieuweObjects();
 		
 	}
 	
@@ -223,7 +209,7 @@ public class BreakoutState {
 	}
 
 	/**
-	 * Calls all methods nescessary for moving the balls and handling collisions
+	 * Calls all methods nescessary for moving the balls and handling collisions.
 	 * 
 	 * @mutates | this
 	 */
@@ -234,105 +220,32 @@ public class BreakoutState {
 			elapsedTime = MAX_ELAPSED_TIME;
 		}
 		
-
-			updateLatestCopy();
-			
 			moveAllBalls(elapsedTime);
 			
-			updateLatestCopy();
-			
 			superchargedTimeHandler(elapsedTime);
-			
-			updateLatestCopy();
 		
 			wallCollisionHandler();
 			
-			updateLatestCopy();
-			
 			lowerWallCollisionHandler();
-		
-			updateLatestCopy();
 			
 			blockCollisionHandler();
-		
-			updateLatestCopy();
 			
 			paddleCollisionHandler(paddleDir);
 	}
 	
-	/**
-	 * Moves all the balls currently in the game according to their current velocity
-	 *    
-	 * @mutates | this
-	 * 
-	 * @post This object's balls array's number of elements equals its old number of elements
-	 *     | getBalls().length == getLatestCopy().length
-	 * @post All balls in this object's balls array have been moved according to their current velocity, and none have gone outside of the field
-	 *     | IntStream.range(0, getBalls().length).allMatch(i -> 
-	 *     |	getBalls()[i].getCenter().equals(getLatestCopy()[i].getCenter().plus(getLatestCopy()[i].getVelocity().scaled(elapsedTime) ) ) || 
-	 *     | 	getBalls()[i].getCenter().getX() + getBalls()[i].getDiameter()/2 == getBottomRight().getX() || 
-	 *     | 	getBalls()[i].getCenter().getX() - getBalls()[i].getDiameter()/2 == 0 || 
-	 *     | 	getBalls()[i].getCenter().getY() + getBalls()[i].getDiameter()/2 == getBottomRight().getY() ||
-	 *     | 	getBalls()[i].getCenter().getY() - getBalls()[i].getDiameter()/2 == 0)
-	 * 
-	 */
-	
-	public void moveAllBalls(int elapsedTime) {		
+	private void moveAllBalls(int elapsedTime) {		
 		for (int i=0; i<balls.length; i++) {
 			balls[i].moveBall(getBottomRight(), elapsedTime);
 		}
 	}
 	
-	/**
-	 * Ensures that all supercharged balls are changed into normall balls if the sum of {@code elapsedTime} and the time they have been supercharged for exceeds the {@code maxSuperchargedTime}.
-	 * 
-	 * @pre Argument {@code elapsedTime} should be greater than 0
-	 * 		| elapsedTime > 0
-	 * 
-	 * @mutates | this
-	 * 
-	 * @post This object's balls array's length has not changed.
-	 * 		| getBalls().length == getLatestCopy().length
-	 * @post All supercharged balls in the balls array have been supercharged for a time less than {@code superchargedTime}.
-	 * 		| IntStream.range(0, getBalls().length).allMatch(i ->
-	 * 		|	getBalls()[i].getTime() < getMaxSuperchargedTime())
-	 * @post All objects have remained unchanged, unless they were or are a supercharged ball.
-	 * 		 If they are a supercharged ball, elapsed time has been added to the time they have been supercharged for.
-	 * 		 If they are no longer a supercharged ball, they are now a normal ball because they would have been supercharged for longer than the maximum amount of time a ball can be supercharged for.
-	 * 		| IntStream.range(0, getBalls().length).allMatch(i ->
-	 * 		| 	getBalls()[i].equals(getLatestCopy()[i]) ||
-	 * 		|	getLatestCopy()[i].getTime() + elapsedTime >= getMaxSuperchargedTime() && 
-	 * 		| 		getBalls()[i].getClass().equals(NormalBall.class) ||
-	 * 		| 	getLatestCopy()[i].getTime() + elapsedTime == getBalls()[i].getTime() ) 
-	 */
-	
-	public void superchargedTimeHandler(int elapsedTime) {
+	private void superchargedTimeHandler(int elapsedTime) {
 		for (int i=0;i<balls.length;i++) {
 			balls[i] = balls[i].superchargedTimeHandler(elapsedTime, maxSuperchargedTime);
 		}
 	}
 	
-	/**
-	 * Checks for a collision between any ball and the left wall, right wall and upper wall. If there is a collision, bounces the ball off the wall.
-	 *  
-	 * @mutates | this
-	 * 
-	 * @post This object's balls array's number of elements equals its old number of elements.
-	 *     	| getBalls().length == getLatestCopy().length
-	 * @post The ball's center and diameter remained unchanged.
-	 * 		 If the a ball did not touch any wall, it remained entirely unchanged.
-	 * 		 If the ball did touch a wall, its velocity got mirrored according to the wall by calling {@code bounceWall(x)} on the ball, 
-	 * 		 where x stands for the number used to indicate which wall the ball made contact with. 
-	 * 	   	| IntStream.range(0, getBalls().length).allMatch(i -> 
-	 * 		| getBalls()[i].getCenter().equals(getLatestCopy()[i].getCenter()) && 
-	 * 		| getBalls()[i].getDiameter() == getLatestCopy()[i].getDiameter() && (
-	 * 		| 	getBalls()[i].equals(getLatestCopy()[i]) || 
-	 *     	| 	getBalls()[i].getVelocity().equals(getLatestCopy()[i].getVelocity().mirrorOver(new Vector(1, 0))) ||
-	 *     	|	getBalls()[i].getVelocity().equals(getLatestCopy()[i].getVelocity().mirrorOver(new Vector(0, 1))) || 
-	 *     	|	getBalls()[i].getVelocity().equals(getLatestCopy()[i].getVelocity().mirrorOver(new Vector(-1, 0)))))
-	 */
-	
-	public void wallCollisionHandler() {
+	private void wallCollisionHandler() {
 		for (Ball ball: balls) {
 			if (ball.raaktRechthoek(new Rect(new Point(-1, 0), new Point(0, bottomRight.getY())), 4)) {
 				ball.bounceWall(1);
@@ -347,54 +260,13 @@ public class BreakoutState {
 				continue;
 			}
 		}
-	}
+	}  
 	
-	/**
-	 * Checks for a collision between a ball and the bottom of the field, and if there is a collision, removes the ball from the game.
-	 * 
-	 * @mutates | this
-	 * 
-	 * @post This object's balls array's number of elements is equal to or less than its old number of elements
-	 * 	   | getBalls().length <= getLatestCopy().length
-	 * @post Any ball that collided with the bottom of the field, got removed from the object's balls array. 
-	 *       If a ball did not collide with the bottom of the field, it stays in the object's balls array.
-	 *     | IntStream.range(0, getBalls().length).noneMatch(i -> getBalls()[i].
-	 *     |	raaktRechthoek(new Rect(new Point(0, getBottomRight().getY()), new Point(getBottomRight().getX(), getBottomRight().getY()+1)), 3))
-	 *     
-	 */
-	
-	public void lowerWallCollisionHandler() {
+	private void lowerWallCollisionHandler() {
 		balls = Arrays.stream(balls).filter(e -> !(e.raaktRechthoek(new Rect(new Point(0, bottomRight.getY()), new Point(bottomRight.getX(), bottomRight.getY()+1)), 3))).toArray(Ball[]::new);
 	}
 	
-	/**
-	 * Checks for a collision between any ball and any block. If any collision happened, the result is dependent on 
-	 * what kind of block got hit and what kind of ball hit the block.
-	 * 
-	 * @mutates | this
-	 * 
-	 * @post This object's balls array's number of elements is equal to its old number of elements. 
-	 * 	   	| getBalls().length == getLatestCopy().length 
-	 * @post This object's blocks array's  number of elements is equal to or less than its old number of elements
-	 * 	   	| getBlocks().length <= old(getBlocks()).length 
-	 * @post If any kind of ball hit a replicator block, the paddle got changed so it represents a paddle that will clone 3 balls.
-	 * 		 If no ball hit any replicator block, the paddle stayed the exact same object.
-	 * 		| getPaddle() == old(getPaddle()) || 
-	 * 		| getPaddle().getAmountOfReplications() == 3 && 
-	 * 		|	Arrays.stream(old(getBlocks())).anyMatch(r -> r.getClass().equals(ReplicatorBlockState.class) && Arrays.stream(getBlocks()).noneMatch(b -> b == r) )
-	 * @post If any kind of ball hit a powerup block, that ball got changed into a new supercharged ball that has been supercharged for 0 milliseconds.
-	 * 		 If no ball hit a powerup block, no new supercharged balls were created.
-	 * 		| Arrays.stream(getBalls()).allMatch(b -> Arrays.stream(getLatestCopy()).anyMatch(ball -> b.getClass().equals(ball.getClass()))) ||
-	 * 		| 	Arrays.stream(old(getBlocks())).anyMatch(p -> p.getClass().equals(PowerupBlockState.class) && Arrays.stream(getBlocks()).noneMatch(b -> b == p ) ) 
-	 * @post All blocks have the same health as before or have been destroyed, unless they were a sturdy block with enough health.
-	 * 		| Arrays.stream(getBlocks()).allMatch(b -> Arrays.stream(old(getBlocks())).anyMatch(block -> b == block) || 
-	 * 		| 	b.getClass().equals(SturdyBlockState.class) && b.getHealth() < 3)
-	 * @post There are no more collisions between any balls and any blocks, unless the ball bounced off the bottom, left or top side of the block and technically still touches the left, top or right side.
-	 * 		| Arrays.stream(getBalls()).noneMatch(ball -> Arrays.stream(getBlocks()).anyMatch(block ->
-	 * 		|	ball.raaktRechthoek(new Rect(block.getTopLeft(), block.getBottomRight()), 1)))
-	 */
-	
-	public void blockCollisionHandler() {
+	private void blockCollisionHandler() {
 		for (int j=0; j < balls.length;j++) {
 			BlockState[] tempBlocks = getBlocks();
 			for (int i=0; i<tempBlocks.length; i++) {
@@ -424,7 +296,7 @@ public class BreakoutState {
 		}
 	}
 	
-	public void paddleCollisionHandler(int paddleDir) {
+	private void paddleCollisionHandler(int paddleDir) {
 		Rect paddleRect = new Rect(paddle.getTopLeft(), paddle.getBottomRight());
 		for (Ball ball: getBalls()) {
 			boolean geraakt = false;
@@ -446,38 +318,6 @@ public class BreakoutState {
 			}
 		}
 	} 
-	
-	/**
-     * This method is used to be able to fully formally document the behavior of methods that mutate the representation object 
-     * used to store balls in. Since {@code Ball} is a mutable class, using the old() method in formal documentation doesn't work.
-     * This method returns an array whose elements are new objects with the exact same properties as the balls in {@code getBalls()}.
-     * 
-     * @inspects | this
-     * 
-     * @post The array that is returned has the same length as {@code getBalls()}.
-     *         | result.length == getBalls().length
-     * @post Any element at any index in the resulting array is a {@code Ball} object that equals the ball at the same index in {@code getBalls()}.
-     *         | IntStream.range(0, result.length).allMatch(i ->
-     *         |    result[i].equals(getBalls()[i]))
-     */
-
-    public Ball[] kopieerBallsMetNieuweObjects() {
-        Ball[] kopieOudeBalls = new Ball[getBalls().length];
-
-        for (int i=0; i<getBalls().length;i++) {
-            kopieOudeBalls[i] = getBalls()[i].cloneBallWithChangedVelocity(new Vector(0, 0));
-        }
-
-        return kopieOudeBalls;
-    }
-    
-    public Ball[] getLatestCopy() {
-    	return latestCopy;
-    }
-    
-	public void updateLatestCopy(){
-		latestCopy = kopieerBallsMetNieuweObjects();
-	}
 	
 	public void movePaddleRight(int elapsedTime) {
 		paddle = paddle.movePaddleRight(getBottomRight(), elapsedTime);
