@@ -85,18 +85,20 @@ class SubmissionTestSuite {
 	@Test
 	void testBreakoutStateNull() {
 		assertThrows(IllegalArgumentException.class, 
-				() -> new BreakoutState(null,oneBlock,bottomRight,paddle) );
+				() -> new BreakoutState(null,oneBlock,bottomRight,paddle, 10000) );
 		assertThrows(IllegalArgumentException.class, 
-				() -> new BreakoutState(oneBall,null,bottomRight,paddle) );
+				() -> new BreakoutState(oneBall,null,bottomRight,paddle, 10000) );
 		assertThrows(IllegalArgumentException.class, 
-				() -> new BreakoutState(oneBall,oneBlock,null,paddle) );
+				() -> new BreakoutState(oneBall,oneBlock,null,paddle, 10000) );
 		assertThrows(IllegalArgumentException.class, 
-				() -> new BreakoutState(oneBall,oneBlock,bottomRight,null) );
+				() -> new BreakoutState(oneBall,oneBlock,bottomRight,null, 10000) );
+		assertThrows(IllegalArgumentException.class, 
+				() -> new BreakoutState(oneBall,oneBlock,bottomRight,paddle, -1) );
 	}
 	
 	@Test
 	void testBreakoutStateNormal() {
-		BreakoutState state = new BreakoutState(oneBall,oneBlock,bottomRight,paddle);
+		BreakoutState state = new BreakoutState(oneBall,oneBlock,bottomRight,paddle, 10000);
 		assertTrue(Arrays.equals(oneBall, state.getBalls()));
 		assertTrue(Arrays.equals(oneBlock, state.getBlocks()));
 		assertEquals(bottomRight,state.getBottomRight());

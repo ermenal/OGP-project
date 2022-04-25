@@ -67,10 +67,40 @@ public class Ball {
 	 * @post 
 	 * 		| result == Color.GREEN || result == Color.WHITE
 	 */
+	
 	public abstract Color getColor();
 	
 	/**
-	 * Returns the amount of time the ball has been supercharged for. If the ball is not supercharged, the result will be {@code -1}
+	 * Returns {@code this} or a new normal ball, depending on whether or not the ball is currently supercharged and for how long.
+	 * 
+	 * @pre Argument {@code maxTime} should be greater than 0.
+	 * 		| maxTime > 0
+	 * @pre Argument {@code elapsedTime} should be greater than 0.
+	 * 		| elapsedTime > 0
+	 * 
+	 * @mutates | this
+	 * 
+	 * @post The resulting ball's center, diameter and velocity have remained unchanged.
+	 * 		| result.getCenter() == getCenter() && 
+	 * 		| result.getDiameter() == getDiameter() && 
+	 * 		| result.getVelocity() == getVelocity()
+	 * 
+	 * @post If the ball isn't supercharged, {@code this} is returned. 
+	 * 		 If the ball is supercharged, a new normal ball is returned if adding the elapsed time to the ball's time 
+	 * 		 it has been supercharged for would result in a value larger than or equal to {@code maxTime}. 
+	 * 		 If this doesn't result in a value larger than {@code maxTime}, the elapsed time is added onto the ball's current time and {@code this} is returned.
+	 * 		| result == this && this.getTime() < maxTime ||
+	 * 		| result.getClass().equals(NormalBall.class) && this.getTime() + elapsedTime >= maxTime
+	 */
+	
+	public Ball superchargedTimeHandler(int elapsedTime, int maxTime) {
+		return this;
+	}
+	
+	/**
+	 * Returns the amount of time the ball has been supercharged for in milliseconds. If the ball is not supercharged, the result will be {@code -1}.
+	 * 
+	 * @inspects | this
 	 * 
 	 * @post
 	 * 		| result == -1 || result >= 0
@@ -81,13 +111,58 @@ public class Ball {
 	}
 	
 	/**
-	 * Returns either a normal ball or a supercharged ball, that has an altered velocity in accordance with {@code addedVelocity}
+	 * Returns either a normal ball or a supercharged ball, that has an altered velocity in accordance with {@code addedVelocity}.
 	 * 
-	 * @pre {@code addedVelocity} is not {@code null}
+	 * @pre Argument {@code addedVelocity} is not {@code null}
 	 * 		| addedVelocity != null
+	 * 
+	 * @inspects | this 
+	 * 
+	 * @creates | result
+	 * 
+	 * @post
+	 * 		| result.getClass().equals(getClass())
+	 * 
+	 * @post The ball's velocity is the result of adding {@code addedVelocity} to its old velocity.
+	 * 		| result.getVelocity().equals(getVelocity().plus(addedVelocity))
+	 * 
+	 * @post The ball's center, time left supercharged and diameter have remained unchanged.
+	 * 		| result.getCenter().equals(getCenter()) &&
+	 * 		| result.getDiameter() == getDiameter() && 
+	 * 		| result.getTime() == getTime()
 	 */
 	
 	public abstract Ball cloneBallWithChangedVelocity(Vector addedVelocity);
+	
+	@Override
+	
+	public boolean equals(Object obj) {
+		return this.getClass() == obj.getClass();
+	
+	}
+	
+	/** 
+	 * Changes the ball's center according with its velocity and the amount of milliseconds since the last time it moved.
+	 * 
+	 * @pre Argument {@code br} is not {@code null} 
+	 * 		| br != null
+	 * @pre Argument {@timeElapsed} is greater than 0
+	 * 		| timeElapsed > 0
+	 * 
+	 * @mutates | this
+	 * 
+	 * @post The ball's velocity and diameter remained unchanged.
+	 * 		| getDiameter() == old(getDiameter()) && 
+	 * 		| getVelocity() == old(getVelocity())
+	 * 
+	 * @post The ball has moved according to its velocity and the time since it last moved, keeping in mind that it can't go outside of the field.
+	 * 		| getCenter().getX() == old(getCenter()).plus(getVelocity().scaled(timeElapsed)).getX()  || 
+	 * 		| getCenter().getX() == getDiameter()/2  || 
+	 * 		| getCenter().getX() == br.getX() - getDiameter()/2 ||
+	 * 		| getCenter().getY() == getDiameter()/2  ||
+	 * 		| getCenter().getY() == br.getY() - getDiameter()/2
+	 * 
+	 */
 	
 	public void moveBall(Point br, int timeElapsed) {
 		Point newCenter = center.plus(velocity.scaled(timeElapsed));
@@ -108,6 +183,25 @@ public class Ball {
 		center = newCenter;
 	}
 	
+	/**
+	 * Changes the ball's velocity after it bounced against a certain wall, indicated by the {@code wallNumber} parameter.
+	 * 			(1 indicates the left wall, 2 indicates the top wall and 3 indicates the right wall)
+	 * 
+	 * @pre Argument {@code wallNumber} should be 1, 2 or 3, indicating which wall the ball made contact with.
+	 * 		| wallNumber == 1 || wallNumber == 2 || wallNumber == 3
+	 * 
+	 * @mutates | this
+	 * 
+	 * @post The ball's center and diameter remained the same.
+	 * 		| getCenter() == old(getCenter()) && 
+	 * 		| getDiameter() == old(getDiameter())
+	 * 
+	 * @post The ball's velocity has been mirrored in accordance with the given {@code wallNumber}.
+	 * 		| getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(1, 0))) && wallNumber == 1|| 
+	 * 		| getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, 1))) && wallNumber == 2 || 
+	 * 		| getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(-1, 0))) && wallNumber == 3
+	 */
+	
 	public void bounceWall(int wallNumber) {
 		
 		if (wallNumber == 1) {
@@ -124,15 +218,50 @@ public class Ball {
 		}
 	}
 	
+	/**
+	 * Changes the ball's velocity after it bounced against a given side of the paddle, indicated by {@code paddleSideNumber}.
+	 * 			(1 indicates left side, 2 indicates top side and 3 indicates right side)
+	 * and speeding the ball up or down in the horizontal direction by 2 units according to the paddle's current direction {@code paddleDir}:
+	 * 			(-1 indicates the paddle is moving left, 0 indicates it's standing still and 1 indicates it's moving right)
+	 * 
+	 * @pre Argument {@code paddleDir} should be -1, 0 or 1
+	 * 		| paddleDir == -1 || paddleDir == 0 || paddleDir == 1
+	 * @pre Argument {@code paddleSideNumber} should be 1, 2 or 3
+	 * 		| paddleSideNumber == 1 || paddleSideNumber == 2 || paddleSideNumber == 3
+	 * 
+	 * @mutates | this
+	 * 
+	 * @post The ball's center and diameter have remained unchanged.
+	 * 		| getCenter() == old(getCenter()) && 
+	 * 		| getDiameter() == old(getDiameter())
+	 * 
+	 * @post The ball's velocity has been mirrored in accordance with the given {@code paddleSideNumber} 
+	 *  	 and its X-component has been changed in accordance with the paddle's given direction {@code paddleDir}.
+	 *  	| paddleSideNumber == 1 &&
+	 *  	| getVelocity().equals
+	 *  	|	(new Vector(old(getVelocity()).mirrorOver(new Vector(-1, 0)).getX() + paddleDir * 2, 
+	 *  	|		old(getVelocity()).mirrorOver(new Vector(-1, 0)).getY())) ||
+	 *  	| paddleSideNumber == 2 &&
+	 *  	| getVelocity().equals
+	 *  	|	(new Vector(old(getVelocity()).mirrorOver(new Vector(0, -1)).getX() + paddleDir * 2, 
+	 *  	|		old(getVelocity()).mirrorOver(new Vector(0, -1)).getY())) ||
+	 *  	| paddleSideNumber == 3 &&
+	 *  	| getVelocity().equals
+	 *  	|	(new Vector(old(getVelocity()).mirrorOver(new Vector(1, 0)).getX() + paddleDir * 2, 
+	 *  	|		old(getVelocity()).mirrorOver(new Vector(1, 0)).getY()))
+	 */
+	
 	public void bouncePaddle(int paddleDir, int paddleSideNumber) {
 		int addedVelocity = paddleDir * 2;
 		if (paddleSideNumber == 1) {
 			// leftSide
 			velocity = velocity.mirrorOver(new Vector(-1, 0)).plus(new Vector(addedVelocity, 0));
+			return;
 		}
 		if (paddleSideNumber == 2) {
 			// topSide
 			velocity = velocity.mirrorOver(new Vector(0, -1)).plus(new Vector(addedVelocity, 0));
+			return;
 		}
 		if (paddleSideNumber == 3) {
 			// rightSide
@@ -141,7 +270,7 @@ public class Ball {
 	}
 	
 	/**
-	 * Returns the dot product of the  and the vector {@code n} and vector constructed by scaling {@code velocity} with -1
+	 * Returns the dot product of the vector {@code n} and the vector constructed by scaling {@code velocity} with -1. 
 	 * 
 	 * @pre {@code velocity} should not be null
 	 * 		| velocity != null
@@ -157,17 +286,73 @@ public class Ball {
 		return v.product(n) >= 0;
 	}
 	
+	/**
+	 * Changes the ball's velocity after it bounced against a block that is presented as {@code rect}.
+	 * 
+	 * @pre {@code rect} is not {@code null}
+	 * 		| rect != null
+	 * @pre The ball hit the block on one of its sides
+	 * 		| raaktRechthoek(rect, 1) || 
+	 * 		| raaktRechthoek(rect, 2) || 
+	 * 		| raaktRechthoek(rect, 3) || 
+	 * 		| raaktRechthoek(rect, 4)
+	 * 
+	 * @mutates | this
+	 * 
+	 * @post The ball's center and diameter remained unchanged.
+	 * 		| getCenter() == old(getCenter()) &&
+	 * 		| getDiameter() == old(getDiameter())
+	 * 
+	 * @post Depending on which side the ball hit the block on, which kind of ball it is
+	 * 		 and if the block is destroyable or not, its velocity got changed accordingly.
+	 * 		| getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, 1))) ||
+	 * 		| getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(-1, 0))) ||
+	 * 		| getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, -1))) ||
+	 * 		| getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(1, 0))) ||
+	 * 		| getVelocity().equals(old(getVelocity()))
+	 */
+	
 	public void hitBlock(Rect rect, boolean destroyed) {
-			if (raaktRechthoek(rect, 1))
+			if (raaktRechthoek(rect, 1)) {
 				velocity = velocity.mirrorOver(new Vector(0, 1));
-			if (raaktRechthoek(rect, 2))
+				return;
+			}
+			if (raaktRechthoek(rect, 2)) {
 				velocity = velocity.mirrorOver(new Vector(-1, 0));
-			if (raaktRechthoek(rect, 3))
+				return;
+			}
+			if (raaktRechthoek(rect, 3)) {
 				velocity = velocity.mirrorOver(new Vector(0, -1));
+				return;
+			}
 			if (raaktRechthoek(rect, 4))
 				velocity = velocity.mirrorOver(new Vector(1, 0));
 		
 	}
+	
+	/**
+	 * Returns true if the ball has hit {@code rechthoek} on the given side, indicated by {@code sideNumber}.
+	 * 			(1 indicates the bottom side, 2 indicates the left side, 3 indicates the top side and 4 indicates the right side)
+	 * 
+	 * @pre Argument {@code sideNumber} should be 1, 2, 3 or 4
+	 * 		| sideNumber == 1 || sideNumber == 2 || sideNumber == 3 || sideNumber == 4
+	 * @pre Argument {@code rechthoek} should not be {@code null}
+	 * 		| rechthoek != null
+	 * 
+	 * @inspects | this
+	 * 
+	 * @post The result is true if the distance between the circle's center to the given side is smaller than or equal to the circle's radius.
+	 * 		| result == ((Math.max(rechthoek.getTopLeft().getX(), Math.min(getCenter().getX(), rechthoek.getBottomRight().getX())) - getCenter().getX()) -
+	 * 		|			(Math.max(rechthoek.getTopLeft().getX(), Math.min(getCenter().getX(), rechthoek.getBottomRight().getX())) - getCenter().getX()) + 
+	 * 		|		(Math.max(rechthoek.getTopLeft().getY(), Math.min(getCenter().getY(), rechthoek.getBottomRight().getY())) - getCenter().getY()) * 
+	 * 		|			(Math.max(rechthoek.getTopLeft().getY(), Math.min(getCenter().getY(), rechthoek.getBottomRight().getY())) - getCenter().getY())) 
+	 * 		|	<= getDiameter()/2 * getDiameter()/2 &&
+	 * 		| 		(getVelocity().scaled(-1).product(new Vector (0, 1)) >= 0 || 
+	 * 		|		getVelocity().scaled(-1).product(new Vector(-1, 0)) >= 0 ||
+	 * 		|		getVelocity().scaled(-1).product(new Vector(0, -1)) >= 0 ||
+	 * 		|		getVelocity().scaled(-1).product(new Vector(1, 0)) >= 0) ||
+	 * 		| result == false
+	 */
 	
 	public boolean raaktRechthoek(Rect rechthoek, int sideNumber) {
 		Point ballOnderstePunt = new Point(center.getX(), center.getY() + diameter/2);
@@ -216,17 +401,19 @@ public class Ball {
 	}
 	
 	/**
-	 * Returns the distance of the center of the ball to a line constructed by 2 points to the power of 2
+	 * Returns the distance of the center of the ball to a line constructed by 2 points to the power of 2.
 	 * 
 	 * @pre {@code punt1} is not {@code null}
 	 * 		| punt1 != null
 	 * @pre {@code punt2} is not {@code null}
 	 * 		| punt2 != null
-	 * @pre {@code punt1} must have either a different x-coordinate to {@code punt2}, a different y-coordinate or both
+	 * @pre {@code punt1} must have either a different x-coordinate to {@code punt2}, a different y-coordinate or both.
 	 * 		| punt1.getX() != punt2.getX() || 
 	 * 		|	punt1.getY() != punt2.getY()
 	 * 
-	 * @post The result is the distance between the center of the ball and the line constructed by the 2 given points
+	 * @inspects | this
+	 * 
+	 * @post The result is the distance between the center of the ball and the line constructed by the 2 given points.
 	 * 		| result == 
 	 * 		|	((punt2.getX() - punt1.getX()) * (punt1.getY() - getCenter().getY()) - 
 	 * 		| 			(punt1.getX() - getCenter().getX()) * (punt2.getY() - punt1.getY())) * 
