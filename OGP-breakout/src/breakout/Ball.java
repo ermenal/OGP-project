@@ -1,16 +1,16 @@
 package breakout;
 
-import java.awt.Color;
-
 /**
  * This class represents a ball on a 2D-grid
+ * 
+ * @immutable
  *
  * @invar | getCenter() != null
  * @invar | getDiameter() >= 0
  * @invar | getVelocity() != null
  */
 
-public abstract class Ball {
+public class Ball {
 	
 	/**
 	 * @invar | center != null
@@ -18,9 +18,9 @@ public abstract class Ball {
 	 * @invar | velocity != null
 	 */
 	
-	private Point center;
+	private final Point center;
 	private final int diameter;
-	private Vector velocity;
+	private final Vector velocity;
 	
 	/**
 	 * @pre | center != null
