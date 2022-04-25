@@ -1,5 +1,7 @@
 package breakout;
 
+import java.awt.Color;
+
 /**
  * This class represents a paddle on a 2D-grid
  * 
@@ -24,23 +26,23 @@ public class PaddleState {
 	 */
 	
 	private final Point center;
-	private final Vector size;
+	private static final Vector size = new Vector(22000, 250);
+	
+	private final boolean replicatorPaddle;
 	
 	/**
 	 * Initializes this object so that it stores the given center and size
 	 * 
 	 * @pre The argument {@code center} is not {@code null}
 	 *     | center != null
-	 * @pre The argument {@code size} is not {@code null}
-	 * 	   | size != null
 	 * 
 	 * @post | getCenter() == center
-	 * @post | getSize() == size
+	 * @post | getSize() == new Vector(22000, 250)
 	 */
 	
-	public PaddleState(Point center, Vector size){
+	public PaddleState(Point center, boolean replicatorPaddle){
 		this.center = center;
-		this.size = size;
+		this.replicatorPaddle = replicatorPaddle;
 	}
 	
 	
@@ -89,6 +91,12 @@ public class PaddleState {
 		return size;
 	}
 	
+	public Color getColor() {
+		if (replicatorPaddle)
+			return Color.GREEN;
+		return Color.CYAN;
+	}
+	
 	/**
 	 * Returns a new paddle object that has moved 10 units to the right, keeping in mind that it can't go outside of the field
 	 * @param elapsedTime 
@@ -112,7 +120,7 @@ public class PaddleState {
 		if (newCenter.getX() + size.getX() > br.getX()){
 			newCenter = new Point(br.getX() - size.getX(), newCenter.getY());
 		}
-		return new PaddleState(newCenter, size);
+		return new PaddleState(newCenter, replicatorPaddle);
 	}
 	
 	/**
@@ -134,7 +142,7 @@ public class PaddleState {
 		if (newCenter.getX() - size.getX() < 0){
 			newCenter = new Point(size.getX(), newCenter.getY());
 		}
-		return new PaddleState(newCenter, size);
+		return new PaddleState(newCenter, replicatorPaddle);
 	}
 	
 	
