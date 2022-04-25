@@ -32,39 +32,6 @@ public class SuperchargedBall extends Ball {
 		super(center, diameter, velocity);
 		this.time = Math.abs(time);
 	}
-
-	/** 
-	 * Changes the ball's center according with its velocity and the amount of milliseconds since the last time it moved.
-	 * Also changes the amount of time the ball has been supercharged for.
-	 * 
-	 * @pre Argument {@code br} is not {@code null} 
-	 * 		| br != null
-	 * @pre Argument {@timeElapsed} is greater than 0
-	 * 		| timeElapsed > 0
-	 * 
-	 * @mutates | this
-	 * 
-	 * @post The ball's velocity and diameter remained unchanged
-	 * 		| getDiameter() == old(getDiameter()) && 
-	 * 		| getVelocity() == old(getVelocity())
-	 * 
-	 * @post The ball has moved according to its velocity, keeping in mind that it can't go outside of the field
-	 * 		| getCenter().getX() == old(getCenter()).plus(getVelocity().scaled(timeElapsed)).getX()  || 
-	 * 		| getCenter().getX() == getDiameter()/2  || 
-	 * 		| getCenter().getX() == br.getX() - getDiameter()/2 ||
-	 * 		| getCenter().getY() == getDiameter()/2  ||
-	 * 		| getCenter().getY() == br.getY() - getDiameter()/2
-	 * 
-	 * @post {@code timeElapsed} is added to the amount of time this ball has been supercharged for.
-	 * 		| getTime() == old(getTime()) + timeElapsed
-	 */
-	
-	@Override
-	
-	public void moveBall(Point br, int timeElapsed) {
-		super.moveBall(br, timeElapsed);
-		time += timeElapsed;
-	}
 	
 	/**
 	 * Returns the ball's color, which for a supercharged ball is green.
@@ -130,34 +97,32 @@ public class SuperchargedBall extends Ball {
 	}
 	
 	/**
-	 * Returns {@code this} if the amount of time the ball has been supercharged for does not exceed {@code maxTime} or a new normal ball if it does.
+	 * Returns {@code this} or a new normal ball, depending on how long the ball has been supercharged for.
 	 * 
-	 * @pre Argument {@code maxTime} should be greater than 0
+	 * @pre Argument {@code maxTime} should be greater than 0.
 	 * 		| maxTime > 0
+	 * @pre Argument {@code elapsedTime} should be greater than 0.
+	 * 		| elapsedTime > 0
 	 * 
-	 * @inspects | this
-	 * 
-	 * @post If the ball is supercharged, a new normal ball is returned if the ball has been supercharged longer than {@code maxTime}. 
-	 * 		 If the supercharged ball hasn't been supercharged for longer than {@code maxTime}, {@code this} is returned.
-	 * 		| result == this && this.getTime() <= maxTime || 
-	 * 		| result.getClass().equals(NormalBall.class) && this.getTime() > maxTime
+	 * @mutates | this
 	 * 
 	 * @post The resulting ball's center, diameter and velocity have remained unchanged.
 	 * 		| result.getCenter() == getCenter() && 
 	 * 		| result.getDiameter() == getDiameter() && 
 	 * 		| result.getVelocity() == getVelocity()
 	 * 
-	 * @post The resulting ball's time left supercharged has either remained the same, or it has become -1 because it is now a normal ball.
-	 * 		| result.getTime() == getTime() || 
-	 * 		| result.getTime() == -1 && result.getClass().equals(NormalBall.class)
+	 * @post A new normal ball is returned if adding the elapsed time to the ball's time it has been supercharged for would result in a value larger than {@code maxTime}. 
+	 * 		 If this doesn't result in a value larger than or equal to {@code maxTime}, the elapsed time is added onto the ball's current time and {@code this} is returned.
+	 * 		| result == this && this.getTime() < maxTime  ||
+	 * 		| result.getClass().equals(NormalBall.class) && this.getTime() + elapsedTime >= maxTime
 	 */
 	
 	@Override
 	
-	public Ball superchargedTimeHandler(int maxTime) {
-		if (time > maxTime) {
+	public Ball superchargedTimeHandler(int elapsedTime, int maxTime) {
+		if (time + elapsedTime >= maxTime)
 			return new NormalBall(getCenter(), getDiameter(), getVelocity());
-	}
+		time += elapsedTime;
 		return this;
 	}
 	

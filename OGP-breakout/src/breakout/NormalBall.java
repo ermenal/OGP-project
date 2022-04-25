@@ -53,9 +53,10 @@ public class NormalBall extends Ball{
 	 * @post The ball's velocity is the result of adding {@code addedVelocity} to its old velocity
 	 * 		| result.getVelocity().equals(getVelocity().plus(addedVelocity))
 	 * 
-	 * @post The ball's center and diameter have remained unchanged
+	 * @post The ball's center, time left supercharged and diameter have remained unchanged.
 	 * 		| result.getCenter().equals(getCenter()) &&
-	 * 		| result.getDiameter() == getDiameter()
+	 * 		| result.getDiameter() == getDiameter() && 
+	 * 		| result.getTime() == getTime()
 	 */
 	
 	@Override

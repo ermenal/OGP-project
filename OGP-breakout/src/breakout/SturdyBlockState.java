@@ -105,8 +105,10 @@ public class SturdyBlockState extends BlockState {
 	/**
 	 * Returns {@code null}, unless this sturdy block has more than 1 health, in which case a new sturdy block that has 1 less health than this one is returned.
 	 * 
-	 * @post | result == null && getHealth() <= 1 || 
-	 * 		 | result.getClass().equals(SturdyBlockState.class)
+	 * @post 
+	 * 		| result == null && getHealth() <= 1 || 
+	 * 		| result.getClass().equals(SturdyBlockState.class) && 
+	 * 		| 	result.getHealth() == getHealth() - 1
 	 */
 	
 	@Override

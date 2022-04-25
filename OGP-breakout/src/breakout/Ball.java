@@ -73,25 +73,27 @@ public abstract class Ball {
 	/**
 	 * Returns {@code this} or a new normal ball, depending on whether or not the ball is currently supercharged and for how long.
 	 * 
-	 * @pre Argument {@code maxTime} should be greater than 0
+	 * @pre Argument {@code maxTime} should be greater than 0.
 	 * 		| maxTime > 0
+	 * @pre Argument {@code elapsedTime} should be greater than 0.
+	 * 		| elapsedTime > 0
 	 * 
-	 * @inspects | this
-	 * 
-	 * @post If the ball isn't supercharged, {@code this} is returned. If the ball is supercharged, a new normal ball is returned if the ball 
-	 * 		 has been supercharged longer than {@code maxTime}. If the supercharged ball hasn't been supercharged for longer than {@code maxTime}, {@code this} is returned.
-	 * 		| result == this || result.getClass().equals(NormalBall.class) && this.getTime() > maxTime
+	 * @mutates | this
 	 * 
 	 * @post The resulting ball's center, diameter and velocity have remained unchanged.
 	 * 		| result.getCenter() == getCenter() && 
 	 * 		| result.getDiameter() == getDiameter() && 
 	 * 		| result.getVelocity() == getVelocity()
 	 * 
-	 * @post The resulting ball's time left supercharged has either remained the same, or it has become -1.
-	 * 		| result.getTime() == getTime() || result.getTime() == -1
+	 * @post If the ball isn't supercharged, {@code this} is returned. 
+	 * 		 If the ball is supercharged, a new normal ball is returned if adding the elapsed time to the ball's time 
+	 * 		 it has been supercharged for would result in a value larger than or equal to {@code maxTime}. 
+	 * 		 If this doesn't result in a value larger than {@code maxTime}, the elapsed time is added onto the ball's current time and {@code this} is returned.
+	 * 		| result == this && this.getTime() < maxTime ||
+	 * 		| result.getClass().equals(NormalBall.class) && this.getTime() + elapsedTime >= maxTime
 	 */
 	
-	public Ball superchargedTimeHandler(int maxTime) {
+	public Ball superchargedTimeHandler(int elapsedTime, int maxTime) {
 		return this;
 	}
 	
@@ -124,9 +126,10 @@ public abstract class Ball {
 	 * @post The ball's velocity is the result of adding {@code addedVelocity} to its old velocity.
 	 * 		| result.getVelocity().equals(getVelocity().plus(addedVelocity))
 	 * 
-	 * @post The ball's center and diameter have remained unchanged.
+	 * @post The ball's center, time left supercharged and diameter have remained unchanged.
 	 * 		| result.getCenter().equals(getCenter()) &&
-	 * 		| result.getDiameter() == getDiameter()
+	 * 		| result.getDiameter() == getDiameter() && 
+	 * 		| result.getTime() == getTime()
 	 */
 	
 	public abstract Ball cloneBallWithChangedVelocity(Vector addedVelocity);

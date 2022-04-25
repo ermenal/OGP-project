@@ -9,10 +9,7 @@ import breakout.GameMap;
 public class BreakoutApplication {
 
 	public static final String initMap = """
-##R###R###
-###!##RR##
-R##R###R##
-SSS!SR!!RS
+###
      o
 
      =
