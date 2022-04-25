@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @immutable
  *
  * @invar | getCenter() != null
- * @invar | getSize().equals(new Vector(1500, 250))
+ * @invar | getSize().equals(new Vector(24999, 250))
  * @invar | getAmountOfReplications() >= 0 && getAmountOfReplications() <= 3
  * @invar | getAddedVelocities().length == 3
  * @invar | IntStream.range(0, getAddedVelocities().length).allMatch(i -> 
@@ -23,7 +23,7 @@ public class PaddleState {
 	
 	/**
 	 * @invar | center != null
-	 * @invar | Size.equals(new Vector(1500, 250))
+	 * @invar | Size.equals(new Vector(24999, 250))
 	 * @invar | amountOfReplications >= 0 && amountOfReplications <= 3
 	 * @invar | AddedVelocities.length == 3
 	 * @invar | IntStream.range(0, AddedVelocities.length).allMatch(i -> 
@@ -34,7 +34,7 @@ public class PaddleState {
 	
 	private final Point center;
 	private final int amountOfReplications;
-	private static final Vector Size = new Vector(1500, 250);
+	private static final Vector Size = new Vector(24999, 250);
 	private static final Vector[] AddedVelocities = {new Vector(2, -2), new Vector(2, 2), new Vector(-2, 2)};
 	
 	/**

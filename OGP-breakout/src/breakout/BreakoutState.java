@@ -12,7 +12,8 @@ import java.util.stream.IntStream;
  * @invar This object's balls array has no elements that are {@code null}
  *     	| Arrays.stream(getBalls()).noneMatch(e -> e == null)
  * @invar This object's balls array's elements are entirely inside the field 
- *     	| Arrays.stream(getBalls()).allMatch(e -> e.getCenter().getX() - e.getDiameter()/2 >= 0 && 
+ *     	| Arrays.stream(getBalls()).allMatch(e ->
+ *     	| e.getCenter().getX() - e.getDiameter()/2 >= 0 && 
  *     	| e.getCenter().getX() + e.getDiameter()/2 <= getBottomRight().getX() && 
  *     	| e.getCenter().getY() - e.getDiameter()/2 >= 0 && 
  *     	| e.getCenter().getY() + e.getDiameter()/2 <= getBottomRight().getY())
@@ -22,7 +23,8 @@ import java.util.stream.IntStream;
  * @invar This object's blocks array has no elements that are {@code null}
  *     	| Arrays.stream(getBlocks()).noneMatch(e -> e == null)
  * @invar This object's blocks array's elements are entirely inside the field 
- *     	| Arrays.stream(getBlocks()).allMatch(e -> e.getTopLeft().getX() >= 0 && 
+ *     	| Arrays.stream(getBlocks()).allMatch(e -> 
+ *     	| e.getTopLeft().getX() >= 0 && 
  *     	| e.getBottomRight().getX() <= getBottomRight().getX() &&
  *     	| e.getTopLeft().getY() >= 0 && 
  *     	| e.getBottomRight().getY() <= getBottomRight().getY())
@@ -366,12 +368,30 @@ public class BreakoutState {
 	}
 	
 	/**
-	 * Checks for a collision between any ball and any block. If any collision happened, the ball's velocity got changed depending on the side of the block it hit and what kind of ball it is.
-	 * In case of a collision, the block got deleted or, in the case of a sturdy block with enough health, had their health reduced by 1.
+	 * Checks for a collision between any ball and any block. If any collision happened, the result is dependent on 
+	 * what kind of block got hit and what kind of ball hit the block.
 	 * 
 	 * @mutates | this
 	 * 
-	 * 
+	 * @post This object's balls array's number of elements is equal to its old number of elements. 
+	 * 	   	| getBalls().length == getLatestCopy().length 
+	 * @post This object's blocks array's  number of elements is equal to or less than its old number of elements
+	 * 	   	| getBlocks().length <= old(getBlocks()).length 
+	 * @post If any kind of ball hit a replicator block, the paddle got changed so it represents a paddle that will clone 3 balls.
+	 * 		 If no ball hit any replicator block, the paddle stayed the exact same object.
+	 * 		| getPaddle() == old(getPaddle()) || 
+	 * 		| getPaddle().getAmountOfReplications() == 3 && 
+	 * 		|	Arrays.stream(old(getBlocks())).anyMatch(r -> r.getClass().equals(ReplicatorBlockState.class) && Arrays.stream(getBlocks()).noneMatch(b -> b == r) )
+	 * @post If any kind of ball hit a powerup block, that ball got changed into a new supercharged ball that has been supercharged for 0 milliseconds.
+	 * 		 If no ball hit a powerup block, no new supercharged balls were created.
+	 * 		| Arrays.stream(getBalls()).allMatch(b -> Arrays.stream(getLatestCopy()).anyMatch(ball -> b.getClass().equals(ball.getClass()))) ||
+	 * 		| 	Arrays.stream(old(getBlocks())).anyMatch(p -> p.getClass().equals(PowerupBlockState.class) && Arrays.stream(getBlocks()).noneMatch(b -> b == p ) ) 
+	 * @post All blocks have the same health as before or have been destroyed, unless they were a sturdy block with enough health.
+	 * 		| Arrays.stream(getBlocks()).allMatch(b -> Arrays.stream(old(getBlocks())).anyMatch(block -> b == block) || 
+	 * 		| 	b.getClass().equals(SturdyBlockState.class) && b.getHealth() < 3)
+	 * @post There are no more collisions between any balls and any blocks, unless the ball bounced off the bottom, left or top side of the block and technically still touches the left, top or right side.
+	 * 		| Arrays.stream(getBalls()).noneMatch(ball -> Arrays.stream(getBlocks()).anyMatch(block ->
+	 * 		|	ball.raaktRechthoek(new Rect(block.getTopLeft(), block.getBottomRight()), 1)))
 	 */
 	
 	public void blockCollisionHandler() {

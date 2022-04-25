@@ -64,14 +64,19 @@ public class SuperchargedBall extends Ball {
 	 * 		| getDiameter() == old(getDiameter())
 	 * 
 	 * @post For a non-destroyable block, the ball's velocity got changed according with the side of the block it hit.
+	 * 		 If the supercharged ball hit the non-destroyable block on one of its corners, the ball's velocity got mirrored over 2 vertices.
 	 * 		 For a destroyable block, the ball's velocity remained unchanged.
-	 * 		| (!destroyed && (
+	 * 		| !destroyed && (
 	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, 1))) ||
+	 * 		|		getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, 1)).mirrorOver(new Vector(-1, 0))) || 
+	 * 		|		getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, 1)).mirrorOver(new Vector(1, 0))) ||
 	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(-1, 0))) ||
-	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, -1))) )||
+	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, -1))) ||
+	 * 		|		getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, -1)).mirrorOver(new Vector(-1, 0))) ||
+	 * 		|		getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, -1)).mirrorOver(new Vector(1, 0))) ||
 	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(1, 0))) ) || 
-	 * 		| (destroyed &&
-	 * 		| 	getVelocity().equals(old(getVelocity())))
+	 * 		| destroyed &&
+	 * 		| 	getVelocity().equals(old(getVelocity()))
 	 */
 	
 	@Override
