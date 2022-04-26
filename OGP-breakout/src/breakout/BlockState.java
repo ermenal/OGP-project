@@ -31,7 +31,7 @@ public abstract class BlockState {
 	private final Point bottomRight;
 
 	/**
-	 * Initializes this object so that it stores the given topLeft and bottomRight coordinates
+	 * Initializes this object so that it stores the given topLeft and bottomRight coordinates of the block
 	 * 
 	 * @pre {@code topLeft} is not {@code null}
 	 *     | topLeft != null
@@ -68,7 +68,7 @@ public abstract class BlockState {
 	 * Returns {@code true} if the block gets destroyed when a ball collides with it, otherwise it returns {@code false}.
 	 * 
 	 * @post Only a sturdy block with enough health health can survive a hit from a ball.
-	 * 		 Returns {@code false} if the block is a sturdy block with more than 1 health, {@code false} otherwise. 
+	 * 		 Returns {@code false} if the block is a sturdy block with more than 1 health, {@code true} otherwise. 
 	 * 		| result == true  || 
 	 * 		| result == false && getClass().equals(SturdyBlockState.class) && getHealth() > 1
 	 */
@@ -89,11 +89,38 @@ public abstract class BlockState {
 	
 	/**
 	 * Returns the amount of health the block has or -1 if the block is not a sturdy block.
+	 * This method is used for formal documentation.
 	 */
 	
 	public int getHealth() {
 		return -1;
 	}
+	
+	/**
+	 * Returns whether or not {@code obj} is equal to {@code this}
+	 * 
+	 * @post The result is {@code true} if {@code obj} is the same kind of block as {@code this} with the same properties.
+	 * 		 If this is not the case or {@code obj} is {@code null}, the result is {@code false}
+	 * 		| result == ( (obj != null) && 
+	 * 		|	(obj.getClass().equals(NormalBlockState.class) && 
+	 * 		|		getClass().equals(NormalBlockState.class) && 
+	 * 		|		((NormalBlockState)obj).getTopLeft().equals(getTopLeft()) &&
+	 * 		|		((NormalBlockState)obj).getBottomRight().equals(getBottomRight()) ||
+	 * 		|	obj.getClass().equals(PowerupBlockState.class) && 
+	 * 		|		getClass().equals(PowerupBlockState.class) &&
+	 * 		|		((PowerupBlockState)obj).getTopLeft().equals(getTopLeft()) &&
+	 * 		|		((PowerupBlockState)obj).getBottomRight().equals(getBottomRight()) ||
+	 * 		|	obj.getClass().equals(ReplicatorBlockState.class) &&
+	 * 		|		getClass().equals(ReplicatorBlockState.class) &&
+	 * 		|		((ReplicatorBlockState)obj).getTopLeft().equals(getTopLeft()) &&
+	 * 		|		((ReplicatorBlockState)obj).getBottomRight().equals(getBottomRight()) ||
+	 * 		|	obj.getClass().equals(SturdyBlockState.class) &&
+	 * 		|		getClass().equals(SturdyBlockState.class) &&
+	 * 		|		((SturdyBlockState)obj).getTopLeft().equals(getTopLeft()) && 
+	 * 		|		((SturdyBlockState)obj).getBottomRight().equals(getBottomRight()) && 
+	 * 		|		((SturdyBlockState)obj).getHealth() == getHealth() ) )
+	 * 
+	 */
 	
 	@Override
 	
@@ -108,6 +135,9 @@ public abstract class BlockState {
 	 * 		| ball != null
 	 * 
 	 * @inspects | ball
+	 * 
+	 * @creates If the block is a powerup block, the result is a new supercharged ball
+	 * 		| result 
 	 * 
 	 * @post If {@code this} is a powerup block, a new supercharged ball is returned. 
 	 * 		 If {@code this} is not a powerup block, {@code ball} is returned.
@@ -130,26 +160,7 @@ public abstract class BlockState {
 	 * @pre Argument {@code paddle} is not {@code null}.
 	 * 		| paddle != null
 	 * 
-	 * @post 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
+	 * @post If {@code this} is a replicatorblock, a new replicator paddle is returned. Otherwise, {@code paddle} is returned
 	 * 		| result == paddle && !getClass().equals(ReplicatorBlockState.class) || 
 	 * 		| getClass().equals(ReplicatorBlockState.class) && result.getClass().equals(ReplicatorPaddleState.class)
 	 * 
@@ -164,7 +175,7 @@ public abstract class BlockState {
 	/**
 	 * Returns {@code null}, unless {@code this} is a sturdy block with more than 1 health.
 	 * 
-	 * @post 
+	 * @post The result is {@code null}, unless {@code this} is a sturdy block with more than 1 health.
 	 * 		| result == null || 
 	 * 		| getClass().equals(SturdyBlockState.class) && result.getHealth() == getHealth()-1
 	 */

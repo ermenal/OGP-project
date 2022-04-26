@@ -9,7 +9,7 @@ import java.awt.Color;
  * 
  * @invar | getBottomRight() != null
  * @invar | getTopLeft() != null
- * @invar | getHealth() == -1 || getHealth() > 0 && getHealth() <= 3
+ * @invar | getHealth() == -1
  * 
  * @invar The bottom right coordinates of the block are below and to the right of top left coordinates of the block
  *     | getTopLeft().getX() < getBottomRight().getX() &&
@@ -19,7 +19,7 @@ import java.awt.Color;
 public class PowerupBlockState extends BlockState {
 
 	/**
-	 * Initializes this object so that it stores the given topLeft and bottomRight coordinates
+	 * Initializes this object so that it stores the given topLeft and bottomRight coordinates of the powerup block
 	 * 
 	 * @pre {@code topLeft} is not {@code null}
 	 *     | topLeft != null
@@ -41,7 +41,7 @@ public class PowerupBlockState extends BlockState {
 	/**
 	 * Returns the block's color, which for a powerup block is blue.
 	 * 
-	 * @post | result.equals(Color.BLUE)
+	 * @post | result == Color.BLUE
 	 */
 	
 	@Override
@@ -49,6 +49,16 @@ public class PowerupBlockState extends BlockState {
 	public Color getColor() {
 		return Color.BLUE;
 	}
+	
+	/**
+	 * Returns whether or not {@code obj} is equal to {@code this}
+	 * 
+	 * @post The result is {@code true} if {@code obj} is a powerup block with the same properties as this block. 
+	 * 		 The result is {@code false} if this is not the case or {@code obj} is {@code null} 
+	 * 		| result == ( (obj != null) && ( getClass().equals(obj.getClass()) &&
+	 * 		|	((PowerupBlockState)obj).getTopLeft().equals(getTopLeft()) &&
+	 * 		|	((PowerupBlockState)obj).getBottomRight().equals(getBottomRight()) ) )
+	 */
 	
 	@Override
 	
@@ -69,9 +79,12 @@ public class PowerupBlockState extends BlockState {
 	 * 
 	 * @inspects | ball
 	 * 
+	 * @creates returns a new supercharged ball
+	 * 		| result
+	 * 
 	 * @post | result.getClass().equals(SuperchargedBall.class)
 	 * 
-	 * @post The resulting ball's center, diameter and velocity have remained unchanged. Its time has been initialized as 0.
+	 * @post The resulting supercharged ball's center, diameter and velocity have remained unchanged. Its time has been initialized as 0.
 	 * 		| result.getCenter() == ball.getCenter() && 
 	 * 		| result.getDiameter() == ball.getDiameter() && 
 	 * 		| result.getVelocity() == ball.getVelocity() && 

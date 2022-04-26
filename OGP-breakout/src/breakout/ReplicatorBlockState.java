@@ -18,6 +18,22 @@ import java.awt.Color;
 
 public class ReplicatorBlockState extends BlockState {
 
+	/**
+	 * Initializes this object so that it stores the given topLeft and bottomRight coordinates of the replicator block
+	 * 
+	 * @pre {@code topLeft} is not {@code null}
+	 *     | topLeft != null
+	 * @pre {@code bottomRight} is not {@code null}
+	 *     | bottomRight != null
+	 * 
+	 * @pre {@code bottomRight} coordinates of the block are below and to the right of its {@code topLeft} coordinates
+	 *     | bottomRight.getX() > topLeft.getX() && 
+	 *     | bottomRight.getY() > topLeft.getY()
+	 * 
+	 * @post | getTopLeft() == topLeft
+	 * @post | getBottomRight() == bottomRight
+	 */
+	
 	ReplicatorBlockState(Point topLeft, Point bottomRight){
 		super(topLeft, bottomRight);
 	}
@@ -33,6 +49,16 @@ public class ReplicatorBlockState extends BlockState {
 	public Color getColor() {
 		return Color.GREEN;
 	}
+	
+	/**
+	 * Returns whether or not {@code obj} is equal to {@code this}
+	 * 
+	 * @post The result is {@code true} if {@code obj} is a replicator block with the same properties as this block. 
+	 * 		 The result is {@code false} if this is not the case or {@code obj} is {@code null} 
+	 * 		| result == ( (obj != null) && ( getClass().equals(obj.getClass()) &&
+	 * 		|	((ReplicatorBlockState)obj).getTopLeft().equals(getTopLeft()) &&
+	 * 		|	((ReplicatorBlockState)obj).getBottomRight().equals(getBottomRight()) ) )
+	 */
 	
 	@Override
 	

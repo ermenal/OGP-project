@@ -24,7 +24,7 @@ public class SturdyBlockState extends BlockState {
 	private final int health;
 	
 	/**
-	 * Initializes this object so that it stores the given topLeft and bottomRight coordinates and the given health
+	 * Initializes this object so that it stores the given topLeft and bottomRight coordinates and the given health of the sturdy block
 	 * 
 	 * @pre {@code topLeft} is not {@code null}
 	 *     	| topLeft != null
@@ -60,7 +60,7 @@ public class SturdyBlockState extends BlockState {
 	}
 	
 	/**
-	 * Returns the block's color, which is dependent on the amount of health the block has left.
+	 * Returns the block's color, which for a sturdy block is dependent on the amount of health the block has left.
 	 * 
 	 * @post If the block has 1 health, it is yellow. If the block has 2 health, it is orange. If the block has 3 health, it is red.
 	 * 		| result == Color.YELLOW && getHealth() == 1 || 
@@ -90,6 +90,17 @@ public class SturdyBlockState extends BlockState {
 	public int getHealth() {
 		return health;
 	}
+	
+	/**
+	 * Returns whether or not {@code obj} is equal to {@code this}
+	 * 
+	 * @post The result is {@code true} if {@code obj} is a sturdy block with the same properties as this block. 
+	 * 		 The result is {@code false} if this is not the case or {@code obj} is {@code null} 
+	 * 		| result == ( (obj != null) && ( getClass().equals(obj.getClass()) &&
+	 * 		|	((SturdyBlockState)obj).getTopLeft().equals(getTopLeft()) &&
+	 * 		|	((SturdyBlockState)obj).getBottomRight().equals(getBottomRight()) &&
+	 * 		| 	((SturdyBlockState)obj).getHealth() == getHealth() ) )
+	 */
 	
 	@Override
 	
