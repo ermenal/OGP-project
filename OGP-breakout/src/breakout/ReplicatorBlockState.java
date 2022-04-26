@@ -51,7 +51,7 @@ public class ReplicatorBlockState extends BlockState {
 	 * @pre Argument {@code paddle} is not {@code null}.
 	 * 		| paddle != null
 	 * 
-	 * @post | result.equals(new PaddleState(paddle.getCenter(), 3)) && getClass().equals(ReplicatorBlockState.class)
+	 * @post | result.equals(new ReplicatorPaddleState(paddle.getCenter(), 3)) && getClass().equals(ReplicatorBlockState.class)
 	 * 
 	 * @post The resulting paddle's center has remained unchanged and it has 3 replications remaining.
 	 * 		| result.getCenter() == paddle.getCenter() &&
@@ -61,7 +61,7 @@ public class ReplicatorBlockState extends BlockState {
 	@Override
 	
 	public PaddleState specialBlockHandler(PaddleState paddle) {
-		return new PaddleState(paddle.getCenter(), 3);
+		return new ReplicatorPaddleState(paddle.getCenter(), 3);
 	}
 	
 }

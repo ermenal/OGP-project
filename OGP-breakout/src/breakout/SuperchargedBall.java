@@ -21,6 +21,7 @@ public class SuperchargedBall extends Ball {
 	/**
 	 * @pre | center != null
 	 * @pre | velocity != null
+	 * @pre | time >= 0
 	 * 
 	 * @post | getCenter() == center
 	 * @post | getDiameter() == Math.abs(diameter)
@@ -30,13 +31,13 @@ public class SuperchargedBall extends Ball {
 	
 	SuperchargedBall(Point center, int diameter, Vector velocity, int time){
 		super(center, diameter, velocity);
-		this.time = Math.abs(time);
+		this.time = time;
 	}
 	
 	/**
 	 * Returns the ball's color, which for a supercharged ball is green.
 	 * 
-	 * @post | result.equals(Color.GREEN)
+	 * @post | result == Color.GREEN
 	 */
 	
 	@Override
@@ -63,17 +64,12 @@ public class SuperchargedBall extends Ball {
 	 * 		| getCenter() == old(getCenter()) &&
 	 * 		| getDiameter() == old(getDiameter())
 	 * 
-	 * @post For a non-destroyable block, the ball's velocity got changed according with the side of the block it hit.
-	 * 		 If the supercharged ball hit the non-destroyable block on one of its corners, the ball's velocity got mirrored over 2 vertices.
-	 * 		 For a destroyable block, the ball's velocity remained unchanged.
+	 * @post For a non-destroyable block, the supercharged ball's velocity got changed according with the side of the block it hit.
+	 * 		 For a destroyable block, the supercharged ball's velocity remained unchanged.
 	 * 		| !destroyed && (
 	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, 1))) ||
-	 * 		|		getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, 1)).mirrorOver(new Vector(-1, 0))) || 
-	 * 		|		getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, 1)).mirrorOver(new Vector(1, 0))) ||
 	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(-1, 0))) ||
 	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, -1))) ||
-	 * 		|		getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, -1)).mirrorOver(new Vector(-1, 0))) ||
-	 * 		|		getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, -1)).mirrorOver(new Vector(1, 0))) ||
 	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(1, 0))) ) || 
 	 * 		| destroyed &&
 	 * 		| 	getVelocity().equals(old(getVelocity()))
@@ -91,8 +87,6 @@ public class SuperchargedBall extends Ball {
 	
 	/**
 	 * Returns the amount of time the ball has been supercharged for in milliseconds. 
-	 * 
-	 * @post | result >= 0
 	 */
 	
 	@Override
@@ -105,7 +99,7 @@ public class SuperchargedBall extends Ball {
 	 * Returns {@code this} or a new normal ball, depending on how long the ball has been supercharged for.
 	 * 
 	 * @pre Argument {@code maxTime} should be greater than 0.
-	 * 		| maxTime > 0
+	 * 		| maxTime >= 0
 	 * @pre Argument {@code elapsedTime} should be greater than 0.
 	 * 		| elapsedTime > 0
 	 * 
@@ -116,7 +110,7 @@ public class SuperchargedBall extends Ball {
 	 * 		| result.getDiameter() == getDiameter() && 
 	 * 		| result.getVelocity() == getVelocity()
 	 * 
-	 * @post A new normal ball is returned if adding the elapsed time to the ball's time it has been supercharged for would result in a value larger than {@code maxTime}. 
+	 * @post A new normal ball is returned if adding the elapsed time to the ball's time it has been supercharged for would result in a value larger than or equal to {@code maxTime}. 
 	 * 		 If this doesn't result in a value larger than or equal to {@code maxTime}, the elapsed time is added onto the ball's current time and {@code this} is returned.
 	 * 		| result == this && this.getTime() < maxTime  ||
 	 * 		| result.getClass().equals(NormalBall.class) && this.getTime() + elapsedTime >= maxTime
@@ -141,13 +135,13 @@ public class SuperchargedBall extends Ball {
 	 * 
 	 * @creates | result
 	 * 
-	 * @post The result is also a supercharged ball
+	 * @post The result is a supercharged ball
 	 * 		| result.getClass().equals(getClass())
 	 * 
-	 * @post The ball's velocity is the result of adding {@code addedVelocity} to its old velocity.
+	 * @post The resulting ball's velocity is the result of adding {@code addedVelocity} to this ball's velocity.
 	 * 		| result.getVelocity().equals(getVelocity().plus(addedVelocity))
 	 * 
-	 * @post The ball's center, diameter and time it's been supercharged for have remained unchanged.
+	 * @post The resulting ball's center, time it has been supercharged for and diameter are the same as {@code this}.
 	 * 		| result.getCenter().equals(getCenter()) &&
 	 * 		| result.getDiameter() == getDiameter() &&
 	 * 		| result.getTime() == getTime()

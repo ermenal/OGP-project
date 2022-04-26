@@ -8,6 +8,7 @@ import java.awt.Color;
  * @invar | getCenter() != null
  * @invar | getDiameter() >= 0
  * @invar | getVelocity() != null
+ * @invar | getTime() == -1 || getTime() >= 0
  */
 
 public abstract class Ball {
@@ -39,6 +40,8 @@ public abstract class Ball {
 	
 	/**
 	 * Returns the object's diameter
+	 * 
+	 * @immutable This object is associated with the same diameter throughout its lifetime
 	 */
 	
 	public int getDiameter() {
@@ -64,7 +67,7 @@ public abstract class Ball {
 	/**
 	 * Returns the ball's color. Either white if it is a normal ball, or green if it is a supercharged ball.
 	 * 
-	 * @post 
+	 * @post The resul is either green or white
 	 * 		| result == Color.GREEN || result == Color.WHITE
 	 */
 	
@@ -74,7 +77,7 @@ public abstract class Ball {
 	 * Returns {@code this} or a new normal ball, depending on whether or not the ball is currently supercharged and for how long.
 	 * 
 	 * @pre Argument {@code maxTime} should be greater than 0.
-	 * 		| maxTime > 0
+	 * 		| maxTime >= 0
 	 * @pre Argument {@code elapsedTime} should be greater than 0.
 	 * 		| elapsedTime > 0
 	 * 
@@ -102,8 +105,9 @@ public abstract class Ball {
 	 * 
 	 * @inspects | this
 	 * 
-	 * @post
-	 * 		| result == -1 || result >= 0
+	 * @post The result is -1 for a normal ball, or not smaller than 0 for a supercharged ball
+	 * 		| result == -1 && this.getClass().equals(NormalBall.class) || 
+	 * 		| result >= 0 && this.getClass().equals(SuperchargedBall.class)
 	 */
 	
 	public int getTime() {
@@ -120,13 +124,13 @@ public abstract class Ball {
 	 * 
 	 * @creates | result
 	 * 
-	 * @post
+	 * @post The result is the same kind of ball as {@code this}
 	 * 		| result.getClass().equals(getClass())
 	 * 
-	 * @post The ball's velocity is the result of adding {@code addedVelocity} to its old velocity.
+	 * @post The resulting ball's velocity is the result of adding {@code addedVelocity} to this ball's velocity.
 	 * 		| result.getVelocity().equals(getVelocity().plus(addedVelocity))
 	 * 
-	 * @post The ball's center, time left supercharged and diameter have remained unchanged.
+	 * @post The resulting ball's center, time it has been supercharged for and diameter are the same as {@code this}.
 	 * 		| result.getCenter().equals(getCenter()) &&
 	 * 		| result.getDiameter() == getDiameter() && 
 	 * 		| result.getTime() == getTime()

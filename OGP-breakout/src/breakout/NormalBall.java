@@ -8,6 +8,7 @@ import java.awt.Color;
  * @invar | getCenter() != null
  * @invar | getDiameter() >= 0
  * @invar | getVelocity() != null
+ * @invar | getTime() == -1
  */
 
 public class NormalBall extends Ball{
@@ -28,7 +29,7 @@ public class NormalBall extends Ball{
 	/**
 	 * Returns the ball's color, which for a normal ball is white.
 	 * 
-	 * @post | result.equals(Color.WHITE)
+	 * @post | result == Color.WHITE
 	 */
 	
 	@Override
@@ -47,13 +48,13 @@ public class NormalBall extends Ball{
 	 * 
 	 * @creates | result
 	 * 
-	 * @post
+	 * @post The resulting ball is a normal ball
 	 * 		| result.getClass().equals(getClass())
 	 * 
-	 * @post The ball's velocity is the result of adding {@code addedVelocity} to its old velocity
+	 * @post The resulting ball's velocity is the result of adding {@code addedVelocity} to this ball's velocity
 	 * 		| result.getVelocity().equals(getVelocity().plus(addedVelocity))
 	 * 
-	 * @post The ball's center, time left supercharged and diameter have remained unchanged.
+	 * @post The resulting ball's center, time it has been supercharged for and diameter are the same as {@code this}.
 	 * 		| result.getCenter().equals(getCenter()) &&
 	 * 		| result.getDiameter() == getDiameter() && 
 	 * 		| result.getTime() == getTime()

@@ -53,23 +53,24 @@ public abstract class BlockState {
 	
 	
 	/** Return this block's topLeft coordinate. 
-	 * @post | result != null
 	 */
 	public Point getTopLeft() {
 		return topLeft;
 	}
 	
 	/** Return this block's bottomRight coordinate. 
-	 * @post result != null
 	 */
 	public Point getBottomRight() {
 		return bottomRight;
 	}
 	
 	/**
-	 * Returns true if the block gets destroyed when a ball collides with it, otherwise it returns false.
+	 * Returns {@code true} if the block gets destroyed when a ball collides with it, otherwise it returns {@code false}.
 	 * 
-	 * @post | result == true || result == false 
+	 * @post Only a sturdy block with enough health health can survive a hit from a ball.
+	 * 		 Returns {@code false} if the block is a sturdy block with more than 1 health, {@code false} otherwise. 
+	 * 		| result == true  || 
+	 * 		| result == false && getClass().equals(SturdyBlockState.class) && getHealth() > 1
 	 */
 	
 	public boolean getsDestroyedOnCollision() {
@@ -80,14 +81,14 @@ public abstract class BlockState {
 	 * Returns the block's color, depending on what kind of block it is.
 	 * 
 	 * @post 
-	 * 		| result.equals(Color.WHITE) || result.equals(Color.RED) || result.equals(Color.ORANGE) || 
-	 * 		| result.equals(Color.YELLOW) || result.equals(Color.GREEN) || result.equals(Color.BLUE)
+	 * 		| result == Color.WHITE || result == Color.RED || result == Color.ORANGE || 
+	 * 		| result == Color.YELLOW || result == Color.GREEN || result == Color.BLUE
 	 */
 	
 	public abstract Color getColor();
 	
 	/**
-	 * Returns the amount of health the block has or 1 if the block is not a sturdy block.
+	 * Returns the amount of health the block has or -1 if the block is not a sturdy block.
 	 */
 	
 	public int getHealth() {
@@ -108,9 +109,12 @@ public abstract class BlockState {
 	 * 
 	 * @inspects | ball
 	 * 
-	 * @post | result == ball || result.getClass().equals(SuperchargedBall.class)
+	 * @post If {@code this} is a powerup block, a new supercharged ball is returned. 
+	 * 		 If {@code this} is not a powerup block, {@code ball} is returned.
+	 * 		| result == ball && !getClass().equals(PowerupBlockState.class) || 
+	 * 		| result.getClass().equals(SuperchargedBall.class) && getClass().equals(PowerupBlockState.class)
 	 * 
-	 * @post The resulting ball's center, diameter and velocity have remained unchanged.
+	 * @post The resulting ball's center, diameter and velocity are the same as {@code ball}.
 	 * 		| result.getCenter() == ball.getCenter() && 
 	 * 		| result.getDiameter() == ball.getDiameter() && 
 	 * 		| result.getVelocity() == ball.getVelocity()
@@ -126,7 +130,28 @@ public abstract class BlockState {
 	 * @pre Argument {@code paddle} is not {@code null}.
 	 * 		| paddle != null
 	 * 
-	 * @post | result == paddle || getClass().equals(ReplicatorBlockState.class)
+	 * @post 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 		| result == paddle && !getClass().equals(ReplicatorBlockState.class) || 
+	 * 		| getClass().equals(ReplicatorBlockState.class) && result.getClass().equals(ReplicatorPaddleState.class)
 	 * 
 	 * @post The resulting paddle's center has remained unchanged.
 	 * 		| result.getCenter() == paddle.getCenter() 
@@ -139,7 +164,9 @@ public abstract class BlockState {
 	/**
 	 * Returns {@code null}, unless {@code this} is a sturdy block with more than 1 health.
 	 * 
-	 * @post | result == null || result.getClass().equals(SturdyBlockState.class)
+	 * @post 
+	 * 		| result == null || 
+	 * 		| getClass().equals(SturdyBlockState.class) && result.getHealth() == getHealth()-1
 	 */
 	
 	public BlockState specialBlockHandler() {

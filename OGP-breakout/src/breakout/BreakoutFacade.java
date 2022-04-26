@@ -5,7 +5,7 @@ import java.awt.Color;
 //No documentation required for this class
 public class BreakoutFacade {
 	public PaddleState createNormalPaddleState(Point center) {
-		return new PaddleState(new Point(25000, 20000), 0);
+		return new NormalPaddleState(new Point(25000, 20000));
 	}
 
 	public Ball createNormalBall(Point center, int diameter, Vector initBallVelocity) {

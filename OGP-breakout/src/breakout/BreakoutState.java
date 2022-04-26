@@ -11,12 +11,6 @@ import java.util.stream.IntStream;
  *     	| getBalls() != null
  * @invar This object's balls array has no elements that are {@code null}
  *     	| Arrays.stream(getBalls()).noneMatch(e -> e == null)
- * @invar This object's balls array's elements are entirely inside the field 
- *     	| Arrays.stream(getBalls()).allMatch(e ->
- *     	| e.getCenter().getX() - e.getDiameter()/2 >= 0 && 
- *     	| e.getCenter().getX() + e.getDiameter()/2 <= getBottomRight().getX() && 
- *     	| e.getCenter().getY() - e.getDiameter()/2 >= 0 && 
- *     	| e.getCenter().getY() + e.getDiameter()/2 <= getBottomRight().getY())
  *     
  * @invar This object's blocks array is not {@code null} 
  *     	| getBlocks() != null
@@ -31,6 +25,9 @@ import java.util.stream.IntStream;
  *     
  * @invar This object's bottomRight point is not {@code null}
  *     	| getBottomRight() != null
+ * @invar This object's bottomRight point is not to the left of or above the point with coordinates {@code (0, 0)}
+ *     	| getBottomRight().getX() >= 0 && 
+ *     	| getBottomRight().getY() >= 0
  *     
  * @invar This object's paddle is not {@code null}
  * 		| getPaddle() != null
@@ -47,14 +44,19 @@ import java.util.stream.IntStream;
 public class BreakoutState {
 	
 	/**
+	 * @invar | balls != null
+	 * @invar | Arrays.stream(balls).noneMatch(e -> e == null)
+	 * 
 	 * @invar | blocks != null
 	 * @invar | Arrays.stream(blocks).noneMatch(e -> e == null)
-	 * @invar | Arrays.stream(blocks).noneMatch(e -> e.getTopLeft().getX() < 0 || 
-	 *        | e.getBottomRight().getX() > bottomRight.getX())
-	 * @invar | Arrays.stream(blocks).noneMatch(e -> e.getTopLeft().getY() < 0 || 
-	 *        | e.getBottomRight().getY() > bottomRight.getY())
+	 * @invar | Arrays.stream(blocks).noneMatch(e -> 
+	 * 		  |		e.getTopLeft().getX() < 0 || 
+	 *        | 	e.getBottomRight().getX() > bottomRight.getX() ||
+	 *        |		e.getTopLeft().getY() < 0 || 
+	 *        |		e.getBottomRight().getY() > bottomRight.getY() )
 	 * 
 	 * @invar | bottomRight != null
+	 * @invar | bottomRight.getX() >= 0 && bottomRight.getY() >= 0
 	 * 
 	 * @invar | paddle != null
 	 * @invar | paddle.getBottomRight().getX() <= bottomRight.getX() && 
@@ -74,37 +76,41 @@ public class BreakoutState {
 	private PaddleState paddle;
 	private final int maxSuperchargedTime;
 	
-	public final static int MAX_ELAPSED_TIME = 20;
+	public final static int MAX_ELAPSED_TIME = 10;
 	
 	/**
-	 * Initializes this object so that it stores the given balls, blocks, bottomRight point and paddle.
+	 * Initializes this object so that it stores the given balls, blocks, bottomRight point paddle and maxSuperchargedTime.
 	 * 
-	 * @throws IllegalArgumentException if the given balls array is null
+	 * @throws IllegalArgumentException if the given balls array is {@code null}
 	 * 	    | balls == null
-	 * @throws IllegalArgumentException if any of the given balls array's elements are null
+	 * @throws IllegalArgumentException if any of the given balls array's elements are {@code null}
 	 *      | Arrays.stream(balls).anyMatch(b -> b == null)
 	 * @throws IllegalArgumentException if any of the given balls array's elements are outside of the field
-	 * 	    | Arrays.stream(balls).anyMatch(e -> e.getCenter().getX() - e.getDiameter()/2 < 0 || 
-	 *      | e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX()) || 
-	 *      | Arrays.stream(balls).anyMatch(e -> e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() || 
-	 *      | e.getCenter().getY() - e.getDiameter()/2 < 0)
+	 * 	    | Arrays.stream(balls).anyMatch(e -> 
+	 * 		|	e.getCenter().getX() - e.getDiameter()/2 < 0 || 
+	 *      | 	e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX() || 
+	 *      | 	e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() || 
+	 *      | 	e.getCenter().getY() - e.getDiameter()/2 < 0 )
 	 *     
-	 * @throws IllegalArgumentException if the given blocks array is null
+	 * @throws IllegalArgumentException if the given blocks array is {@code null}
 	 * 	    | blocks == null
-	 * @throws IllegalArgumentException if any of the given blocks array's elements are null
+	 * @throws IllegalArgumentException if any of the given blocks array's elements are {@code null}
 	 *      | Arrays.stream(blocks).anyMatch(b -> b == null)
-	 * @throws IllegalArgumentException if any of the given block array's elements are outside of the field    
+	 * @throws IllegalArgumentException if any of the given block array's elements are outside of the field   
 	 *      | Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getX() < 0 || 
 	 *      | e.getBottomRight().getX() > bottomRight.getX()) || 
 	 *      | Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getY() < 0 || 
 	 *      | e.getBottomRight().getY() > bottomRight.getY())
 	 *     
-	 * @throws IllegalArgumentException if the given bottomRight is null
-	 * 	    | blocks == null
+	 * @throws IllegalArgumentException if the given {@code bottomRight} is {@code null}.
+	 * 	    | bottomRight == null
+	 * @throws IllegalArgumentException if the given {@code bottomRight} is to the left of or above the point with coordinates {@code (0, 0)}
+	 * 	    | bottomRight.getX() < 0 ||
+	 * 		| bottomRight.getY() < 0
 	 * 
-	 * @throws IllegalArgumentException if the given paddle is null
+	 * @throws IllegalArgumentException if the given {@code paddle} is {@code null}
 	 * 	    | paddle == null
-	 * @throws IllegalArgumentException if the given paddle is outside of the field
+	 * @throws IllegalArgumentException if the given {@code paddle} is outside of the field
 	 *      | paddle.getBottomRight().getX() > bottomRight.getX() || 
 	 *      | paddle.getBottomRight().getY() > bottomRight.getY() || 
 	 *      | paddle.getTopLeft().getX() < 0 || 
@@ -129,6 +135,7 @@ public class BreakoutState {
 	 * @post This object's paddle has the same center and size as the given paddle
 	 *      | paddle.getCenter().equals(getPaddle().getCenter()) && 
 	 *      | getPaddle().getSize().equals(getPaddle().getSize())
+	 *      
 	 * @post the maximum amount of time a ball may be supercharged for after hitting a powerup block is {@code maxSuperchargedTime}.
 	 * 		| getMaxSuperchargedTime() == maxSuperchargedTime
 	 */
@@ -136,15 +143,21 @@ public class BreakoutState {
 	public BreakoutState(Ball[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle, int maxSuperchargedTime) {
 		
 		if (balls == null || blocks == null || bottomRight == null || paddle == null) {
-			throw new IllegalArgumentException("BreakoutState argument can't be null");
+			throw new IllegalArgumentException("BreakoutState arguments can't be null");
 		}
 		if (Arrays.stream(balls).anyMatch(b -> b == null) || Arrays.stream(blocks).anyMatch(b -> b == null)) {
 			throw new IllegalArgumentException("balls and blocks may not have elements that are null");
 		}
 		
-		if (Arrays.stream(balls).anyMatch(e -> e.getCenter().getX() - e.getDiameter()/2 < 0 || e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX()) || Arrays.stream(balls).anyMatch(e -> e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() || e.getCenter().getY() - e.getDiameter()/2 < 0) || Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getX() < 0 || e.getBottomRight().getX() > bottomRight.getX()) || Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getY() < 0 || e.getBottomRight().getY() > bottomRight.getY())) {
+		if (Arrays.stream(balls).anyMatch(e -> e.getCenter().getX() - e.getDiameter()/2 < 0 || 
+				e.getCenter().getX() + e.getDiameter()/2 > bottomRight.getX() ||  
+				e.getCenter().getY() + e.getDiameter()/2 > bottomRight.getY() || 
+				e.getCenter().getY() - e.getDiameter()/2 < 0 ) || 
+			Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getX() < 0 || 
+					e.getBottomRight().getX() > bottomRight.getX() || 
+					e.getBottomRight().getY() > bottomRight.getY() ||
+					e.getTopLeft().getY() < 0 ) )
 			throw new IllegalArgumentException("balls and blocks may not have elements that are outside of the field");
-		}
 		
 		if (paddle.getBottomRight().getX() > bottomRight.getX() || paddle.getBottomRight().getY() > bottomRight.getY() || paddle.getTopLeft().getX() < 0 || paddle.getTopLeft().getY() < 0)
 			throw new IllegalArgumentException("paddle should be inside of the field");
@@ -152,12 +165,14 @@ public class BreakoutState {
 		if (maxSuperchargedTime < 0)
 			throw new IllegalArgumentException("The maximum time a ball is allowed to be supercharged for after hitting a powerup block should be greater than or equal to 0");
 		
+		if (bottomRight.getX() < 0 || bottomRight.getY() < 0)
+			throw new IllegalArgumentException("bottomRight should not be to the left of or above (0, 0)");
+		
 		this.balls = balls.clone();
 		this.blocks = blocks.clone();
 		this.bottomRight = bottomRight;
 		this.paddle = paddle;
 		this.maxSuperchargedTime = maxSuperchargedTime;
-		
 	}
 	
 	/**
@@ -201,7 +216,7 @@ public class BreakoutState {
 	/**
 	 * Returns the maximum amount of time a ball can be supercharged for after hitting a powerup block. 
 	 * 
-	 * @immutable This value is the same throughout its lifetime
+	 * @immutable This object is associated with the same maximum supercharged time throughout its lifetime
 	 */
 	
 	public int getMaxSuperchargedTime() {
@@ -209,20 +224,16 @@ public class BreakoutState {
 	}
 
 	/**
-	 * Calls all methods nescessary for moving the balls and handling collisions.
+	 * Calls all methods nescessary for moving the balls, handling collisions and handling interactions between blocks, balls and the paddle
 	 * 
 	 * @mutates | this
 	 */
 	
 	public void tick(int paddleDir, int elapsedTime) {
-		
-		if (elapsedTime > MAX_ELAPSED_TIME) {
-			elapsedTime = MAX_ELAPSED_TIME;
-		}
+
+			superchargedTimeHandler(elapsedTime);
 		
 			moveAllBalls(elapsedTime);
-			
-			superchargedTimeHandler(elapsedTime);
 		
 			wallCollisionHandler();
 			
@@ -233,15 +244,15 @@ public class BreakoutState {
 			paddleCollisionHandler(paddleDir);
 	}
 	
-	private void moveAllBalls(int elapsedTime) {		
-		for (int i=0; i<balls.length; i++) {
-			balls[i].moveBall(getBottomRight(), elapsedTime);
-		}
-	}
-	
 	private void superchargedTimeHandler(int elapsedTime) {
 		for (int i=0;i<balls.length;i++) {
 			balls[i] = balls[i].superchargedTimeHandler(elapsedTime, maxSuperchargedTime);
+		}
+	}
+	
+	private void moveAllBalls(int elapsedTime) {		
+		for (int i=0; i<balls.length; i++) {
+			balls[i].moveBall(getBottomRight(), elapsedTime);
 		}
 	}
 	
@@ -313,23 +324,75 @@ public class BreakoutState {
 				geraakt = true;
 			}
 			if (geraakt) {
-				balls = Arrays.stream(paddle.hitPaddle(getBalls(), ball)).filter(b -> b != null).toArray(Ball[]::new);
-				paddle = new PaddleState(paddle.getCenter(), Math.max(0, paddle.getAmountOfReplications()-1));
+				balls = Arrays.stream(paddle.hitPaddleReplicationHandler(getBalls(), ball)).filter(b -> b != null).toArray(Ball[]::new);
+				paddle = paddle.ballHitPaddle();
 			}
 		}
 	} 
+	
+	/**
+	 * Moves the paddle to the right, taking into consideration how much time has passed since the last tick and keeping in mind it can't go outside of the field.
+	 * 
+	 * @pre Argument {@code elapsedTime} should be greater than 0.
+	 * 		| elapsedTime > 0
+	 * 
+	 * @mutates | this
+	 * 
+	 * @post The paddle is the same kind of paddle as the old paddle
+	 * 		| getPaddle().getClass().equals(old(getPaddle()).getClass())
+	 * @post The paddle's y-coordinate hasn't changed
+	 * 		| getPaddle().getCenter().getY() == old(getPaddle()).getCenter().getY()
+	 * @post The paddle has moved to the right by {@code elapsedTime * 10} units, unless it would have gone outside of the field, in which case it does not go any further than the right of the field
+	 * 	   	| getPaddle().getCenter().getX() == old(getPaddle()).getCenter().getX() + 10*elapsedTime|| 
+	 * 	   	| getPaddle().getCenter().getX() == getBottomRight().getX() - getPaddle().getSize().getX()
+	 */
 	
 	public void movePaddleRight(int elapsedTime) {
 		paddle = paddle.movePaddleRight(getBottomRight(), elapsedTime);
 	}
 	
+	/**
+	 * Moves the paddle to the left, taking into consideration how much time has passed since the last tick and keeping in mind it can't go outside of the field.
+	 * 
+	 * @pre Argument {@code elapsedTime} should be greater than 0.
+	 * 		| elapsedTime > 0
+	 * 
+	 * @mutates | this
+	 * 
+	 * @post The paddle is the same kind of paddle as the old paddle
+	 * 		| getPaddle().getClass().equals(old(getPaddle()).getClass())
+	 * @post The paddle's y-coordinate hasn't changed
+	 * 		| getPaddle().getCenter().getY() == old(getPaddle()).getCenter().getY()
+	 * @post The paddle has moved to the left by {@code elapsedTime * 10} units, unless it would have gone outside of the field, in which case it does not go any further than the left of the field
+	 * 	   	| getPaddle().getCenter().getX() == old(getPaddle()).getCenter().getX() - 10*elapsedTime|| 
+	 * 	   	| getPaddle().getCenter().getX() == getPaddle().getSize().getX()
+	 */
+	
 	public void movePaddleLeft(int elapsedTime) {
 		paddle = paddle.movePaddleLeft(elapsedTime);
 	}
 	
+	/**
+	 * Returns whether the game is won or not 
+	 * 
+	 * @inspects | this
+	 * 
+	 * @post  The result is {@code true} if there are no more blocks on the field, and at least one ball is still in the game
+	 *     | result == (getBlocks().length == 0 && getBalls().length > 0)
+	 */
+	
 	public boolean isWon() {
 		return blocks.length == 0 && balls.length > 0;
 	}
+	
+	/**
+	 * Returns whether the game is lost or not
+	 * 
+	 * @inspects | this
+	 * 
+	 * @post  The result is {@code true} if there are no more balls left in the game
+	 *    | result == (getBalls().length == 0)
+	 */
 
 	public boolean isDead() {
 		return balls.length == 0;

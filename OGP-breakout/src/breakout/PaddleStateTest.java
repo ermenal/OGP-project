@@ -33,7 +33,7 @@ class PaddleStateTest {
 	
 	@BeforeEach
 	void setUp() {
-		paddle1 = new PaddleState(center1, 2);
+		paddle1 = new NormalPaddleState(center1);
 		ball1 = new NormalBall(ballCenter1, ballDiameter1, ballVelocity1);
 		ball2 = new NormalBall(ballCenter2, ballDiameter2, ballVelocity2);
 		ball3 = new NormalBall(ballCenter3, ballDiameter3, ballVelocity3);
@@ -44,11 +44,11 @@ class PaddleStateTest {
 	
 	@Test
 	void ballHitPaddleTest() {
-		assertThrows(AssertionError.class, () -> paddle1.hitPaddle(null, ball1));
+		assertThrows(AssertionError.class, () -> paddle1.hitPaddleReplicationHandler(null, ball1));
 		
 		Ball[] balls = {ball1, ball2, ball3};
 		
-		assertEquals(5, paddle1.hitPaddle(balls, ball1).length);
+		assertEquals(5, paddle1.hitPaddleReplicationHandler(balls, ball1).length);
 		
 	
 	}
