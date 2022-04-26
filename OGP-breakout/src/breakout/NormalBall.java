@@ -67,8 +67,10 @@ public class NormalBall extends Ball{
 	}
 	
 	/**
+	 * Checks if {@code obj} is the same class with the same properties as {@code this}
 	 * 
-	 * @post
+	 * @post The result is {@code true} if {@code obj} is a normal ball with the same properties as this ball. 
+	 * 		 The result is {@code false} if this is not the case or {@code obj} is {@code null} 
 	 * | result == ( (obj != null) && getClass().equals(obj.getClass()) && 
 	 * |	((NormalBall)obj).getCenter().equals(getCenter()) && 
 	 * |	((NormalBall)obj).getDiameter() == getDiameter() && 

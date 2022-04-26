@@ -1,6 +1,20 @@
 package breakout;
 
 import java.awt.Color;
+import java.util.Arrays;
+
+	/**
+ 	* This class represents a paddle on a 2D-grid.
+ 	* 
+ 	* @immutable
+ 	*
+ 	* @invar The paddle's center is not {@code null}
+ 	* 		| getCenter() != null
+ 	* @invar | getSize().equals(new Vector(1500, 250))
+ 	* @invar The amount of replications this paddle will spawn when a ball collides with it is 0
+ 	* 		| getAmountOfReplications() == 0
+ 	* @invar | Arrays.equals(getAddedVelocities(), new Vector[] {new Vector(2, -2), new Vector(2, 2), new Vector(-2, 2)})
+ 	*/
 
 public class NormalPaddleState extends PaddleState{
 
@@ -14,9 +28,36 @@ public class NormalPaddleState extends PaddleState{
 	 * @post | result == Color.CYAN
 	 */
 	
+	@Override
+	
 	public Color getColor() {
 		return Color.CYAN;
 	}
+	
+	/**
+	 * Returns a new normal paddle after this paddle was hit by a ball. 
+	 * 
+	 * @post The center has remained unchanged
+	 * 		| result.getCenter() == getCenter()
+	 * 
+	 * @post The result is a normal paddle with the same center as this paddle.
+	 * 		| result.equals(new NormalPaddleState(getCenter())) 
+	 */
+	
+	@Override
+	
+	public PaddleState ballHitPaddle() {
+		return new NormalPaddleState(getCenter());
+	}
+	
+	/**
+	 * Returns {@code true} if {@code obj} is equal to {@code this}, {@code false} otherwise.
+	 * 
+	 * @post The result is {@code true} if {@code obj} is a normal paddle with the same properties as {@code this}.
+	 * 		 The result is {@code false} if this is not the case or if {@code obj} is {@code null}
+	 * 		| result == ( (obj != null) && (obj.getClass().equals(NormalPaddleState.class) && 
+	 * 		|	((NormalPaddleState)obj).getCenter().equals(getCenter()) ) )
+	 */
 	
 	@Override
 	
@@ -28,9 +69,21 @@ public class NormalPaddleState extends PaddleState{
 		return other.getCenter().equals(getCenter());
 	}
 	
-	public PaddleState ballHitPaddle() {
-		return new NormalPaddleState(getCenter());
-	}
+	/**
+	 * Returns a copy of {@code balls}
+	 * 
+	 * @pre Argument {@code balls} should not be {@code null}
+	 * 		| balls != null
+	 * 
+	 * @inspects | balls
+	 * 
+	 * @creates | result
+	 * 
+	 * @post | Arrays.equals(result, balls)
+	 */
+	
+	@Override
+	
 	public Ball[] hitPaddleReplicationHandler(Ball[] balls, Ball ball) {
 		return balls.clone();
 	}
@@ -56,6 +109,8 @@ public class NormalPaddleState extends PaddleState{
 	 * 		| result.getCenter().getX() == old(getCenter()).getX() + 10*elapsedTime ||
 	 * 		| result.getCenter().getX() == br.getX() - getSize().getX()
 	 */
+	
+	@Override
 	
 	public PaddleState movePaddleRight(Point br, int elapsedTime) {
 		int moveBy = 10 * elapsedTime;
@@ -85,6 +140,8 @@ public class NormalPaddleState extends PaddleState{
 	 * 		| result.getCenter().getX() == old(getCenter()).getX() - 10*elapsedTime || 
 	 * 		| result.getCenter().getX() == getSize().getX()
 	 */
+	
+	@Override
 	
 	public PaddleState movePaddleLeft(int elapsedTime) {
 		int moveBy = 10 * elapsedTime;

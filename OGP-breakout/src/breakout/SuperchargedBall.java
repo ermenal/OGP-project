@@ -155,8 +155,10 @@ public class SuperchargedBall extends Ball {
 	@Override
 	
 	/**
+	 * Checks if {@code obj} is the same class with the same properties as {@code this}
 	 * 
-	 * @post
+	 * @post The result is {@code true} if {@code obj} is a supercharged ball with the same properties as this ball. 
+	 * 		 The result is {@code false} if this is not the case or {@code obj} is {@code null} 
 	 * | result == ( (obj != null) && getClass().equals(obj.getClass()) && 
 	 * |	((SuperchargedBall)obj).getCenter().equals(getCenter()) && 
 	 * |	((SuperchargedBall)obj).getDiameter() == getDiameter() && 

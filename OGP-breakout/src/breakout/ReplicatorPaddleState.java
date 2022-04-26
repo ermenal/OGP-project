@@ -12,10 +12,7 @@ import java.util.Arrays;
  	* @invar The amount of replications this paddle will spawn when a ball collides with it is at least 1 and at most 3 
  	* 		| getAmountOfReplications() >= 1 && getAmountOfReplications() <= 3
  	* @invar | getAddedVelocities().length == 3
- 	* @invar | IntStream.range(0, getAddedVelocities().length).allMatch(i -> 
- 	* 		  | 	i == 0 && getAddedVelocities()[i].equals(new Vector(2, -2)) ||
- 	* 		  |		i == 1 && getAddedVelocities()[i].equals(new Vector(2, 2)) ||
- 	* 		  |		i == 2 && getAddedVelocities()[i].equals(new Vector(-2, 2)))
+ 	* @invar | Arrays.equals(getAddedVelocities(), new Vector[] {new Vector(2, -2), new Vector(2, 2), new Vector(-2, 2)})
  	*/
 	
 	
@@ -30,7 +27,7 @@ public class ReplicatorPaddleState extends PaddleState{
 	 *     	| center != null
 	 * @pre The value of {@code amountOfReplications} is a value between 1 and 3, including 1 and 3.
 	 * 		This number indicates the amount of clones that will be spawned when a ball makes contact with the paddle.
-	 * 		| amountOfReplications >= 0 && amountOfReplications <= 3
+	 * 		| amountOfReplications >= 1 && amountOfReplications <= 3
 	 * 
 	 * @post | getCenter() == center
 	 * @post | getAmountOfReplications() == amountOfReplications
@@ -66,6 +63,38 @@ public class ReplicatorPaddleState extends PaddleState{
 		return amountOfReplications;
 	}
 	
+	/**
+	 * Returns a new replicator paddle after this paddle was hit by a ball. 
+	 * 
+	 * @post The center has remained unchanged
+	 * 		| result.getCenter() == getCenter()
+	 * 
+	 * @post If this paddle was only able to clone one more ball, the result is a normal paddle.
+	 * 		 If this paddle was able to clone 2 or 3 more balls, the result is a replicator paddle that is able to clone 1 less ball than this paddle.
+	 * 		| result.equals(new NormalPaddleState(getCenter())) && 
+	 * 		|		getAmountOfReplications() == 1 || 
+	 * 		| result.equals(new ReplicatorPaddleState(getCenter(), getAmountOfReplications()-1)) && 
+	 * 		|		getAmountOfReplications() > 1
+	 */
+	
+	@Override
+	
+	public PaddleState ballHitPaddle() {
+		if (amountOfReplications - 1 <= 0)
+			return new NormalPaddleState(getCenter());
+		return new ReplicatorPaddleState(getCenter(), amountOfReplications-1);
+	}
+	
+	/**
+	 * Returns {@code true} if {@code obj} is equal to {@code this}, {@code false} otherwise.
+	 * 
+	 * @post The result is {@code true} if {@code obj} is a replicator paddle with the same properties as {@code this}.
+	 * 		 The result is {@code false} if this is not the case or if {@code obj} is {@code null}
+	 * 		| result == ( (obj != null) && (obj.getClass().equals(ReplicatorPaddleState.class) && 
+	 * 		|	((ReplicatorPaddleState)obj).getCenter().equals(getCenter()) && 
+	 * 		|	((ReplicatorPaddleState)obj).getAmountOfReplications() == getAmountOfReplications() ) )
+	 */
+	
 	@Override
 	
 	public boolean equals(Object obj) {
@@ -76,11 +105,39 @@ public class ReplicatorPaddleState extends PaddleState{
 		return other.getCenter().equals(getCenter()) && other.getAmountOfReplications() == amountOfReplications;
 	}
 	
-	public PaddleState ballHitPaddle() {
-		if (amountOfReplications - 1 <= 0)
-			return new NormalPaddleState(getCenter());
-		return new ReplicatorPaddleState(getCenter(), amountOfReplications-1);
-	}
+	/**
+	 * Returns a new array, containing all balls in the given array {@code balls} as well as any balls that were cloned as a result of
+	 * {@code ball} colliding with the paddle.
+	 * 
+	 * @pre Argument {@code balls} should not be {@code null}.
+	 * 		| balls != null
+	 * @pre Argument {@code ball} should not be {@code null}.
+	 * 		| ball != null
+	 * 
+	 * @inspects | balls, ball
+	 * 
+	 * @creates | result
+	 * 
+	 * @post The resulting array will have an amount of elements equal to the sum of the number of elements in {@code balls} and the amount of balls this paddle will clone.
+	 * 		| result.length == balls.length + getAmountOfReplications()
+	 * 
+	 * @post All elements from {@code balls} are in the resulting array, and all of them are on the same index as they were in {@code balls}.
+	 * 		| IntStream.range(0, balls.length).
+	 * 		|	allMatch(i -> balls[i] == result[i])
+	 * 
+	 * @post None of the resulting array's elements are {@code null}, unless they were {@code null} in {@code balls}.
+	 * 		| IntStream.range(0, result.length).
+	 * 		|	allMatch(i -> result[i] != null || i <= balls.length)
+	 * 
+	 * @post All of the cloned balls in the resulting array are behind the elements from {@code balls}. The cloned balls' classes, time left supercharged, centers and diameters 
+	 * 		 are all the same as {@code ball} and their velocities are equal to the sum of one of the Vectors from {@code AddedVelocities} and the velocitiy from {@code ball}.
+	 * 		| IntStream.range(balls.length, result.length).allMatch(i ->
+	 * 		| 	result[i].equals(ball.cloneBallWithChangedVelocity(getAddedVelocities()[0])) ||
+	 * 		|	result[i].equals(ball.cloneBallWithChangedVelocity(getAddedVelocities()[1])) ||
+	 * 		|	result[i].equals(ball.cloneBallWithChangedVelocity(getAddedVelocities()[2])) )
+	 */
+	
+	@Override
 	
 	public Ball[] hitPaddleReplicationHandler(Ball[] balls, Ball ball) {
 		Ball[] newBalls = new Ball[balls.length + amountOfReplications];
@@ -126,6 +183,8 @@ public class ReplicatorPaddleState extends PaddleState{
 	 * 		| result.getCenter().getX() == br.getX() - getSize().getX()
 	 */
 	
+	@Override
+	
 	public PaddleState movePaddleRight(Point br, int elapsedTime) {
 		int moveBy = 10 * elapsedTime;
 		Point newCenter = new Point(getCenter().getX() + moveBy, getCenter().getY());
@@ -154,6 +213,8 @@ public class ReplicatorPaddleState extends PaddleState{
 	 * 		| result.getCenter().getX() == old(getCenter()).getX() - 10*elapsedTime || 
 	 * 		| result.getCenter().getX() == getSize().getX()
 	 */
+	
+	@Override
 	
 	public PaddleState movePaddleLeft(int elapsedTime) {
 		int moveBy = 10 * elapsedTime;

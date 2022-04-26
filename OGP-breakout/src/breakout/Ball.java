@@ -143,10 +143,12 @@ public abstract class Ball {
 	 * 		 Returns {@code false} if this is not the case or if {@code obj} is {@code null}.
 	 * 	| result == ( (obj != null) && ( (
 	 * 	|		obj.getClass().equals(NormalBall.class) &&  
+	 * 	|			getClass().equals(NormalBall.class) &&
 	 * 	|			((NormalBall)obj).getCenter().equals(getCenter()) && 
 	 * 	|			((NormalBall)obj).getDiameter() == getDiameter() && 
 	 * 	|			((NormalBall)obj).getVelocity().equals(getVelocity()) ) || (
 	 * 	| 		obj.getClass().equals(SuperchargedBall.class) && 
+	 * 	|			getClass().equals(SuperchargedBall.class) &&
 	 * 	|			((SuperchargedBall)obj).getCenter().equals(getCenter()) && 
 	 * 	|			((SuperchargedBall)obj).getDiameter() == getDiameter() && 
 	 * 	|			((SuperchargedBall)obj).getVelocity().equals(getVelocity()) && 

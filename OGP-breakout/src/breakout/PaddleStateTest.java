@@ -25,6 +25,7 @@ class PaddleStateTest {
 	private int ballDiameter3 = 5;
 	
 	private PaddleState paddle1;
+	private PaddleState paddle2;
 	private Ball ball1;
 	private Ball ball2;
 	private Ball ball3;
@@ -34,6 +35,7 @@ class PaddleStateTest {
 	@BeforeEach
 	void setUp() {
 		paddle1 = new NormalPaddleState(center1);
+		paddle2 = new ReplicatorPaddleState(center1, 2);
 		ball1 = new NormalBall(ballCenter1, ballDiameter1, ballVelocity1);
 		ball2 = new NormalBall(ballCenter2, ballDiameter2, ballVelocity2);
 		ball3 = new NormalBall(ballCenter3, ballDiameter3, ballVelocity3);
@@ -44,9 +46,13 @@ class PaddleStateTest {
 	
 	@Test
 	void ballHitPaddleTest() {
-		assertThrows(AssertionError.class, () -> paddle1.hitPaddleReplicationHandler(null, ball1));
-		
 		Ball[] balls = {ball1, ball2, ball3};
+		
+		assertTrue(paddle1.equals(new NormalPaddleState(center1)));
+		assertFalse(paddle1.equals(paddle2));
+		
+		assertTrue(paddle2.equals(new ReplicatorPaddleState(center1, 2)));
+		assertFalse(paddle2.equals(paddle1));
 		
 		assertEquals(3, paddle1.hitPaddleReplicationHandler(balls, ball1).length);
 		
