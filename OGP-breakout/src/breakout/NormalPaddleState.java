@@ -96,8 +96,6 @@ public class NormalPaddleState extends PaddleState{
 	 * @pre Argument {@code elapsedTime} is greater than 0
 	 * 		| elapsedTime > 0
 	 * 
-	 * @creates | result
-	 * 
 	 * @post The result is not {@code null}
 	 * 	    | result != null
 	 * @post The resulting paddle is the same kind of paddle as {@code this}, which in this case is a normal paddle
@@ -126,8 +124,6 @@ public class NormalPaddleState extends PaddleState{
 	 * 
 	 * @pre Argument {@code elapsedTime} is greater than 0
 	 * 		| elapsedTime > 0
-	 * 
-	 * @creates | result
 	 * 
 	 * @post The result is not {@code null}
 	 * 		|  result != null

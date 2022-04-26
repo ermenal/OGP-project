@@ -202,8 +202,6 @@ public abstract class PaddleState {
 	 * @pre Argument {@code elapsedTime} is greater than 0
 	 * 		| elapsedTime > 0
 	 * 
-	 * @creates | result
-	 * 
 	 * @post The result is not {@code null}
 	 * 	    | result != null
 	 * 
@@ -226,8 +224,6 @@ public abstract class PaddleState {
 	 * 
 	 * @pre Argument {@code elapsedTime} is greater than 0
 	 * 		| elapsedTime > 0
-	 * 
-	 * @creates | result
 	 * 
 	 * @post The result is not {@code null}
 	 * 		|  result != null

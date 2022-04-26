@@ -90,22 +90,4 @@ public class NormalBall extends Ball{
 	
 	}
 	
-	/**
-	 * Typecasts the parameter {@code obj} to a normal ball.
-	 * 
-	 * @pre Argument {@code obj} is not {@code null}
-	 * 		| obj != null
-	 * @pre Argument {@code obj} is of class NormalBall
-	 * 		| obj.getClass().equals(NormalBall.class)
-	 * 
-	 * @creates | result
-	 * 
-	 * @post | result.getClass().equals(NormalBall.class)
-	 */
-	
-	public Ball typeCastFormalDocumentation(Object obj) {
-		NormalBall other = (NormalBall)obj;
-		return other;
-	}
-	
 }

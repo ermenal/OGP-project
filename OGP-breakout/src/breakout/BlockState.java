@@ -136,8 +136,7 @@ public abstract class BlockState {
 	 * 
 	 * @inspects | ball
 	 * 
-	 * @creates If the block is a powerup block, the result is a new supercharged ball
-	 * 		| result 
+	 * @creates | result 
 	 * 
 	 * @post If {@code this} is a powerup block, a new supercharged ball is returned. 
 	 * 		 If {@code this} is not a powerup block, {@code ball} is returned.
