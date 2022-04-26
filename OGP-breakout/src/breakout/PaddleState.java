@@ -11,7 +11,7 @@ import java.util.Arrays;
  *
  * @invar The paddle's center is not {@code null}
  * 		| getCenter() != null
- * @invar | getSize().equals(new Vector(20000, 250))
+ * @invar | getSize().equals(new Vector(1500, 250))
  * @invar The amount of replications this paddle will spawn is between 0 and 3, including 0 and 3
  * 		| getAmountOfReplications() >= 0 && getAmountOfReplications() <= 3
  * @invar | getAddedVelocities().length == 3
@@ -25,7 +25,7 @@ public abstract class PaddleState {
 	
 	/**
 	 * @invar | center != null
-	 * @invar | Size.equals(new Vector(20000, 250))
+	 * @invar | Size.equals(new Vector(1500, 250))
 	 * @invar | AddedVelocities.length == 3
 	 * @invar | IntStream.range(0, AddedVelocities.length).allMatch(i -> 
 	 * 		  | 	i == 0 && AddedVelocities[i].equals(new Vector(2, -2)) ||
@@ -34,7 +34,7 @@ public abstract class PaddleState {
 	 */
 	
 	private final Point center;
-	private static final Vector Size = new Vector(20000, 250);
+	private static final Vector Size = new Vector(1500, 250);
 	private static final Vector[] AddedVelocities = {new Vector(2, -2), new Vector(2, 2), new Vector(-2, 2)};
 	
 	/**
@@ -131,7 +131,9 @@ public abstract class PaddleState {
 	@Override
 	
 	public boolean equals(Object obj) {
-		return getClass().equals(obj.getClass());
+		if (obj == null)
+			return false;
+		return getClass() == obj.getClass();
 	}
 	
 	/**

@@ -12,7 +12,8 @@ public class BreakoutApplication {
 ##########
 ###!######
 ##########
-SSS!SRS!#S
+SSS!SSS!#S
+
      o
 
      =

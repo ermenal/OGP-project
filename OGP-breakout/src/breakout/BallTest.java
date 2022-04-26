@@ -61,6 +61,8 @@ public class BallTest {
 		assertEquals(Color.WHITE, normalBall1.getColor());
 		assertEquals(Color.GREEN, superchargedBall1.getColor());
 		
+		assertFalse(normalBall1.equals(null));
+		
 	}
 	
 	

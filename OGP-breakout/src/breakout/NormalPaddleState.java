@@ -24,7 +24,7 @@ public class NormalPaddleState extends PaddleState{
 		if (!super.equals(obj))
 			return false;
 		
-		ReplicatorPaddleState other = (ReplicatorPaddleState)obj;
+		NormalPaddleState other = (NormalPaddleState)obj;
 		return other.getCenter().equals(getCenter());
 	}
 	

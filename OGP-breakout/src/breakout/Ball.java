@@ -67,7 +67,7 @@ public abstract class Ball {
 	/**
 	 * Returns the ball's color. Either white if it is a normal ball, or green if it is a supercharged ball.
 	 * 
-	 * @post The resul is either green or white
+	 * @post The result is either green or white
 	 * 		| result == Color.GREEN || result == Color.WHITE
 	 */
 	
@@ -76,7 +76,7 @@ public abstract class Ball {
 	/**
 	 * Returns {@code this} or a new normal ball, depending on whether or not the ball is currently supercharged and for how long.
 	 * 
-	 * @pre Argument {@code maxTime} should be greater than 0.
+	 * @pre Argument {@code maxTime} should not be less than 0.
 	 * 		| maxTime >= 0
 	 * @pre Argument {@code elapsedTime} should be greater than 0.
 	 * 		| elapsedTime > 0
@@ -87,13 +87,12 @@ public abstract class Ball {
 	 * 		| result.getCenter() == getCenter() && 
 	 * 		| result.getDiameter() == getDiameter() && 
 	 * 		| result.getVelocity() == getVelocity()
-	 * 
-	 * @post If the ball isn't supercharged, {@code this} is returned. 
-	 * 		 If the ball is supercharged, a new normal ball is returned if adding the elapsed time to the ball's time 
+	 * @post If this ball isn't supercharged, {@code this} is returned. 
+	 * 		 If this ball is supercharged, a new normal ball is returned if adding the elapsed time to this ball's time 
 	 * 		 it has been supercharged for would result in a value larger than or equal to {@code maxTime}. 
-	 * 		 If this doesn't result in a value larger than {@code maxTime}, the elapsed time is added onto the ball's current time and {@code this} is returned.
-	 * 		| result == this && this.getTime() < maxTime ||
-	 * 		| result.getClass().equals(NormalBall.class) && this.getTime() + elapsedTime >= maxTime
+	 * 		 If this doesn't result in a value larger than or equal to {@code maxTime}, the elapsed time is added onto the ball's current time and {@code this} is returned.
+	 * 		| result == this && getTime() < maxTime ||
+	 * 		| result.getClass().equals(NormalBall.class) && getTime() + elapsedTime >= maxTime
 	 */
 	
 	public Ball superchargedTimeHandler(int elapsedTime, int maxTime) {
@@ -102,12 +101,11 @@ public abstract class Ball {
 	
 	/**
 	 * Returns the amount of time the ball has been supercharged for in milliseconds. If the ball is not supercharged, the result will be {@code -1}.
-	 * 
-	 * @inspects | this
+	 * This method is used for formal documentation.
 	 * 
 	 * @post The result is -1 for a normal ball, or not smaller than 0 for a supercharged ball
-	 * 		| result == -1 && this.getClass().equals(NormalBall.class) || 
-	 * 		| result >= 0 && this.getClass().equals(SuperchargedBall.class)
+	 * 		| result == -1 && getClass().equals(NormalBall.class) || 
+	 * 		| result >= 0 && getClass().equals(SuperchargedBall.class)
 	 */
 	
 	public int getTime() {
@@ -138,10 +136,29 @@ public abstract class Ball {
 	
 	public abstract Ball cloneBallWithChangedVelocity(Vector addedVelocity);
 	
+	/**
+	 * Checks if {@code this} is the same class as {@code obj}. 
+	 * 
+	 * @post The result is {@code true} if {@code obj} is a {@code SuperchargedBall} or a {@code NormalBall} with the same properties as {@code this}.
+	 * 		 Returns {@code false} if this is not the case or if {@code obj} is {@code null}.
+	 * 	| result == ( (obj != null) && ( (
+	 * 	|		obj.getClass().equals(NormalBall.class) &&  
+	 * 	|			((NormalBall)obj).getCenter().equals(getCenter()) && 
+	 * 	|			((NormalBall)obj).getDiameter() == getDiameter() && 
+	 * 	|			((NormalBall)obj).getVelocity().equals(getVelocity()) ) || (
+	 * 	| 		obj.getClass().equals(SuperchargedBall.class) && 
+	 * 	|			((SuperchargedBall)obj).getCenter().equals(getCenter()) && 
+	 * 	|			((SuperchargedBall)obj).getDiameter() == getDiameter() && 
+	 * 	|			((SuperchargedBall)obj).getVelocity().equals(getVelocity()) && 
+	 * 	|			((SuperchargedBall)obj).getTime() == getTime() ) ) )
+	 */
+	
 	@Override
 	
 	public boolean equals(Object obj) {
-		return this.getClass() == obj.getClass();
+		if (obj == null)
+			return false;
+		return getClass() == obj.getClass();
 	
 	}
 	
@@ -211,10 +228,12 @@ public abstract class Ball {
 		if (wallNumber == 1) {
 			// leftWall
 			velocity = velocity.mirrorOver(new Vector(1, 0));
+			return;
 		}
 		if (wallNumber == 2) {
 			// topWall
 			velocity = velocity.mirrorOver(new Vector(0, 1));
+			return;
 		}
 		if (wallNumber == 3) {
 			// righttWall
@@ -242,17 +261,14 @@ public abstract class Ball {
 	 * @post The ball's velocity has been mirrored in accordance with the given {@code paddleSideNumber} 
 	 *  	 and its X-component has been changed in accordance with the paddle's given direction {@code paddleDir}.
 	 *  	| paddleSideNumber == 1 &&
-	 *  	| getVelocity().equals
-	 *  	|	(new Vector(old(getVelocity()).mirrorOver(new Vector(-1, 0)).getX() + paddleDir * 2, 
-	 *  	|		old(getVelocity()).mirrorOver(new Vector(-1, 0)).getY())) ||
+	 *  	| 	getVelocity().equals
+	 *  	|		(old(getVelocity()).mirrorOver(new Vector(-1, 0)).plus(new Vector(paddleDir*2, 0)) ) ||
 	 *  	| paddleSideNumber == 2 &&
-	 *  	| getVelocity().equals
-	 *  	|	(new Vector(old(getVelocity()).mirrorOver(new Vector(0, -1)).getX() + paddleDir * 2, 
-	 *  	|		old(getVelocity()).mirrorOver(new Vector(0, -1)).getY())) ||
+	 *  	| 	getVelocity().equals
+	 *  	|		(old(getVelocity()).mirrorOver(new Vector(0, -1)).plus(new Vector(paddleDir*2, 0)) ) ||
 	 *  	| paddleSideNumber == 3 &&
-	 *  	| getVelocity().equals
-	 *  	|	(new Vector(old(getVelocity()).mirrorOver(new Vector(1, 0)).getX() + paddleDir * 2, 
-	 *  	|		old(getVelocity()).mirrorOver(new Vector(1, 0)).getY()))
+	 *  	| 	getVelocity().equals
+	 *  	|		(old(getVelocity()).mirrorOver(new Vector(1, 0)).plus(new Vector(paddleDir*2, 0)) )
 	 */
 	
 	public void bouncePaddle(int paddleDir, int paddleSideNumber) {
@@ -291,11 +307,11 @@ public abstract class Ball {
 	}
 	
 	/**
-	 * Changes the ball's velocity after it bounced against a block that is presented as {@code rect}.
+	 * Changes this ball's velocity after it bounced against a block that is presented as {@code rect}, depending on what kind of ball this is.
 	 * 
 	 * @pre {@code rect} is not {@code null}
 	 * 		| rect != null
-	 * @pre The ball hit the block on one of its sides
+	 * @pre This ball hit the block on one of its sides
 	 * 		| raaktRechthoek(rect, 1) || 
 	 * 		| raaktRechthoek(rect, 2) || 
 	 * 		| raaktRechthoek(rect, 3) || 
@@ -303,12 +319,12 @@ public abstract class Ball {
 	 * 
 	 * @mutates | this
 	 * 
-	 * @post The ball's center and diameter remained unchanged.
+	 * @post This ball's center and diameter remained unchanged.
 	 * 		| getCenter() == old(getCenter()) &&
 	 * 		| getDiameter() == old(getDiameter())
 	 * 
-	 * @post Depending on which side the ball hit the block on, which kind of ball it is
-	 * 		 and if the block is destroyable or not, its velocity got changed accordingly.
+	 * @post Depending on which side this ball hit the block on, which kind of ball this is
+	 * 		 and if the block is destroyable or not, this ball's velocity got changed accordingly.
 	 * 		| getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, 1))) ||
 	 * 		| getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(-1, 0))) ||
 	 * 		| getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, -1))) ||

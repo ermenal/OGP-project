@@ -15,6 +15,6 @@ public @interface Todos {
 	 * 
 	 * paddleCollisionHandler niet dynamic blabla ??
 	 * 
-	 * PaddleState opdelen
+	 * Ball superchargedTimeHandler: @mutates en @creates ?
 	 */
 }

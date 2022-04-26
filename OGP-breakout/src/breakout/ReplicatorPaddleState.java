@@ -8,7 +8,7 @@ import java.util.Arrays;
 	 * This class represents a replicator paddle on a 2D-grid
 	 * 
  	* @invar | getCenter() != null
- 	* @invar | getSize().equals(new Vector(20000, 250))
+ 	* @invar | getSize().equals(new Vector(1500, 250))
  	* @invar The amount of replications this paddle will spawn when a ball collides with it is at least 1 and at most 3 
  	* 		| getAmountOfReplications() >= 1 && getAmountOfReplications() <= 3
  	* @invar | getAddedVelocities().length == 3

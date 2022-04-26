@@ -48,7 +48,7 @@ class PaddleStateTest {
 		
 		Ball[] balls = {ball1, ball2, ball3};
 		
-		assertEquals(5, paddle1.hitPaddleReplicationHandler(balls, ball1).length);
+		assertEquals(3, paddle1.hitPaddleReplicationHandler(balls, ball1).length);
 		
 	
 	}

@@ -47,12 +47,12 @@ public class SuperchargedBall extends Ball {
 	}
 	
 	/**
-	 * Changes the ball's velocity after it bounced against a non-destroyable block that is presented as {@code rect}.
+	 * Changes this supercharged ball's velocity after it bounced against a non-destroyable block that is presented as {@code rect}.
 	 * If the block is destroyable, the ball's velocity remains unchanged.
 	 * 
 	 * @pre {@code rect} is not {@code null}
 	 * 		| rect != null
-	 * @pre The ball hit the block on one of its sides.
+	 * @pre This ball hit the block on one of its sides.
 	 * 		| raaktRechthoek(rect, 1) || 
 	 * 		| raaktRechthoek(rect, 2) || 
 	 * 		| raaktRechthoek(rect, 3) || 
@@ -60,12 +60,12 @@ public class SuperchargedBall extends Ball {
 	 * 
 	 * @mutates | this
 	 * 
-	 * @post The ball's center and diameter remained unchanged.
+	 * @post This ball's center and diameter remained unchanged.
 	 * 		| getCenter() == old(getCenter()) &&
 	 * 		| getDiameter() == old(getDiameter())
 	 * 
-	 * @post For a non-destroyable block, the supercharged ball's velocity got changed according with the side of the block it hit.
-	 * 		 For a destroyable block, the supercharged ball's velocity remained unchanged.
+	 * @post For a non-destroyable block, this supercharged ball's velocity got changed according with the side of the block it hit.
+	 * 		 For a destroyable block, this supercharged ball's velocity remained unchanged.
 	 * 		| !destroyed && (
 	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(0, 1))) ||
 	 * 		| 	getVelocity().equals(old(getVelocity()).mirrorOver(new Vector(-1, 0))) ||
@@ -98,7 +98,7 @@ public class SuperchargedBall extends Ball {
 	/**
 	 * Returns {@code this} or a new normal ball, depending on how long the ball has been supercharged for.
 	 * 
-	 * @pre Argument {@code maxTime} should be greater than 0.
+	 * @pre Argument {@code maxTime} should not be less than 0.
 	 * 		| maxTime >= 0
 	 * @pre Argument {@code elapsedTime} should be greater than 0.
 	 * 		| elapsedTime > 0
@@ -109,11 +109,10 @@ public class SuperchargedBall extends Ball {
 	 * 		| result.getCenter() == getCenter() && 
 	 * 		| result.getDiameter() == getDiameter() && 
 	 * 		| result.getVelocity() == getVelocity()
-	 * 
-	 * @post A new normal ball is returned if adding the elapsed time to the ball's time it has been supercharged for would result in a value larger than or equal to {@code maxTime}. 
+	 * @post A new normal ball is returned if adding the elapsed time to this ball's time it has been supercharged for would result in a value larger than or equal to {@code maxTime}. 
 	 * 		 If this doesn't result in a value larger than or equal to {@code maxTime}, the elapsed time is added onto the ball's current time and {@code this} is returned.
-	 * 		| result == this && this.getTime() < maxTime  ||
-	 * 		| result.getClass().equals(NormalBall.class) && this.getTime() + elapsedTime >= maxTime
+	 * 		| result == this && getTime() < maxTime  ||
+	 * 		| result.getClass().equals(NormalBall.class) && getTime() + elapsedTime >= maxTime
 	 */
 	
 	@Override
@@ -155,6 +154,16 @@ public class SuperchargedBall extends Ball {
 	
 	@Override
 	
+	/**
+	 * 
+	 * @post
+	 * | result == ( (obj != null) && getClass().equals(obj.getClass()) && 
+	 * |	((SuperchargedBall)obj).getCenter().equals(getCenter()) && 
+	 * |	((SuperchargedBall)obj).getDiameter() == getDiameter() && 
+	 * |	((SuperchargedBall)obj).getVelocity().equals(getVelocity()) && 
+	 * |	((SuperchargedBall)obj).getTime() == getTime() )
+	 */
+	
 	public boolean equals(Object obj) {
 		if (! (super.equals(obj)))
 			return false;
@@ -164,4 +173,6 @@ public class SuperchargedBall extends Ball {
 				other.getCenter().equals(this.getCenter()) && other.getDiameter() == this.getDiameter() && 
 				other.getVelocity().equals(this.getVelocity()) && other.getTime() == this.getTime();
 	}
+	
 }
+
