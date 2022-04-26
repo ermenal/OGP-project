@@ -20,6 +20,8 @@ class SubmissionTestSuite {
 	Vector origBallVelocity;
 	BlockState bounceBlock;
 	Ball ball;
+	
+	BreakoutFacade facade = new BreakoutFacade();
 
 	public static final String initMap1 = """
 #		       
@@ -85,20 +87,18 @@ class SubmissionTestSuite {
 	@Test
 	void testBreakoutStateNull() {
 		assertThrows(IllegalArgumentException.class, 
-				() -> new BreakoutState(null,oneBlock,bottomRight,paddle, 10000) );
+				() -> new BreakoutState(null,oneBlock,bottomRight,paddle) );
 		assertThrows(IllegalArgumentException.class, 
-				() -> new BreakoutState(oneBall,null,bottomRight,paddle, 10000) );
+				() -> new BreakoutState(oneBall,null,bottomRight,paddle) );
 		assertThrows(IllegalArgumentException.class, 
-				() -> new BreakoutState(oneBall,oneBlock,null,paddle, 10000) );
+				() -> new BreakoutState(oneBall,oneBlock,null,paddle) );
 		assertThrows(IllegalArgumentException.class, 
-				() -> new BreakoutState(oneBall,oneBlock,bottomRight,null, 10000) );
-		assertThrows(IllegalArgumentException.class, 
-				() -> new BreakoutState(oneBall,oneBlock,bottomRight,paddle, -1) );
+				() -> new BreakoutState(oneBall,oneBlock,bottomRight,null) );
 	}
 	
 	@Test
 	void testBreakoutStateNormal() {
-		BreakoutState state = new BreakoutState(oneBall,oneBlock,bottomRight,paddle, 10000);
+		BreakoutState state = new BreakoutState(oneBall,oneBlock,bottomRight,paddle);
 		assertTrue(Arrays.equals(oneBall, state.getBalls()));
 		assertTrue(Arrays.equals(oneBlock, state.getBlocks()));
 		assertEquals(bottomRight,state.getBottomRight());

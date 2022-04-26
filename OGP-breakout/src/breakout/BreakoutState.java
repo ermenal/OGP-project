@@ -36,9 +36,6 @@ import java.util.stream.IntStream;
  *     	| getPaddle().getBottomRight().getX() <= getBottomRight().getX() && 
  *     	| getPaddle().getTopLeft().getY() >= 0 && 
  *     	| getPaddle().getBottomRight().getY() <= getBottomRight().getY()
- *     
- * @invar The maximum amount of time a ball may be supercharged for after hitting a powerup block is greater than or equal to 0 milliseconds.
- * 		| getMaxSuperchargedTime() >= 0
  */
 
 public class BreakoutState {
@@ -63,9 +60,6 @@ public class BreakoutState {
 	 *        | paddle.getBottomRight().getY() <= bottomRight.getY() && 
 	 *        | paddle.getTopLeft().getX() >= 0 && 
 	 *        | paddle.getTopLeft().getY() >= 0 
-	 *        
-	 * @invar | maxSuperchargedTime >= 0
-	 * 
 	 * @representationObject
 	 */
 	
@@ -74,12 +68,13 @@ public class BreakoutState {
 	private BlockState[] blocks;
 	private final Point bottomRight;
 	private PaddleState paddle;
-	private final int maxSuperchargedTime;
+	
+	private static final int MAX_SUPERCHARGED_TIME = 10000;
 	
 	public final static int MAX_ELAPSED_TIME = 10;
 	
 	/**
-	 * Initializes this object so that it stores the given balls, blocks, bottomRight point paddle and maxSuperchargedTime.
+	 * Initializes this object so that it stores the given balls, blocks, bottomRight point paddle.
 	 * 
 	 * @throws IllegalArgumentException if the given balls array is {@code null}
 	 * 	    | balls == null
@@ -115,9 +110,6 @@ public class BreakoutState {
 	 *      | paddle.getBottomRight().getY() > bottomRight.getY() || 
 	 *      | paddle.getTopLeft().getX() < 0 || 
 	 *      | paddle.getTopLeft().getY() < 0 
-	 *     
-	 * @throws IllegalArgumentException if the given maxSuperchargedTime is smaller than 0
-	 * 		| maxSuperchargedTime < 0
 	 * 
 	 * @inspects | balls, blocks
 	 * 
@@ -135,12 +127,9 @@ public class BreakoutState {
 	 * @post This object's paddle has the same center and size as the given paddle
 	 *      | paddle.getCenter().equals(getPaddle().getCenter()) && 
 	 *      | getPaddle().getSize().equals(getPaddle().getSize())
-	 *      
-	 * @post the maximum amount of time a ball may be supercharged for after hitting a powerup block is {@code maxSuperchargedTime}.
-	 * 		| getMaxSuperchargedTime() == maxSuperchargedTime
 	 */
 	
-	public BreakoutState(Ball[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle, int maxSuperchargedTime) {
+	public BreakoutState(Ball[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
 		
 		if (balls == null || blocks == null || bottomRight == null || paddle == null) {
 			throw new IllegalArgumentException("BreakoutState arguments can't be null");
@@ -156,23 +145,22 @@ public class BreakoutState {
 			Arrays.stream(blocks).anyMatch(e -> e.getTopLeft().getX() < 0 || 
 					e.getBottomRight().getX() > bottomRight.getX() || 
 					e.getBottomRight().getY() > bottomRight.getY() ||
-					e.getTopLeft().getY() < 0 ) )
+					e.getTopLeft().getY() < 0 ) ) {
 			throw new IllegalArgumentException("balls and blocks may not have elements that are outside of the field");
+		}
 		
-		if (paddle.getBottomRight().getX() > bottomRight.getX() || paddle.getBottomRight().getY() > bottomRight.getY() || paddle.getTopLeft().getX() < 0 || paddle.getTopLeft().getY() < 0)
+		if (paddle.getBottomRight().getX() > bottomRight.getX() || paddle.getBottomRight().getY() > bottomRight.getY() || paddle.getTopLeft().getX() < 0 || paddle.getTopLeft().getY() < 0) {
 			throw new IllegalArgumentException("paddle should be inside of the field");
-		
-		if (maxSuperchargedTime < 0)
-			throw new IllegalArgumentException("The maximum time a ball is allowed to be supercharged for after hitting a powerup block should be greater than or equal to 0");
-		
-		if (bottomRight.getX() < 0 || bottomRight.getY() < 0)
+		}
+			
+		if (bottomRight.getX() < 0 || bottomRight.getY() < 0) {
 			throw new IllegalArgumentException("bottomRight should not be to the left of or above (0, 0)");
-		
+		}
+			
 		this.balls = balls.clone();
 		this.blocks = blocks.clone();
 		this.bottomRight = bottomRight;
 		this.paddle = paddle;
-		this.maxSuperchargedTime = maxSuperchargedTime;
 	}
 	
 	/**
@@ -220,7 +208,7 @@ public class BreakoutState {
 	 */
 	
 	public int getMaxSuperchargedTime() {
-		return maxSuperchargedTime;
+		return MAX_SUPERCHARGED_TIME;
 	}
 
 	/**
@@ -246,7 +234,7 @@ public class BreakoutState {
 	
 	private void superchargedTimeHandler(int elapsedTime) {
 		for (int i=0;i<balls.length;i++) {
-			balls[i] = balls[i].superchargedTimeHandler(elapsedTime, maxSuperchargedTime);
+			balls[i] = balls[i].superchargedTimeHandler(elapsedTime, MAX_SUPERCHARGED_TIME);
 		}
 	}
 	
