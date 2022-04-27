@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -43,6 +45,45 @@ class PaddleStateTest {
 		
 	}
 	
+	@Test
+	void paddletesten() {
+		
+		assertEquals(paddle1.getTopLeft(), new Point(-500,750));
+		assertEquals(paddle2.getTopLeft(), new Point(-500,750));
+		assertTrue(paddle1.getTopLeft().equals(paddle2.getTopLeft()));
+		
+		assertEquals(paddle1.getBottomRight(), new Point(2500,1250));
+		assertEquals(paddle2.getBottomRight(), new Point(2500,1250));
+		assertTrue(paddle1.getBottomRight().equals(paddle2.getBottomRight()));
+		
+		assertEquals(paddle1.getCenter(), new Point(1000,1000));
+		assertEquals(paddle2.getCenter(), new Point(1000,1000));
+		assertTrue(paddle1.getCenter().equals(paddle2.getCenter()));
+		
+		assertEquals(paddle1.getSize(), paddle2.getSize());
+		
+		assertEquals(paddle1.getColor(), Color.CYAN);
+		assertEquals(paddle2.getColor(), Color.PINK);
+	}
+	
+	@Test
+	void getAmountOfReplicationsTest() {
+		
+		assertEquals(paddle1.getAmountOfReplications(), 0);
+		assertEquals(paddle2.getAmountOfReplications(), 2);
+	}
+	
+	@Test 
+	void getAddedVelocitiesTest() {
+		
+		assertEquals(paddle1.getAddedVelocities()[0], new Vector(2, -2));
+		assertEquals(paddle1.getAddedVelocities()[1], new Vector(2, 2));
+		assertEquals(paddle1.getAddedVelocities()[2], new Vector(-2, 2));
+		
+		assertEquals(paddle2.getAddedVelocities()[0], new Vector(2, -2));
+		assertEquals(paddle2.getAddedVelocities()[1], new Vector(2, 2));
+		assertEquals(paddle2.getAddedVelocities()[2], new Vector(-2, 2));
+	}
 	
 	@Test
 	void ballHitPaddleTest() {
@@ -55,6 +96,7 @@ class PaddleStateTest {
 		assertFalse(paddle2.equals(paddle1));
 		
 		assertEquals(3, paddle1.hitPaddleReplicationHandler(balls, ball1).length);
+		
 		
 	
 	}
