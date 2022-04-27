@@ -40,7 +40,7 @@ public class BallTest {
 	
 	
 	@BeforeEach
-	void setUp() {
+	void setUp() throws Exception {
 		BreakoutFacade facade = new BreakoutFacade();
 		zeroVector = new Vector(0, 0);
 		maxElapsedTime = 10000;
