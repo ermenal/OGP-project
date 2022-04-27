@@ -363,8 +363,6 @@ public class BreakoutState {
 	/**
 	 * Returns whether the game is won or not 
 	 * 
-	 * @inspects | this
-	 * 
 	 * @post  The result is {@code true} if there are no more blocks on the field, and at least one ball is still in the game
 	 *     | result == (getBlocks().length == 0 && getBalls().length > 0)
 	 */
@@ -375,8 +373,6 @@ public class BreakoutState {
 	
 	/**
 	 * Returns whether the game is lost or not
-	 * 
-	 * @inspects | this
 	 * 
 	 * @post  The result is {@code true} if there are no more balls left in the game
 	 *    | result == (getBalls().length == 0)

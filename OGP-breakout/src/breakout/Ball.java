@@ -364,7 +364,8 @@ public abstract class Ball {
 	 * 
 	 * @inspects | this
 	 * 
-	 * @post The result is true if the distance between the circle's center to the given side is smaller than or equal to the circle's radius.
+	 * @post The result is true if the distance between the circle's center to the given side is smaller than or equal to the circle's radius, 
+	 * 		 and if the dot product of the direction of the ball and the vector perpendicular to the given side of the rectangle is positive.
 	 * 		| result == ((Math.max(rechthoek.getTopLeft().getX(), Math.min(getCenter().getX(), rechthoek.getBottomRight().getX())) - getCenter().getX()) -
 	 * 		|			(Math.max(rechthoek.getTopLeft().getX(), Math.min(getCenter().getX(), rechthoek.getBottomRight().getX())) - getCenter().getX()) + 
 	 * 		|		(Math.max(rechthoek.getTopLeft().getY(), Math.min(getCenter().getY(), rechthoek.getBottomRight().getY())) - getCenter().getY()) * 

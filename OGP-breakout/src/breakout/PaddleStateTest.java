@@ -46,7 +46,7 @@ class PaddleStateTest {
 	}
 	
 	@Test
-	void paddletesten() {
+	void testPaddleEquals() {
 		
 		assertEquals(paddle1.getTopLeft(), new Point(-500,750));
 		assertEquals(paddle2.getTopLeft(), new Point(-500,750));
@@ -67,14 +67,14 @@ class PaddleStateTest {
 	}
 	
 	@Test
-	void getAmountOfReplicationsTest() {
+	void testGetAmountOfReplications() {
 		
 		assertEquals(paddle1.getAmountOfReplications(), 0);
 		assertEquals(paddle2.getAmountOfReplications(), 2);
 	}
 	
 	@Test 
-	void getAddedVelocitiesTest() {
+	void testGetAddedVelocities() {
 		
 		assertEquals(paddle1.getAddedVelocities()[0], new Vector(2, -2));
 		assertEquals(paddle1.getAddedVelocities()[1], new Vector(2, 2));
@@ -86,7 +86,7 @@ class PaddleStateTest {
 	}
 	
 	@Test
-	void ballHitPaddleTest() {
+	void testBallHitPaddle() {
 		Ball[] balls = {ball1, ball2, ball3};
 		
 		assertTrue(paddle1.equals(new NormalPaddleState(center1)));
@@ -96,9 +96,6 @@ class PaddleStateTest {
 		assertFalse(paddle2.equals(paddle1));
 		
 		assertEquals(3, paddle1.hitPaddleReplicationHandler(balls, ball1).length);
-		
-		
-	
 	}
 
 }

@@ -77,7 +77,7 @@ public class PowerupBlockState extends BlockState {
 	 * @creates | result
 	 * 
 	 * @post The result is a supercharged ball 
-	 * 		| result.getClass().equals(SuperchargedBall.class)
+	 * 		| result.getClass() == SuperchargedBall.class
 	 * 
 	 * @post The resulting supercharged ball's center, diameter and velocity have remained unchanged. Its time has been initialized as 0.
 	 * 		| result.getCenter() == ball.getCenter() && 
