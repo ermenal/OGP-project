@@ -105,6 +105,8 @@ public class SuperchargedBall extends Ball {
 	 * 
 	 * @mutates | this
 	 * 
+	 * @creates | result 
+	 * 
 	 * @post The resulting ball's center, diameter and velocity have remained unchanged.
 	 * 		| result.getCenter() == getCenter() && 
 	 * 		| result.getDiameter() == getDiameter() && 
