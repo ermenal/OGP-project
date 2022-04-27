@@ -55,18 +55,14 @@ public class NormalPaddleState extends PaddleState{
 	 * 
 	 * @post The result is {@code true} if {@code obj} is a normal paddle with the same properties as {@code this}.
 	 * 		 The result is {@code false} if this is not the case or if {@code obj} is {@code null}
-	 * 		| result == ( (obj != null) && (obj.getClass().equals(NormalPaddleState.class) && 
-	 * 		|	((NormalPaddleState)obj).getCenter().equals(getCenter()) ) )
+	 * 		| result == ( (obj != null) && (obj.getClass() == getClass() && 
+	 * 		|	((PaddleState)obj).getCenter().equals(getCenter()) ) )
 	 */
 	
 	@Override
 	
 	public boolean equals(Object obj) {
-		if (!super.equals(obj))
-			return false;
-		
-		NormalPaddleState other = (NormalPaddleState)obj;
-		return other.getCenter().equals(getCenter());
+		return super.equals(obj);
 	}
 	
 	/**

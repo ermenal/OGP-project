@@ -90,19 +90,16 @@ public class ReplicatorPaddleState extends PaddleState{
 	 * 
 	 * @post The result is {@code true} if {@code obj} is a replicator paddle with the same properties as {@code this}.
 	 * 		 The result is {@code false} if this is not the case or if {@code obj} is {@code null}
-	 * 		| result == ( (obj != null) && (obj.getClass().equals(ReplicatorPaddleState.class) && 
-	 * 		|	((ReplicatorPaddleState)obj).getCenter().equals(getCenter()) && 
+	 * 		| result == ( (obj != null) && (obj.getClass() == getClass() && 
+	 * 		|	((PaddleState)obj).getCenter().equals(getCenter()) && 
 	 * 		|	((ReplicatorPaddleState)obj).getAmountOfReplications() == getAmountOfReplications() ) )
 	 */
 	
 	@Override
 	
 	public boolean equals(Object obj) {
-		if (!super.equals(obj))
-			return false;
-		
-		ReplicatorPaddleState other = (ReplicatorPaddleState)obj;
-		return other.getCenter().equals(getCenter()) && other.getAmountOfReplications() == amountOfReplications;
+		return super.equals(obj) && 
+				((ReplicatorPaddleState)obj).getAmountOfReplications() == amountOfReplications;
 	}
 	
 	/**

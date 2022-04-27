@@ -96,21 +96,17 @@ public class SturdyBlockState extends BlockState {
 	 * 
 	 * @post The result is {@code true} if {@code obj} is a sturdy block with the same properties as this block. 
 	 * 		 The result is {@code false} if this is not the case or {@code obj} is {@code null} 
-	 * 		| result == ( (obj != null) && ( getClass().equals(obj.getClass()) &&
-	 * 		|	((SturdyBlockState)obj).getTopLeft().equals(getTopLeft()) &&
-	 * 		|	((SturdyBlockState)obj).getBottomRight().equals(getBottomRight()) &&
+	 * 		| result == ( (obj != null) && ( getClass() == obj.getClass() &&
+	 * 		|	((BlockState)obj).getTopLeft().equals(getTopLeft()) &&
+	 * 		|	((BlockState)obj).getBottomRight().equals(getBottomRight()) &&
 	 * 		| 	((SturdyBlockState)obj).getHealth() == getHealth() ) )
 	 */
 	
 	@Override
 	
 	public boolean equals(Object obj) {
-		if (!(super.equals(obj)))
-			return false;
-		
-		SturdyBlockState other = (SturdyBlockState) obj;
-		return this == other || getTopLeft().equals(other.getTopLeft()) && 
-				getBottomRight().equals(other.getBottomRight()) && health == other.getHealth();
+		return super.equals(obj) && 
+				((SturdyBlockState)obj).getHealth() == getHealth();
 	}
 	
 	/**

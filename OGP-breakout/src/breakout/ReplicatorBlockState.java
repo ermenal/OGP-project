@@ -55,20 +55,15 @@ public class ReplicatorBlockState extends BlockState {
 	 * 
 	 * @post The result is {@code true} if {@code obj} is a replicator block with the same properties as this block. 
 	 * 		 The result is {@code false} if this is not the case or {@code obj} is {@code null} 
-	 * 		| result == ( (obj != null) && ( getClass().equals(obj.getClass()) &&
-	 * 		|	((ReplicatorBlockState)obj).getTopLeft().equals(getTopLeft()) &&
-	 * 		|	((ReplicatorBlockState)obj).getBottomRight().equals(getBottomRight()) ) )
+	 * 		| result == ( (obj != null) && ( getClass() == obj.getClass() &&
+	 * 		|	((BlockState)obj).getTopLeft().equals(getTopLeft()) &&
+	 * 		|	((BlockState)obj).getBottomRight().equals(getBottomRight()) ) )
 	 */
 	
 	@Override
 	
 	public boolean equals(Object obj) {
-		if (!(super.equals(obj)))
-			return false;
-		
-		ReplicatorBlockState other = (ReplicatorBlockState) obj;
-		return this == other || this.getTopLeft().equals(other.getTopLeft()) && 
-								this.getBottomRight().equals(other.getBottomRight());
+		return super.equals(obj);
 	}
 	
 	/**

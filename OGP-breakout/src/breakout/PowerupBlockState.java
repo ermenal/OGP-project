@@ -55,20 +55,15 @@ public class PowerupBlockState extends BlockState {
 	 * 
 	 * @post The result is {@code true} if {@code obj} is a powerup block with the same properties as this block. 
 	 * 		 The result is {@code false} if this is not the case or {@code obj} is {@code null} 
-	 * 		| result == ( (obj != null) && ( getClass().equals(obj.getClass()) &&
-	 * 		|	((PowerupBlockState)obj).getTopLeft().equals(getTopLeft()) &&
-	 * 		|	((PowerupBlockState)obj).getBottomRight().equals(getBottomRight()) ) )
+	 * 		| result == ( (obj != null) && ( getClass() == obj.getClass() &&
+	 * 		|	((BlockState)obj).getTopLeft().equals(getTopLeft()) &&
+	 * 		|	((BlockState)obj).getBottomRight().equals(getBottomRight()) ) )
 	 */
 	
 	@Override
 	
 	public boolean equals(Object obj) {
-		if (!(super.equals(obj)))
-			return false;
-		
-		PowerupBlockState other = (PowerupBlockState) obj;
-		return this == other || this.getTopLeft().equals(other.getTopLeft()) && 
-								this.getBottomRight().equals(other.getBottomRight());
+		return super.equals(obj);
 	}
 	
 	/**

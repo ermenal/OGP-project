@@ -71,7 +71,7 @@ public class BreakoutState {
 	
 	private static final int MAX_SUPERCHARGED_TIME = 10000;
 	
-	public final static int MAX_ELAPSED_TIME = 10;
+	public final static int MAX_ELAPSED_TIME = 50;
 	
 	/**
 	 * Initializes this object so that it stores the given balls, blocks, bottomRight point paddle.

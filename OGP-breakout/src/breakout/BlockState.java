@@ -101,31 +101,26 @@ public abstract class BlockState {
 	 * 
 	 * @post The result is {@code true} if {@code obj} is the same kind of block as {@code this} with the same properties.
 	 * 		 If this is not the case or {@code obj} is {@code null}, the result is {@code false}
-	 * 		| result == ( (obj != null) && 
-	 * 		|	(obj.getClass().equals(NormalBlockState.class) && 
-	 * 		|		getClass().equals(NormalBlockState.class) && 
-	 * 		|		((NormalBlockState)obj).getTopLeft().equals(getTopLeft()) &&
-	 * 		|		((NormalBlockState)obj).getBottomRight().equals(getBottomRight()) ||
-	 * 		|	obj.getClass().equals(PowerupBlockState.class) && 
-	 * 		|		getClass().equals(PowerupBlockState.class) &&
-	 * 		|		((PowerupBlockState)obj).getTopLeft().equals(getTopLeft()) &&
-	 * 		|		((PowerupBlockState)obj).getBottomRight().equals(getBottomRight()) ||
-	 * 		|	obj.getClass().equals(ReplicatorBlockState.class) &&
-	 * 		|		getClass().equals(ReplicatorBlockState.class) &&
-	 * 		|		((ReplicatorBlockState)obj).getTopLeft().equals(getTopLeft()) &&
-	 * 		|		((ReplicatorBlockState)obj).getBottomRight().equals(getBottomRight()) ||
-	 * 		|	obj.getClass().equals(SturdyBlockState.class) &&
-	 * 		|		getClass().equals(SturdyBlockState.class) &&
-	 * 		|		((SturdyBlockState)obj).getTopLeft().equals(getTopLeft()) && 
-	 * 		|		((SturdyBlockState)obj).getBottomRight().equals(getBottomRight()) && 
-	 * 		|		((SturdyBlockState)obj).getHealth() == getHealth() ) )
+	 * 		| result == ( (obj != null) && (
+	 * 		|	obj.getClass() == getClass() && 
+	 * 		|	((BlockState)obj).getTopLeft().equals(getTopLeft()) &&
+	 * 		|	((BlockState)obj).getBottomRight().equals(getBottomRight()) && (
+	 * 		|		getClass() == NormalBlockState.class ||
+	 * 		|		getClass() == PowerupBlockState.class ||
+	 * 		|		getClass() == ReplicatorBlockState.class ||
+	 * 		|		getClass() == SturdyBlockState.class &&
+	 * 		|			((SturdyBlockState)obj).getHealth() == getHealth() ) ) )
 	 * 
 	 */
 	
 	@Override
 	
 	public boolean equals(Object obj) {
-		return getClass().equals(obj.getClass());
+		if (obj == null)
+			return false;
+		return obj.getClass() == getClass() && 
+				((BlockState)obj).getTopLeft().equals(getTopLeft()) && 
+				((BlockState)obj).getBottomRight().equals(getBottomRight());
 	}
 	
 	/**

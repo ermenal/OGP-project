@@ -143,18 +143,14 @@ public abstract class Ball {
 	 * 
 	 * @post The result is {@code true} if {@code obj} is a {@code SuperchargedBall} or a {@code NormalBall} with the same properties as {@code this}.
 	 * 		 Returns {@code false} if this is not the case or if {@code obj} is {@code null}.
-	 * 	| result == ( (obj != null) && ( (
-	 * 	|		obj.getClass().equals(NormalBall.class) &&  
-	 * 	|			getClass().equals(NormalBall.class) &&
-	 * 	|			((NormalBall)obj).getCenter().equals(getCenter()) && 
-	 * 	|			((NormalBall)obj).getDiameter() == getDiameter() && 
-	 * 	|			((NormalBall)obj).getVelocity().equals(getVelocity()) ) || (
-	 * 	| 		obj.getClass().equals(SuperchargedBall.class) && 
-	 * 	|			getClass().equals(SuperchargedBall.class) &&
-	 * 	|			((SuperchargedBall)obj).getCenter().equals(getCenter()) && 
-	 * 	|			((SuperchargedBall)obj).getDiameter() == getDiameter() && 
-	 * 	|			((SuperchargedBall)obj).getVelocity().equals(getVelocity()) && 
-	 * 	|			((SuperchargedBall)obj).getTime() == getTime() ) ) )
+	 * 	| result == ( (obj != null) && 
+	 * 	|		( obj.getClass() == getClass() &&
+	 * 	|		((Ball)obj).getCenter().equals(getCenter()) &&
+	 * 	|		((Ball)obj).getDiameter() == getDiameter() &&
+	 * 	|		((Ball)obj).getVelocity().equals(getVelocity()) && (
+	 * 	|			getClass() == NormalBall.class ||
+	 * 	|			getClass() == SuperchargedBall.class &&
+	 * 	|				((SuperchargedBall)obj).getTime() == getTime() ) ) )
 	 */
 	
 	@Override
@@ -162,7 +158,10 @@ public abstract class Ball {
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;
-		return getClass() == obj.getClass();
+		return obj.getClass() == getClass() && 
+				((Ball)obj).getCenter().equals(center) &&
+				((Ball)obj).getDiameter() == diameter &&
+				((Ball)obj).getVelocity().equals(velocity);
 	
 	}
 	

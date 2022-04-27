@@ -157,25 +157,20 @@ public class SuperchargedBall extends Ball {
 	@Override
 	
 	/**
-	 * Checks if {@code obj} is the same class with the same properties as {@code this}
+	 * Checks if {@code obj} is a supercharged ball with the same properties as {@code this}
 	 * 
 	 * @post The result is {@code true} if {@code obj} is a supercharged ball with the same properties as this ball. 
 	 * 		 The result is {@code false} if this is not the case or {@code obj} is {@code null} 
-	 * | result == ( (obj != null) && getClass().equals(obj.getClass()) && 
-	 * |	((SuperchargedBall)obj).getCenter().equals(getCenter()) && 
-	 * |	((SuperchargedBall)obj).getDiameter() == getDiameter() && 
-	 * |	((SuperchargedBall)obj).getVelocity().equals(getVelocity()) && 
+	 * | result == ( (obj != null) && getClass() == obj.getClass() && 
+	 * |	((Ball)obj).getCenter().equals(getCenter()) && 
+	 * |	((Ball)obj).getDiameter() == getDiameter() && 
+	 * |	((Ball)obj).getVelocity().equals(getVelocity()) && 
 	 * |	((SuperchargedBall)obj).getTime() == getTime() )
 	 */
 	
 	public boolean equals(Object obj) {
-		if (! (super.equals(obj)))
-			return false;
-		
-		SuperchargedBall other = (SuperchargedBall) obj;
-		return this == other || 
-				other.getCenter().equals(this.getCenter()) && other.getDiameter() == this.getDiameter() && 
-				other.getVelocity().equals(this.getVelocity()) && other.getTime() == this.getTime();
+		return super.equals(obj) && 
+				((SuperchargedBall)obj).getTime() == getTime();
 	}
 	
 }

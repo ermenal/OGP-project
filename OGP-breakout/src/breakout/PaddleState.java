@@ -143,13 +143,11 @@ public abstract class PaddleState {
 	 * @post The result is {@code true} if {@code obj} is the same kind of paddle as {@code this} with the same properties.
 	 * 		 If this is not the case or {@code obj} is {@code null}, the result is {@code false} 
 	 * 		| result == ( (obj != null) && (
-	 * 		| 	(obj.getClass().equals(NormalPaddleState.class) &&  
-	 * 		|		getClass().equals(NormalPaddleState.class) &&
-	 * 		|		((NormalPaddleState)obj).getCenter().equals(getCenter()) ) ||
-	 * 		|	(obj.getClass().equals(ReplicatorPaddleState.class) && 
-	 * 		|		getClass().equals(ReplicatorPaddleState.class) &&
-	 * 		|		((ReplicatorPaddleState)obj).getCenter().equals(getCenter()) &&
-	 * 		|		((ReplicatorPaddleState)obj).getAmountOfReplications() == getAmountOfReplications() ) ) )
+	 * 		| 	obj.getClass() == getClass() &&
+	 * 		|	((PaddleState)obj).getCenter().equals(getCenter()) && (
+	 * 		|		getClass() == NormalPaddleState.class ||
+	 * 		|		getClass() == ReplicatorPaddleState.class &&
+	 * 		|			((ReplicatorPaddleState)obj).getAmountOfReplications() == getAmountOfReplications() ) ) )
 	 */
 	
 	@Override
@@ -157,7 +155,8 @@ public abstract class PaddleState {
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;
-		return getClass() == obj.getClass();
+		return getClass() == obj.getClass() &&
+				((PaddleState)obj).getCenter().equals(getCenter());
 	}
 	
 	/**
