@@ -2,6 +2,10 @@ package breakout;
 
 public @interface Todos {
 	/**
-	 * PEER OBJECTS
+	 * Create Color field in abstract classes
+	 * 
+	 * invars getColor() != null
+	 * 
+	 * feedback deel 2 
 	 */
 }
